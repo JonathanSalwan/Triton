@@ -138,6 +138,12 @@ namespace triton {
           //! Adds new symbolic expressions to the instruction starting with given symbolic expression id. Returns last added expression.
           const SharedSymbolicExpression& addSymbolicExpressions(triton::arch::Instruction& inst, triton::usize id) const;
 
+          //! Returns true if ALIGNED_MEMORY is enabled.
+          inline bool isAlignedMode(void) const;
+
+          //! Returns true if MEMORY_ARRAY is enabled.
+          inline bool isArrayMode(void) const;
+
         public:
           //! Constructor.
           TRITON_EXPORT SymbolicEngine(triton::arch::Architecture* architecture,

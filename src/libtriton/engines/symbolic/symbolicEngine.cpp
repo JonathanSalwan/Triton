@@ -137,7 +137,7 @@ namespace triton {
        */
       void SymbolicEngine::concretizeMemory(triton::uint64 addr) {
         /* Symbolic array */
-        if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+        if (this->isArrayMode()) {
           auto cv = this->architecture->getConcreteMemoryValue(addr);
           auto cell = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), addr, this->astCtxt->bv(cv, triton::bitsize::byte));
           this->memoryArray = this->newSymbolicExpression(cell, MEMORY_EXPRESSION, "Concretization");
@@ -154,7 +154,7 @@ namespace triton {
       /* Same as concretizeMemory but with all address memory */
       void SymbolicEngine::concretizeAllMemory(void) {
         /* Symbolic array */
-        if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+        if (this->isArrayMode()) {
           this->memoryArray = nullptr;
         }
         /* Symbolic bitvector */
@@ -385,7 +385,7 @@ namespace triton {
 
       /* Returns or init the symbolic memory array */
       SharedSymbolicExpression SymbolicEngine::getMemoryArray(void) {
-        if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY) && this->memoryArray == nullptr) {
+        if (this->isArrayMode() && this->memoryArray == nullptr) {
           triton::uint32 gpr_size = this->architecture->gprBitSize();
           this->memoryArray = this->newSymbolicExpression(this->astCtxt->array(gpr_size), VOLATILE_EXPRESSION);
         }
@@ -431,12 +431,13 @@ namespace triton {
 
       /* Removes the symbolic expression corresponding to the id */
       void SymbolicEngine::removeSymbolicExpression(const SharedSymbolicExpression& expr) {
-        // TODO: Mode array
         if (this->symbolicExpressions.find(expr->getId()) != this->symbolicExpressions.end()) {
           /* Concretize memory */
           if (expr->getType() == MEMORY_EXPRESSION) {
             const auto& mem = expr->getOriginMemory();
-            this->concretizeMemory(mem);
+            if (this->isArrayMode() == false) {
+              this->concretizeMemory(mem);
+            }
           }
 
           /* Concretize register */
@@ -601,7 +602,7 @@ namespace triton {
         this->setConcreteVariableValue(symVar, cv);
 
         /* Record the aligned symbolic variable for a symbolic optimization */
-        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY) && !this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+        if (this->isAlignedMode() && this->isArrayMode() == false) {
           const SharedSymbolicExpression& aligned = this->newSymbolicExpression(symVarNode, MEMORY_EXPRESSION, "Aligned optimization");
           aligned->setOriginMemory(mem);
           this->addAlignedMemory(memAddr, symVarSize, aligned);
@@ -617,7 +618,7 @@ namespace triton {
 
           /* Create a new symbolic expression containing the symbolic variable */
           /* Symbolic array */
-          if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+          if (this->isArrayMode()) {
             auto cell = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), memAddr + index, tmp);
             this->memoryArray = this->newSymbolicExpression(cell, MEMORY_EXPRESSION, "Byte reference");
             this->memoryArray->setOriginMemory(triton::arch::MemoryAccess(memAddr + index, triton::size::byte));
@@ -868,16 +869,14 @@ namespace triton {
          * Symbolic optimization
          * If the memory access is aligned, don't split the memory.
          */
-        if (!this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY) &&
-             this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY) &&
-             this->isAlignedMemory(address, size)) {
+        if (this->isArrayMode() == false && this->isAlignedMode() && this->isAlignedMemory(address, size)) {
           return this->getAlignedMemory(address, size)->getAst();
         }
 
         cells.reserve(size);
         while (size) {
           /* Symbolic Array */
-          if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+          if (this->isArrayMode()) {
             auto gpr_size = this->architecture->gprBitSize();
             auto memor_ea = mem.getLeaAst() != nullptr ? mem.getLeaAst() : this->astCtxt->bv(address, gpr_size);
             auto final_ea = this->astCtxt->bvadd(memor_ea, this->astCtxt->bv(size - 1, gpr_size));
@@ -977,7 +976,7 @@ namespace triton {
         triton::usize id                    = this->uniqueSymExprId;
 
         /* Record the aligned memory for a symbolic optimization */
-        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY) && !this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+        if (this->isAlignedMode() && this->isArrayMode() == false) {
           const SharedSymbolicExpression& aligned = this->newSymbolicExpression(node, MEMORY_EXPRESSION, "Aligned optimization - " + comment);
           aligned->setOriginMemory(mem);
           this->addAlignedMemory(address, writeSize, aligned);
@@ -997,7 +996,7 @@ namespace triton {
           tmp = this->astCtxt->extract(high, low, node);
 
           /* Symbolic array */
-          if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+          if (this->isArrayMode()) {
             auto gpr_size = this->architecture->gprBitSize();
             auto memor_ea = mem.getLeaAst() != nullptr ? mem.getLeaAst() : this->astCtxt->bv(address, gpr_size);
             auto final_ea = this->astCtxt->bvadd(memor_ea, this->astCtxt->bv(writeSize - 1, gpr_size));
@@ -1170,7 +1169,7 @@ namespace triton {
         }
 
         /* Record the aligned memory for a symbolic optimization */
-        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY) && !this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+        if (this->isAlignedMode() && this->isArrayMode() == false) {
           this->addAlignedMemory(address, writeSize, se);
         }
 
@@ -1186,7 +1185,7 @@ namespace triton {
           const triton::ast::SharedAbstractNode& tmp = this->astCtxt->extract(high, low, node);
 
           /* Symbolic array */
-          if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+          if (this->isArrayMode()) {
             auto cell = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), ((address + writeSize) - 1), tmp);
             this->memoryArray = this->newSymbolicExpression(cell, MEMORY_EXPRESSION, "Byte reference");
             this->memoryArray->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
@@ -1329,6 +1328,16 @@ namespace triton {
 
           this->architecture->setConcreteMemoryValue(mem, value);
         }
+      }
+
+
+      inline bool SymbolicEngine::isAlignedMode(void) const {
+        return this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY);
+      }
+
+
+      inline bool SymbolicEngine::isArrayMode(void) const {
+        return this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY);
       }
 
     }; /* symbolic namespace */

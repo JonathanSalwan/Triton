@@ -553,3 +553,36 @@ class TestIssue872(unittest.TestCase):
     def test_2(self):
         ret = self.ctx.processing(Instruction(b"\xCC")) # int3
         self.assertEqual(ret, EXCEPTION.FAULT_BP)
+
+
+class TestIssue1187(unittest.TestCase):
+    """Testing #1187."""
+
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.X86)
+        self.ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.esp, 0x1000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.ebp, 0xabcd)
+        self.ctx.addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, self.mem_read_cb)
+        self.count = 0
+
+    def mem_read_cb(self, ctx, mem):
+        self.count += 1
+
+    def test_1(self):
+        self.ctx.setMode(MODE.MEMORY_ARRAY, True)
+
+        inst = Instruction(0, b'\x55') # push ebp
+        self.ctx.processing(inst)
+
+        # Processing must not call callback
+        self.assertEqual(self.count, 0)
+
+    def test_2(self):
+        self.ctx.setMode(MODE.MEMORY_ARRAY, False)
+
+        inst = Instruction(0, b'\x55') # push ebp
+        self.ctx.processing(inst)
+
+        # Processing must not call callback
+        self.assertEqual(self.count, 0)
