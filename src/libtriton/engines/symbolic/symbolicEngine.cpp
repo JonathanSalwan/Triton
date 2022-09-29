@@ -227,7 +227,7 @@ namespace triton {
 
       /* Returns the reference memory if it's referenced otherwise returns nullptr */
       SharedSymbolicExpression SymbolicEngine::getSymbolicMemory(triton::uint64 addr) const {
-        // TODO: Mode array (should we really want to return a sharedexpr?)
+        // TODO: Mode array (should we really want to return a sharedexpr? if no, what to do for isMemorySymbolized?)
         auto it = this->memoryBitvector.find(addr);
         if (it != this->memoryBitvector.end()) {
           return it->second;
