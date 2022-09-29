@@ -42,7 +42,8 @@ jobs:
           cd bitwuzla
           ./contrib/setup-cadical.sh
           ./contrib/setup-btor2tools.sh
-          ./configure.sh production --only-cadical --no-symfpu --no-testing --shared
+          ./contrib/setup-symfpu.sh
+          ./configure.sh --shared
           sudo make -C build install
           cd ..
 
