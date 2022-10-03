@@ -278,10 +278,10 @@ namespace triton {
           TRITON_EXPORT void concretizeAllRegister(void);
 
           //! Concretizes specific symbolic memory cells.
-          TRITON_EXPORT void concretizeMemory(const triton::arch::MemoryAccess& mem);
+          TRITON_EXPORT void concretizeMemory(const triton::arch::MemoryAccess& mem, bool array=true);
 
           //! Concretizes a specific symbolic memory cell.
-          TRITON_EXPORT void concretizeMemory(triton::uint64 addr);
+          TRITON_EXPORT void concretizeMemory(triton::uint64 addr, bool array=true);
 
           //! Concretizes a specific symbolic register.
           TRITON_EXPORT void concretizeRegister(const triton::arch::Register& reg);

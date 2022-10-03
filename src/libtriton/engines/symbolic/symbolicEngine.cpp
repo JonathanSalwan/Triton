@@ -120,12 +120,12 @@ namespace triton {
        * assignment will be over the concretization. This method must be called
        * before symbolic processing.
        */
-      void SymbolicEngine::concretizeMemory(const triton::arch::MemoryAccess& mem) {
+      void SymbolicEngine::concretizeMemory(const triton::arch::MemoryAccess& mem, bool array) {
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
         for (triton::uint32 index = 0; index < size; index++) {
-          this->concretizeMemory(addr+index);
+          this->concretizeMemory(addr+index, array);
         }
       }
 
@@ -135,33 +135,26 @@ namespace triton {
        * assignment will be over the concretization. This method must be called
        * before symbolic processing.
        */
-      void SymbolicEngine::concretizeMemory(triton::uint64 addr) {
+      void SymbolicEngine::concretizeMemory(triton::uint64 addr, bool array) {
         /* Symbolic array */
-        if (this->isArrayMode()) {
+        if (this->isArrayMode() && array) {
           auto cv = this->architecture->getConcreteMemoryValue(addr);
           auto cell = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), addr, this->astCtxt->bv(cv, triton::bitsize::byte));
           this->memoryArray = this->newSymbolicExpression(cell, MEMORY_EXPRESSION, "Concretization");
           this->memoryArray->setOriginMemory(triton::arch::MemoryAccess(addr, triton::size::byte));
         }
+
         /* Symbolic bitvector */
-        else {
-          this->memoryBitvector.erase(addr);
-          this->removeAlignedMemory(addr, triton::size::byte);
-        }
+        this->memoryBitvector.erase(addr);
+        this->removeAlignedMemory(addr, triton::size::byte);
       }
 
 
       /* Same as concretizeMemory but with all address memory */
       void SymbolicEngine::concretizeAllMemory(void) {
-        /* Symbolic array */
-        if (this->isArrayMode()) {
-          this->memoryArray = nullptr;
-        }
-        /* Symbolic bitvector */
-        else {
-          this->memoryBitvector.clear();
-          this->alignedBitvectorMemory.clear();
-        }
+        this->memoryArray = nullptr;          /* abv logic */
+        this->memoryBitvector.clear();        /* bv logic  */
+        this->alignedBitvectorMemory.clear(); /* bv optim  */
       }
 
 
@@ -200,6 +193,10 @@ namespace triton {
         if (this->alignedBitvectorMemory.empty())
           return;
 
+        /* Do nothing if we are in array mode */
+        if (this->isArrayMode())
+          return;
+
         /* Remove overloaded positive ranges */
         for (triton::uint32 index = 0; index < size; index++) {
           this->alignedBitvectorMemory.erase(std::make_pair(address+index, triton::size::byte));
@@ -227,7 +224,6 @@ namespace triton {
 
       /* Returns the reference memory if it's referenced otherwise returns nullptr */
       SharedSymbolicExpression SymbolicEngine::getSymbolicMemory(triton::uint64 addr) const {
-        // TODO: Mode array (should we really want to return a sharedexpr? if no, what to do for isMemorySymbolized?)
         auto it = this->memoryBitvector.find(addr);
         if (it != this->memoryBitvector.end()) {
           return it->second;
@@ -435,9 +431,7 @@ namespace triton {
           /* Concretize memory */
           if (expr->getType() == MEMORY_EXPRESSION) {
             const auto& mem = expr->getOriginMemory();
-            if (this->isArrayMode() == false) {
-              this->concretizeMemory(mem);
-            }
+            this->concretizeMemory(mem, false);
           }
 
           /* Concretize register */
@@ -551,7 +545,6 @@ namespace triton {
 
       /* Returns the map of symbolic memory defined */
       const std::unordered_map<triton::uint64, SharedSymbolicExpression>& SymbolicEngine::getSymbolicMemory(void) const {
-        // TODO: Mode array
         return this->memoryBitvector;
       }
 
@@ -619,9 +612,10 @@ namespace triton {
           /* Create a new symbolic expression containing the symbolic variable */
           /* Symbolic array */
           if (this->isArrayMode()) {
-            auto cell = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), memAddr + index, tmp);
+            const auto& cell = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), memAddr + index, tmp);
             this->memoryArray = this->newSymbolicExpression(cell, MEMORY_EXPRESSION, "Byte reference");
             this->memoryArray->setOriginMemory(triton::arch::MemoryAccess(memAddr + index, triton::size::byte));
+            this->addBitvectorMemory(memAddr + index, this->memoryArray);
           }
           /* Symbolic bitvector */
           else {
@@ -1009,6 +1003,7 @@ namespace triton {
             auto cell = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), final_ea, tmp);
             this->memoryArray = this->newSymbolicExpression(cell, MEMORY_EXPRESSION, "Byte reference - " + comment);
             this->memoryArray->setOriginMemory(triton::arch::MemoryAccess((address + writeSize) - 1, triton::size::byte));
+            this->addBitvectorMemory((address + writeSize) - 1, this->memoryArray);
           }
           /* Symbolic bitvector */
           else {
@@ -1186,15 +1181,16 @@ namespace triton {
 
           /* Symbolic array */
           if (this->isArrayMode()) {
-            auto cell = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), ((address + writeSize) - 1), tmp);
+            const auto& cell = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), ((address + writeSize) - 1), tmp);
             this->memoryArray = this->newSymbolicExpression(cell, MEMORY_EXPRESSION, "Byte reference");
             this->memoryArray->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
+            this->addBitvectorMemory((address + writeSize) - 1, this->memoryArray);
           }
           /* Symbolic bitvector */
           else {
-            const SharedSymbolicExpression& cell = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference");
-            cell->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
-            this->addBitvectorMemory((address + writeSize) - 1, cell);
+            const SharedSymbolicExpression& se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference");
+            se->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
+            this->addBitvectorMemory((address + writeSize) - 1, se);
           }
 
           writeSize--;

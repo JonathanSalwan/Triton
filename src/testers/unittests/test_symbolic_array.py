@@ -157,3 +157,26 @@ class TestSymbolicArray(unittest.TestCase):
 
         value = self.ctx.getSymbolicMemoryValue(MemoryAccess(0x1000, 4))
         self.assertEqual(value, 0x66778899)
+
+    def test_9(self):
+        self.ctx.setMode(MODE.CONSTANT_FOLDING, True)
+
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdi, 0x1000)
+        self.ctx.symbolizeRegister(self.ctx.registers.rsi)
+        inst = Instruction(b"\x48\x89\x37") # mov [rdi], rsi
+        self.ctx.processing(inst)
+
+        e = self.ctx.getSymbolicMemory(0x1000)
+        self.assertEqual(str(e), "(define-fun ref!9 () (Array (_ BitVec 64) (_ BitVec 8)) (store ref!8 (_ bv4096 64) ((_ extract 7 0) ref!0))) ; Byte reference - MOV operation")
+
+        e = self.ctx.getMemoryAst(MemoryAccess(0x1000, 1))
+        self.assertEqual(str(e), "(select ref!9 (_ bv4096 64))")
+
+        es = self.ctx.getSymbolicMemory()
+        self.assertEqual(len(es), 8) # 8 bytes
+
+        sym = self.ctx.isMemorySymbolized(0x1000)
+        self.assertTrue(sym)
+
+        sym = self.ctx.isMemorySymbolized(0x1008)
+        self.assertFalse(sym)
