@@ -166,17 +166,36 @@ class TestSymbolicArray(unittest.TestCase):
         inst = Instruction(b"\x48\x89\x37") # mov [rdi], rsi
         self.ctx.processing(inst)
 
-        e = self.ctx.getSymbolicMemory(0x1000)
-        self.assertEqual(str(e), "(define-fun ref!9 () (Array (_ BitVec 64) (_ BitVec 8)) (store ref!8 (_ bv4096 64) ((_ extract 7 0) ref!0))) ; Byte reference - MOV operation")
+        x = self.ctx.getSymbolicMemory(0x1000)
+        self.assertEqual(str(x), "(define-fun ref!9 () (Array (_ BitVec 64) (_ BitVec 8)) (store ref!8 (_ bv4096 64) ((_ extract 7 0) ref!0))) ; Byte reference - MOV operation")
 
-        e = self.ctx.getMemoryAst(MemoryAccess(0x1000, 1))
-        self.assertEqual(str(e), "(select ref!9 (_ bv4096 64))")
+        x = self.ctx.getMemoryAst(MemoryAccess(0x1000, 1))
+        self.assertEqual(str(x), "(select ref!9 (_ bv4096 64))")
 
-        es = self.ctx.getSymbolicMemory()
-        self.assertEqual(len(es), 8) # 8 bytes
+        x = self.ctx.getSymbolicMemory()
+        self.assertEqual(len(x), 8) # 8 bytes
 
         sym = self.ctx.isMemorySymbolized(0x1000)
         self.assertTrue(sym)
 
         sym = self.ctx.isMemorySymbolized(0x1008)
         self.assertFalse(sym)
+
+    def test_10(self):
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdi, 0x1000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsi, 0xdeadbeef)
+        self.ctx.symbolizeRegister(self.ctx.registers.rsi)
+        inst = Instruction(b"\x48\x89\x37") # mov [rdi], rsi
+        self.ctx.processing(inst)
+
+        x = self.ctx.getSymbolicMemory(0x1000)
+        self.assertEqual(x.getAst().evaluate(), 0xef)
+
+        x = self.ctx.getMemoryAst(MemoryAccess(0x1000, 1))
+        self.assertEqual(x.evaluate(), 0xef)
+
+        x = self.ctx.getMemoryAst(MemoryAccess(0x1000, 2))
+        self.assertEqual(x.evaluate(), 0xbeef)
+
+        x = self.ctx.getMemoryAst(MemoryAccess(0x1000, 4))
+        self.assertEqual(x.evaluate(), 0xdeadbeef)
