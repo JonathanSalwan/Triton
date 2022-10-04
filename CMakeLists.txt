@@ -60,9 +60,6 @@ if(PYTHON_BINDINGS)
         COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${TRITON_ROOT}/src/testers/unittests
         DEPENDS python-triton
     )
-    if(NOT GCOV)
-        add_dependencies(check test-python)
-    endif()
 
     add_test(NAME test-python
         COMMAND ${PYTHON_EXECUTABLE} -m unittest discover ${triton_SOURCE_DIR}/src/testers/unittests

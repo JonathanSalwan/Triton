@@ -15,10 +15,14 @@ RUN cd /tmp && \
 
 # libbitwuzla
 RUN cd /tmp && \ 
-    git clone https://github.com/bitwuzla/bitwuzla && cd bitwuzla && \
-    ./contrib/setup-cadical.sh && ./contrib/setup-btor2tools.sh && ./contrib/setup-symfpu.sh && \
-    ./configure.sh production --only-cadical --no-symfpu --no-testing --shared && \
-    make -C build install && rm -rf /tmp/bitwuzla
+    git clone https://github.com/bitwuzla/bitwuzla && \
+    cd bitwuzla && \
+    ./contrib/setup-cadical.sh && \
+    ./contrib/setup-btor2tools.sh && \
+    ./contrib/setup-symfpu.sh && \
+    ./configure.sh --shared && \
+    make -C build install && \
+    rm -rf /tmp/bitwuzla
 
 # libz3 >= 4.6.0
 RUN cd /tmp && \

@@ -13,14 +13,14 @@ class TestInstruction(unittest.TestCase):
 
     def setUp(self):
         """Define and process the instruction to test."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
         self.inst = Instruction()
         self.inst.setOpcode(b"\x48\x01\xd8")  # add rax, rbx
         self.inst.setAddress(0x400000)
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rax, 0x1122334455667788)
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rbx, 0x8877665544332211)
-        self.Triton.processing(self.inst)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rax, 0x1122334455667788)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbx, 0x8877665544332211)
+        self.ctx.processing(self.inst)
 
     def test_address(self):
         """Check instruction current and next address."""
@@ -115,16 +115,16 @@ class TestLoadAccess(unittest.TestCase):
 
     def test_load_immediate_fs(self):
         """Check load from fs segment with immediate."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
 
         inst = Instruction()
         # mov eax, DWORD PTR fs:0xffffffffffffdf98
         inst.setOpcode(b"\x64\x8B\x04\x25\x98\xDF\xFF\xFF")
         inst.setAddress(0x400000)
 
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.fs, 0x7fffda8ab700)
-        self.Triton.processing(inst)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.fs, 0x7fffda8ab700)
+        self.ctx.processing(inst)
 
         self.assertTrue(inst.getLoadAccess())
 
@@ -134,17 +134,17 @@ class TestLoadAccess(unittest.TestCase):
 
     def test_load_indirect_fs(self):
         """Check load from fs with indirect address."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
 
         inst = Instruction()
         # mov rax, QWORD PTR fs:[rax]
         inst.setOpcode(b"\x64\x48\x8B\x00")
         inst.setAddress(0x400000)
 
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.fs, 0x7fffda8ab700)
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rax, 0xffffffffffffdf90)
-        self.Triton.processing(inst)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.fs, 0x7fffda8ab700)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rax, 0xffffffffffffdf90)
+        self.ctx.processing(inst)
 
         self.assertTrue(inst.getLoadAccess())
 
@@ -154,13 +154,13 @@ class TestLoadAccess(unittest.TestCase):
 
     def test_load_ds(self):
         """Check load from ds segment."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86)
 
         inst = Instruction()
         # mov ax, ds:word_40213C
         inst.setOpcode(b"\x66\xA1\x3C\x21\x40\x00")
-        self.Triton.processing(inst)
+        self.ctx.processing(inst)
 
         self.assertEqual(inst.getOperands()[1].getAddress(), 0x40213C)
         self.assertEqual(inst.getOperands()[1].getBitSize(), 16)
@@ -172,8 +172,8 @@ class TestProcessing(unittest.TestCase):
 
     def test_pop_esp(self):
         """Check pop on esp processing."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86)
 
         # mov esp, 0x19fe00
         inst1 = Instruction(b'\xBC\x00\xFE\x19\x00')
@@ -181,9 +181,9 @@ class TestProcessing(unittest.TestCase):
         inst2 = Instruction(b'\xC7\x04\x24\x11\x11\x11\x11')
         # pop dword ptr [esp]
         inst3 = Instruction(b'\x8F\x04\x24')
-        self.Triton.processing(inst1)
-        self.Triton.processing(inst2)
-        self.Triton.processing(inst3)
+        self.ctx.processing(inst1)
+        self.ctx.processing(inst2)
+        self.ctx.processing(inst3)
 
         self.assertEqual(inst3.getOperands()[0].getAddress(), 0x19fe04, "esp has been poped")
         self.assertEqual(inst3.getStoreAccess()[0][0].getAddress(), 0x19fe04, "inst3 set the value in 0x19fe04")
@@ -191,8 +191,8 @@ class TestProcessing(unittest.TestCase):
 
     def test_pop(self):
         """Check the pop instruction processing."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86)
 
         # mov esp, 0x19fe00
         inst1 = Instruction(b'\xBC\x00\xFE\x19\x00')
@@ -202,10 +202,10 @@ class TestProcessing(unittest.TestCase):
         inst3 = Instruction(b'\xC7\x04\x24\x11\x11\x11\x11')
         # pop dword ptr [edi]
         inst4 = Instruction(b'\x8F\x07')
-        self.Triton.processing(inst1)
-        self.Triton.processing(inst2)
-        self.Triton.processing(inst3)
-        self.Triton.processing(inst4)
+        self.ctx.processing(inst1)
+        self.ctx.processing(inst2)
+        self.ctx.processing(inst3)
+        self.ctx.processing(inst4)
 
         self.assertEqual(inst4.getOperands()[0].getAddress(), 0x19fe00, "poping edi doesn't change it")
         self.assertEqual(inst4.getStoreAccess()[0][0].getAddress(), 0x19fe00, "inst4 store the new value in 0x19fe00 (edi value)")
@@ -213,32 +213,32 @@ class TestProcessing(unittest.TestCase):
 
     def test_mov_xmm_to_memory(self):
         """Check move and xmm register to memory do not crash."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
 
         # movhpd QWORD PTR [rax], xmm1
-        self.Triton.processing(Instruction(b"\x66\x0F\x17\x08"))
+        self.ctx.processing(Instruction(b"\x66\x0F\x17\x08"))
         # movhpd xmm1, QWORD PTR [rax]
-        self.Triton.processing(Instruction(b"\x66\x0F\x16\x08"))
+        self.ctx.processing(Instruction(b"\x66\x0F\x16\x08"))
         # movhps QWORD PTR [rax], xmm1
-        self.Triton.processing(Instruction(b"\x0F\x17\x08"))
+        self.ctx.processing(Instruction(b"\x0F\x17\x08"))
         # movhps xmm1, QWORD PTR [rax]
-        self.Triton.processing(Instruction(b"\x0F\x16\x08"))
+        self.ctx.processing(Instruction(b"\x0F\x16\x08"))
         # movlpd QWORD PTR [rax], xmm1
-        self.Triton.processing(Instruction(b"\x66\x0F\x13\x08"))
+        self.ctx.processing(Instruction(b"\x66\x0F\x13\x08"))
         # movlpd xmm1, QWORD PTR [rax]
-        self.Triton.processing(Instruction(b"\x66\x0F\x12\x08"))
+        self.ctx.processing(Instruction(b"\x66\x0F\x12\x08"))
         # movlps QWORD PTR [rax], xmm1
-        self.Triton.processing(Instruction(b"\x0F\x13\x08"))
+        self.ctx.processing(Instruction(b"\x0F\x13\x08"))
         # movlps xmm1, QWORD PTR [rax]
-        self.Triton.processing(Instruction(b"\x0F\x12\x08"))
+        self.ctx.processing(Instruction(b"\x0F\x12\x08"))
 
     def test_mix_high_low_register(self):
         """Check operation on lower and higher register."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
         inst = Instruction(b"\x00\xDC")  # add ah,bl
-        self.Triton.processing(inst)
+        self.ctx.processing(inst)
 
 
 class TestMemoryAccess(unittest.TestCase):
@@ -301,3 +301,66 @@ class Test869(unittest.TestCase):
         ctx.processing(Instruction(0x1000, b"\x31\xc9")) # xor rcx, rcx
         ctx.processing(Instruction(0x2000, b"\xe3\x30")) # jecxz 0x32
         self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.eip), 0x2032)
+
+class TestX86ParityFlag(unittest.TestCase):
+
+    """Testing the parity flag of Intel x86."""
+
+    def setUp(self):
+        """Define and process the instruction to test."""
+        self.ctx = TritonContext(ARCH.X86_64)
+        self.inst = Instruction(b"\x48\x01\xd8") # add rax, rbx
+
+    def test_pf1(self):
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rax, 0)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbx, 0b1100)
+        self.ctx.processing(self.inst)
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.pf), 1)
+
+    def test_pf2(self):
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rax, 0)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbx, 0b1101)
+        self.ctx.processing(self.inst)
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.pf), 0)
+
+    def test_pf3(self):
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rax, 0)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbx, 0b1110)
+        self.ctx.processing(self.inst)
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.pf), 0)
+
+    def test_pf4(self):
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rax, 0)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbx, 0b1111)
+        self.ctx.processing(self.inst)
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.pf), 1)
+
+    def test_pf5(self):
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rax, 0)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbx, 0b1000000000000001)
+        self.ctx.processing(self.inst)
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.pf), 0)
+
+    def test_pf6(self):
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rax, 0)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbx, 0b1000000000000011)
+        self.ctx.processing(self.inst)
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.pf), 1)
+
+    def test_pf7(self):
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rax, 0)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbx, 0b1110000000000011)
+        self.ctx.processing(self.inst)
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.pf), 1)
+
+    def test_pf8(self):
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rax, 0)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbx, 0b1110000000000010)
+        self.ctx.processing(self.inst)
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.pf), 0)
+
+    def test_pf9(self):
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rax, 0)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbx, 0b1110000000000000)
+        self.ctx.processing(self.inst)
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.pf), 1)

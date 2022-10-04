@@ -60,7 +60,9 @@ set(LIBTRITON_SOURCE_FILES
     engines/synthesis/synthesizer.cpp
     engines/taint/taintEngine.cpp
     modes/modes.cpp
-    stubs/libc.cpp
+    stubs/i386-systemv-libc.cpp
+    stubs/x8664-ms-libc.cpp
+    stubs/x8664-systemv-libc.cpp
     utils/coreUtils.cpp
 )
 
