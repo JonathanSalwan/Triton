@@ -215,7 +215,7 @@ e.g: `(= node1 epxr2)`.
 Creates an `extract` node. The `high` and `low` fields represent the bits position.<br>
 e.g: `((_ extract high low) node1)`.
 
-- <b>\ref py_AstNode_page forall([\ref py_AstNode_page var, ...], \ref py_AstNode_page body)</b><br>
+- <b>\ref py_AstNode_page forall([\ref py_AstNode_page, ...], \ref py_AstNode_page body)</b><br>
 Creates an `forall` node.<br>
 e.g: `(forall ((x (_ BitVec <size>)), ...) body)`.
 

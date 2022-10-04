@@ -35,7 +35,6 @@ option(BOOST_INTERFACE      "Use Boost as multiprecision library"      ON)
 cmake_dependent_option(BUILD_EXAMPLES       "Build the examples"                            ON  BUILD_SHARED_LIBS OFF)
 cmake_dependent_option(ENABLE_TEST          "Do testing"                                    ON  BUILD_SHARED_LIBS OFF)
 cmake_dependent_option(PYTHON_BINDINGS      "Enable Python bindings"                        ON  BUILD_SHARED_LIBS OFF)
-cmake_dependent_option(PYTHON_AUTOCOMPLETE  "Generate Python triton_autocomplete module"    OFF BUILD_SHARED_LIBS OFF)
 
 #Enable ctest
 include(CTest)
