@@ -32,40 +32,40 @@ The MODE namespace contains all kinds of modes.
 <hr>
 
 - **MODE.ALIGNED_MEMORY**<br>
-Enabled, Triton will keep a map of aligned memory to reduce the symbolic memory explosion of `LOAD` and `STORE` accesses.
+Keeps a map of aligned memory to reduce the symbolic memory explosion of `LOAD` and `STORE` accesses.
 
 - **MODE.AST_OPTIMIZATIONS**<br>
-Enabled, Triton will reduces the depth of the trees using classical arithmetic optimisations.
+Reduces the depth of the trees using classical arithmetic optimisations.
 
 - **MODE.CONCRETIZE_UNDEFINED_REGISTERS**<br>
-Enabled, Triton will concretize every register tagged as undefined (see #750).
+Concretizes every register tagged as undefined (see #750).
 
 - **MODE.CONSTANT_FOLDING**<br>
-Enabled, Triton will perform a constant folding optimization of sub ASTs which do not contain symbolic variables.
+Performs a constant folding optimization of sub ASTs which do not contain symbolic variables.
 
 - **MODE.MEMORY_ARRAY**<br>
-Enabled, Triton will use memory symbolic array.
+Enables symbolic pointers reasoning (QF_ABV logic). When this mode is not enabled, which is the case by default, the QF_BV memory model is applied.
 
 - **MODE.ONLY_ON_SYMBOLIZED**<br>
-Enabled, Triton will perform symbolic execution only on symbolized expressions.
+Removes symbolic expressions that does not contain symbolic variable.
 
 - **MODE.ONLY_ON_TAINTED**<br>
-Enabled, Triton will perform symbolic execution only on tainted instructions.
+Removes symbolic expressions that are not tainted.
 
 - **MODE.PC_TRACKING_SYMBOLIC**<br>
-Enabled, Triton will track path constraints only if they are symbolized. This mode is enabled by default.
+Tracks path constraints only if they are symbolized. This mode is enabled by default.
 
 - **MODE.SYMBOLIZE_INDEX_ROTATION**<br>
-Enabled, Triton will symbolize the index of rotation for `bvror` and `bvrol` nodes. This mode increases the complexity of solving.
+Symbolizes the index of rotation for `bvror` and `bvrol` nodes. This mode increases the complexity of solving.
 
 - **MODE.SYMBOLIZE_LOAD**<br>
-Enabled, Triton will symbolize memory load if memory array is enabled.
+Keeps symbolic expressions on load indexes (concretize them otherwise).
 
 - **MODE.SYMBOLIZE_STORE**<br>
-Enabled, Triton will symbolize memory store if memory array is enabled.
+Keeps symbolic expressions on store indexes (concretize them otherwise).
 
 - **MODE.TAINT_THROUGH_POINTERS**<br>
-Enabled, the taint is spread if an index pointer is already tainted (see #725).
+Spreads taint in non `MEMORY_ARRAY` mode if an index pointer is tainted (see #725).
 
 */
 
