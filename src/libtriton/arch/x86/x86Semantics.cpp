@@ -13112,10 +13112,6 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> packed;
         packed.reserve(4);
 
-        if (dst.getBitSize()) {
-
-        }
-
         switch (dst.getBitSize()) {
           /* XMM */
           case triton::bitsize::dqword:
