@@ -195,6 +195,32 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 
 <ul dir="auto">
 <li>
+<b>Strong Optimistic Solving for Dynamic Symbolic Execution</b><br />
+ <b>Talk at</b>: Ivannikov Memorial Workshop, Kazan, Russia, 2022. [<a href="publications/IVMEM2022-strong-optimistic-parygina.pdf">paper</a>] [<a href="publications/IVMEM2022-slide-strong-optimistic-parygina.pdf">slide</a>]<br />
+ <b>Authors</b>: Parygina D., Vishnyakov A., Fedotov A.<br />
+ <b>Abstract</b>: <em>Dynamic symbolic execution (DSE) is an effective method
+ for automated program testing and bug detection. It is increasing the code
+ coverage by the complex branches exploration during hybrid fuzzing. DSE tools
+ invert the branches along some execution path and help fuzzer examine
+ previously unavailable program parts. DSE often faces over- and underconstraint
+ problems. The first one leads to significant analysis complication while the
+ second one causes inaccurate symbolic execution. <br />
+
+ We propose strong optimistic solving method that eliminates irrelevant path
+ predicate constraints for target branch inversion. We eliminate such symbolic
+ constraints that the target branch is not control dependent on. Moreover, we
+ separately handle symbolic branches that have nested control transfer
+ instructions that pass control beyond the parent branch scope, e.g. return,
+ goto, break, etc. We implement the proposed method in our dynamic symbolic
+ execution tool Sydr. <br />
+
+ We evaluate the strong optimistic strategy, the optimistic strategy that
+ contains only the last constraint negation, and their combination. The results
+ show that the strategies combination helps increase either the code coverage or
+ the average number of correctly inverted branches per one minute. It is optimal
+ to apply both strategies together in contrast with other configurations.</em>
+</li>
+<li>
 <b>Greybox Program Synthesis: A New Approach to Attack Dataflow Obfuscation</b><br />
  <b>Talk at</b>: Blackhat USA, Las Vegas, Nevada, 2021. [<a href="publications/BHUSA2021-David-Greybox-Program-Synthesis.pdf">slide</a>]<br />
  <b>Authors</b>: Robin David<br />
