@@ -531,6 +531,9 @@ namespace triton {
                     reg.setExtendedSize(size * triton::bitsize::byte);
                   }
 
+                  /* Init the instruction's vector arrangement specifier */
+                  reg.setVASType(this->capstoneVASToTritonVAS(op->vas));
+
                   /* Define a base address for next operand */
                   size = this->getMemoryOperandSpecialSize(inst.getType());
                   if (!size) {

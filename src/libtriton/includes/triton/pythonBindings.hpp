@@ -92,6 +92,9 @@ namespace triton {
       //! Initializes the EXTEND python namespace.
       void initExtendNamespace(PyObject* extendDict);
 
+      //! Initializes the VAS python namespace.
+      void initVASNamespace(PyObject* vasDict);
+
       //! Initializes the REG python namespace.
       void initRegNamespace(PyObject* regDict);
 

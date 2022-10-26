@@ -73,6 +73,9 @@ namespace triton {
             //! Converts a capstone's condition id to a triton's condition id.
             TRITON_EXPORT triton::arch::arm::condition_e capstoneConditionToTritonCondition(triton::uint32 id) const;
 
+            //! Converts a capstone's vas id to a triton's vas id.
+            TRITON_EXPORT triton::arch::arm::vas_e capstoneVASToTritonVAS(triton::uint32 id) const;
+
             //! Converts a capstone's instruction id to a triton's instruction id.
             TRITON_EXPORT triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id) const;
 

@@ -352,3 +352,24 @@ class TestX64Disass(unittest.TestCase):
 
         self.ctx.processing(block, 0x112233)
         self.assertEqual(block.getInstructions()[0].getAddress(), 0x112233)
+
+
+class TestAArch64VAS(unittest.TestCase):
+    """Test aarch64 VAS type"""
+
+    def setUp(self):
+        """Define the arch."""
+        self.ctx = TritonContext(ARCH.AARCH64)
+
+    def test_1(self):
+        inst = Instruction(b"\x20\x1c\x22\x2e")  # eor v0.8b, v1.8b, v2.8b
+        self.ctx.disassembly(inst)
+        op0 = inst.getOperands()[0]
+        op1 = inst.getOperands()[1]
+        op2 = inst.getOperands()[2]
+        self.assertEqual(op0.getName(), "v0.8B")
+        self.assertEqual(op1.getName(), "v1.8B")
+        self.assertEqual(op2.getName(), "v2.8B")
+        self.assertEqual(op0.getVASType(), VAS.ARM.v8B)
+        self.assertEqual(op1.getVASType(), VAS.ARM.v8B)
+        self.assertEqual(op2.getVASType(), VAS.ARM.v8B)

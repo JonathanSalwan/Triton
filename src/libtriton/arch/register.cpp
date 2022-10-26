@@ -71,6 +71,9 @@ namespace triton {
 
 
     std::string Register::getName(void) const {
+      if (this->getVASType()) {
+        return this->name + "." + this->getVASName();
+      }
       return this->name;
     }
 

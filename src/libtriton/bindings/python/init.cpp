@@ -104,6 +104,12 @@ namespace triton {
         initExtendNamespace(extendDict);
         PyObject* idExtendClass = xPyClass_New(nullptr, extendDict, xPyString_FromString("EXTEND"));
 
+        /* Create the VAS namespace ================================================================== */
+
+        PyObject* vasDict = xPyDict_New();
+        initVASNamespace(vasDict);
+        PyObject* idVASClass = xPyClass_New(nullptr, vasDict, xPyString_FromString("VAS"));
+
         /* Create the OPCODE namespace =============================================================== */
 
         PyObject* opcodesDict = xPyDict_New();
@@ -192,6 +198,7 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "SOLVER_STATE",        idSolverStateClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "STUBS",               idStubsClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYMBOLIC",            idSymbolicClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "VAS",                 idVASClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "VERSION",             idVersionClass);
 
         return triton::bindings::python::tritonModule;

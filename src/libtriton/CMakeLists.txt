@@ -203,6 +203,7 @@ if(PYTHON_BINDINGS)
         bindings/python/namespaces/initSolverStateNamespace.cpp
         bindings/python/namespaces/initStubsNamespace.cpp
         bindings/python/namespaces/initSymbolicNamespace.cpp
+        bindings/python/namespaces/initVASNamespace.cpp
         bindings/python/namespaces/initVersionNamespace.cpp
         bindings/python/objects/pyAstContext.cpp
         bindings/python/objects/pyAstNode.cpp
