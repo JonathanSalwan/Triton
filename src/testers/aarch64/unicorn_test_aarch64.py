@@ -1875,6 +1875,15 @@ CODE  = [
 
     (b"\x28\x00\x00\x37", "tbnz w8, #0, #4"),
     (b"\x48\x00\x00\x36", "tbz w8, #0, #0"),
+
+    # Armv8-A Neon
+    (b"\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
+    #(b"\x21\x70\x40\x4c", "ld1 {v1.16B}, [x1]"), # TODO
+
+    (b"\x21\x20\x00\x91", "add x1, x1, #8"), # STACK+8
+    #(b"\x22\x70\x40\x4c", "ld1 {v2.16B}, [x1]"), # TODO
+
+    #(b"\x20\x1c\x22\x2e", "eor V0.8B, V1.8B, V2.8B"), # TODO
 ]
 
 def emu_with_unicorn(opcode, istate):
@@ -1923,6 +1932,38 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_ARM64_REG_X28,  istate['x28'])
     mu.reg_write(UC_ARM64_REG_X29,  istate['x29'])
     mu.reg_write(UC_ARM64_REG_X30,  istate['x30'])
+    mu.reg_write(UC_ARM64_REG_V0,   istate['v0'])
+    mu.reg_write(UC_ARM64_REG_V1,   istate['v1'])
+    mu.reg_write(UC_ARM64_REG_V2,   istate['v2'])
+    mu.reg_write(UC_ARM64_REG_V3,   istate['v3'])
+    mu.reg_write(UC_ARM64_REG_V4,   istate['v4'])
+    mu.reg_write(UC_ARM64_REG_V5,   istate['v5'])
+    mu.reg_write(UC_ARM64_REG_V6,   istate['v6'])
+    mu.reg_write(UC_ARM64_REG_V7,   istate['v7'])
+    mu.reg_write(UC_ARM64_REG_V8,   istate['v8'])
+    mu.reg_write(UC_ARM64_REG_V9,   istate['v9'])
+    mu.reg_write(UC_ARM64_REG_V10,  istate['v10'])
+    mu.reg_write(UC_ARM64_REG_V11,  istate['v11'])
+    mu.reg_write(UC_ARM64_REG_V12,  istate['v12'])
+    mu.reg_write(UC_ARM64_REG_V13,  istate['v13'])
+    mu.reg_write(UC_ARM64_REG_V14,  istate['v14'])
+    mu.reg_write(UC_ARM64_REG_V15,  istate['v15'])
+    mu.reg_write(UC_ARM64_REG_V16,  istate['v16'])
+    mu.reg_write(UC_ARM64_REG_V17,  istate['v17'])
+    mu.reg_write(UC_ARM64_REG_V18,  istate['v18'])
+    mu.reg_write(UC_ARM64_REG_V19,  istate['v19'])
+    mu.reg_write(UC_ARM64_REG_V20,  istate['v20'])
+    mu.reg_write(UC_ARM64_REG_V21,  istate['v21'])
+    mu.reg_write(UC_ARM64_REG_V22,  istate['v22'])
+    mu.reg_write(UC_ARM64_REG_V23,  istate['v23'])
+    mu.reg_write(UC_ARM64_REG_V24,  istate['v24'])
+    mu.reg_write(UC_ARM64_REG_V25,  istate['v25'])
+    mu.reg_write(UC_ARM64_REG_V26,  istate['v26'])
+    mu.reg_write(UC_ARM64_REG_V27,  istate['v27'])
+    mu.reg_write(UC_ARM64_REG_V28,  istate['v28'])
+    mu.reg_write(UC_ARM64_REG_V29,  istate['v29'])
+    mu.reg_write(UC_ARM64_REG_V30,  istate['v30'])
+    mu.reg_write(UC_ARM64_REG_V31,  istate['v31'])
     mu.reg_write(UC_ARM64_REG_PC,   istate['pc'])
     mu.reg_write(UC_ARM64_REG_SP,   istate['sp'])
     mu.reg_write(UC_ARM64_REG_NZCV, istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28)
@@ -1964,7 +2005,38 @@ def emu_with_unicorn(opcode, istate):
         "x28":   mu.reg_read(UC_ARM64_REG_X28),
         "x29":   mu.reg_read(UC_ARM64_REG_X29),
         "x30":   mu.reg_read(UC_ARM64_REG_X30),
-        "x30":   mu.reg_read(UC_ARM64_REG_X30),
+        "v0":    mu.reg_read(UC_ARM64_REG_V0),
+        "v1":    mu.reg_read(UC_ARM64_REG_V1),
+        "v2":    mu.reg_read(UC_ARM64_REG_V2),
+        "v3":    mu.reg_read(UC_ARM64_REG_V3),
+        "v4":    mu.reg_read(UC_ARM64_REG_V4),
+        "v5":    mu.reg_read(UC_ARM64_REG_V5),
+        "v6":    mu.reg_read(UC_ARM64_REG_V6),
+        "v7":    mu.reg_read(UC_ARM64_REG_V7),
+        "v8":    mu.reg_read(UC_ARM64_REG_V8),
+        "v9":    mu.reg_read(UC_ARM64_REG_V9),
+        "v10":   mu.reg_read(UC_ARM64_REG_V10),
+        "v11":   mu.reg_read(UC_ARM64_REG_V11),
+        "v12":   mu.reg_read(UC_ARM64_REG_V12),
+        "v13":   mu.reg_read(UC_ARM64_REG_V13),
+        "v14":   mu.reg_read(UC_ARM64_REG_V14),
+        "v15":   mu.reg_read(UC_ARM64_REG_V15),
+        "v16":   mu.reg_read(UC_ARM64_REG_V16),
+        "v17":   mu.reg_read(UC_ARM64_REG_V17),
+        "v18":   mu.reg_read(UC_ARM64_REG_V18),
+        "v19":   mu.reg_read(UC_ARM64_REG_V19),
+        "v20":   mu.reg_read(UC_ARM64_REG_V20),
+        "v21":   mu.reg_read(UC_ARM64_REG_V21),
+        "v22":   mu.reg_read(UC_ARM64_REG_V22),
+        "v23":   mu.reg_read(UC_ARM64_REG_V23),
+        "v24":   mu.reg_read(UC_ARM64_REG_V24),
+        "v25":   mu.reg_read(UC_ARM64_REG_V25),
+        "v26":   mu.reg_read(UC_ARM64_REG_V26),
+        "v27":   mu.reg_read(UC_ARM64_REG_V27),
+        "v28":   mu.reg_read(UC_ARM64_REG_V28),
+        "v29":   mu.reg_read(UC_ARM64_REG_V29),
+        "v30":   mu.reg_read(UC_ARM64_REG_V30),
+        "v31":   mu.reg_read(UC_ARM64_REG_V31),
         "pc":    mu.reg_read(UC_ARM64_REG_PC),
         "sp":    mu.reg_read(UC_ARM64_REG_SP),
         "n":   ((mu.reg_read(UC_ARM64_REG_NZCV) >> 31) & 1),
@@ -2014,6 +2086,38 @@ def emu_with_triton(opcode, istate):
     ctx.setConcreteRegisterValue(ctx.registers.x28, istate['x28'])
     ctx.setConcreteRegisterValue(ctx.registers.x29, istate['x29'])
     ctx.setConcreteRegisterValue(ctx.registers.x30, istate['x30'])
+    ctx.setConcreteRegisterValue(ctx.registers.v0,  istate['v0'])
+    ctx.setConcreteRegisterValue(ctx.registers.v1,  istate['v1'])
+    ctx.setConcreteRegisterValue(ctx.registers.v2,  istate['v2'])
+    ctx.setConcreteRegisterValue(ctx.registers.v3,  istate['v3'])
+    ctx.setConcreteRegisterValue(ctx.registers.v4,  istate['v4'])
+    ctx.setConcreteRegisterValue(ctx.registers.v5,  istate['v5'])
+    ctx.setConcreteRegisterValue(ctx.registers.v6,  istate['v6'])
+    ctx.setConcreteRegisterValue(ctx.registers.v7,  istate['v7'])
+    ctx.setConcreteRegisterValue(ctx.registers.v8,  istate['v8'])
+    ctx.setConcreteRegisterValue(ctx.registers.v9,  istate['v9'])
+    ctx.setConcreteRegisterValue(ctx.registers.v10, istate['v10'])
+    ctx.setConcreteRegisterValue(ctx.registers.v11, istate['v11'])
+    ctx.setConcreteRegisterValue(ctx.registers.v12, istate['v12'])
+    ctx.setConcreteRegisterValue(ctx.registers.v13, istate['v13'])
+    ctx.setConcreteRegisterValue(ctx.registers.v14, istate['v14'])
+    ctx.setConcreteRegisterValue(ctx.registers.v15, istate['v15'])
+    ctx.setConcreteRegisterValue(ctx.registers.v16, istate['v16'])
+    ctx.setConcreteRegisterValue(ctx.registers.v17, istate['v17'])
+    ctx.setConcreteRegisterValue(ctx.registers.v18, istate['v18'])
+    ctx.setConcreteRegisterValue(ctx.registers.v19, istate['v19'])
+    ctx.setConcreteRegisterValue(ctx.registers.v20, istate['v20'])
+    ctx.setConcreteRegisterValue(ctx.registers.v21, istate['v21'])
+    ctx.setConcreteRegisterValue(ctx.registers.v22, istate['v22'])
+    ctx.setConcreteRegisterValue(ctx.registers.v23, istate['v23'])
+    ctx.setConcreteRegisterValue(ctx.registers.v24, istate['v24'])
+    ctx.setConcreteRegisterValue(ctx.registers.v25, istate['v25'])
+    ctx.setConcreteRegisterValue(ctx.registers.v26, istate['v26'])
+    ctx.setConcreteRegisterValue(ctx.registers.v27, istate['v27'])
+    ctx.setConcreteRegisterValue(ctx.registers.v28, istate['v28'])
+    ctx.setConcreteRegisterValue(ctx.registers.v29, istate['v29'])
+    ctx.setConcreteRegisterValue(ctx.registers.v30, istate['v30'])
+    ctx.setConcreteRegisterValue(ctx.registers.v31, istate['v31'])
     ctx.setConcreteRegisterValue(ctx.registers.pc,  istate['pc'])
     ctx.setConcreteRegisterValue(ctx.registers.sp,  istate['sp'])
     ctx.setConcreteRegisterValue(ctx.registers.n,   istate['n'])
@@ -2063,7 +2167,38 @@ def emu_with_triton(opcode, istate):
         "x28":   ctx.getSymbolicRegisterValue(ctx.registers.x28),
         "x29":   ctx.getSymbolicRegisterValue(ctx.registers.x29),
         "x30":   ctx.getSymbolicRegisterValue(ctx.registers.x30),
-        "x30":   ctx.getSymbolicRegisterValue(ctx.registers.x30),
+        "v0":    ctx.getSymbolicRegisterValue(ctx.registers.v0),
+        "v1":    ctx.getSymbolicRegisterValue(ctx.registers.v1),
+        "v2":    ctx.getSymbolicRegisterValue(ctx.registers.v2),
+        "v3":    ctx.getSymbolicRegisterValue(ctx.registers.v3),
+        "v4":    ctx.getSymbolicRegisterValue(ctx.registers.v4),
+        "v5":    ctx.getSymbolicRegisterValue(ctx.registers.v5),
+        "v6":    ctx.getSymbolicRegisterValue(ctx.registers.v6),
+        "v7":    ctx.getSymbolicRegisterValue(ctx.registers.v7),
+        "v8":    ctx.getSymbolicRegisterValue(ctx.registers.v8),
+        "v9":    ctx.getSymbolicRegisterValue(ctx.registers.v9),
+        "v10":   ctx.getSymbolicRegisterValue(ctx.registers.v10),
+        "v11":   ctx.getSymbolicRegisterValue(ctx.registers.v11),
+        "v12":   ctx.getSymbolicRegisterValue(ctx.registers.v12),
+        "v13":   ctx.getSymbolicRegisterValue(ctx.registers.v13),
+        "v14":   ctx.getSymbolicRegisterValue(ctx.registers.v14),
+        "v15":   ctx.getSymbolicRegisterValue(ctx.registers.v15),
+        "v16":   ctx.getSymbolicRegisterValue(ctx.registers.v16),
+        "v17":   ctx.getSymbolicRegisterValue(ctx.registers.v17),
+        "v18":   ctx.getSymbolicRegisterValue(ctx.registers.v18),
+        "v19":   ctx.getSymbolicRegisterValue(ctx.registers.v19),
+        "v20":   ctx.getSymbolicRegisterValue(ctx.registers.v20),
+        "v21":   ctx.getSymbolicRegisterValue(ctx.registers.v21),
+        "v22":   ctx.getSymbolicRegisterValue(ctx.registers.v22),
+        "v23":   ctx.getSymbolicRegisterValue(ctx.registers.v23),
+        "v24":   ctx.getSymbolicRegisterValue(ctx.registers.v24),
+        "v25":   ctx.getSymbolicRegisterValue(ctx.registers.v25),
+        "v26":   ctx.getSymbolicRegisterValue(ctx.registers.v26),
+        "v27":   ctx.getSymbolicRegisterValue(ctx.registers.v27),
+        "v28":   ctx.getSymbolicRegisterValue(ctx.registers.v28),
+        "v29":   ctx.getSymbolicRegisterValue(ctx.registers.v29),
+        "v30":   ctx.getSymbolicRegisterValue(ctx.registers.v30),
+        "v31":   ctx.getSymbolicRegisterValue(ctx.registers.v31),
         "pc":    ctx.getSymbolicRegisterValue(ctx.registers.pc),
         "sp":    ctx.getSymbolicRegisterValue(ctx.registers.sp),
         "n":     ctx.getSymbolicRegisterValue(ctx.registers.n),
@@ -2119,7 +2254,38 @@ if __name__ == '__main__':
         "x28":   0,
         "x29":   0,
         "x30":   0,
-        "x30":   0,
+        "v0":    0x00112233445566778899aabbccddeeff,
+        "v1":    0xffeeddccbbaa99887766554433221100,
+        "v2":    0xfefedcdc5656787889892692dfeccaa0,
+        "v3":    0x1234567890987654321bcdffccddee01,
+        "v4":    0,
+        "v5":    0,
+        "v6":    0,
+        "v7":    0,
+        "v8":    0,
+        "v9":    0,
+        "v10":   0,
+        "v11":   0,
+        "v12":   0,
+        "v13":   0,
+        "v14":   0,
+        "v15":   0,
+        "v16":   0,
+        "v17":   0,
+        "v18":   0,
+        "v19":   0,
+        "v20":   0,
+        "v21":   0,
+        "v22":   0,
+        "v23":   0,
+        "v24":   0,
+        "v25":   0,
+        "v26":   0,
+        "v27":   0,
+        "v28":   0,
+        "v29":   0,
+        "v30":   0,
+        "v31":   0,
         "pc":    ADDR,
         "sp":    STACK,
         "n":     0,
