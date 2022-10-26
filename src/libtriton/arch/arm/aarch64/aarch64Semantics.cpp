@@ -1909,9 +1909,9 @@ namespace triton {
            * Register offset (Rm != 11111)
            * LD3 { <Vt>.<T>, <Vt2>.<T>, <Vt3>.<T> }, [<Xn|SP>], <Xm>
            */
-          if (inst.operands.size() == 5) {
-            triton::arch::Register& base   = mem.getBaseRegister();
-            triton::arch::Register& offset = inst.operands[4].getRegister();
+          if (inst.operands.size() == 5 && inst.operands[4].getType() == triton::arch::OP_REG) {
+            auto base   = mem.getBaseRegister();
+            auto offset = inst.operands[4].getRegister();
 
             /* Create symbolic operands of the post computation */
             auto baseNode   = this->symbolicEngine->getOperandAst(inst, base);
@@ -1921,10 +1921,37 @@ namespace triton {
             auto node3 = this->astCtxt->bvadd(baseNode, offsetNode);
 
             /* Create symbolic expression */
-            auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LD3 operation - Base register computation");
+            auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LD3 operation - Post Index");
 
             /* Spread taint */
             expr3->isTainted = this->taintEngine->isTainted(base) | this->taintEngine->isTainted(offset);
+          }
+
+          /*
+           * Register offset (Rm == 11111)
+           * LD3 { <Vt>.<T>, <Vt2>.<T>, <Vt3>.<T> }, [<Xn|SP>], <imm>
+           */
+          else if (inst.operands.size() == 4 && inst.isWriteBack()) {
+            auto base = mem.getBaseRegister();
+            /*
+             * Is the post-index immediate offset, encoded in Q:
+             * Q <imm>
+             * 0 #24
+             * 1 #48
+             */
+            auto offset = vt0.getRegister().getVASSize() == triton::size::dqword ? 48 : 24;
+
+            /* Create symbolic operands of the post computation */
+            auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+
+            /* Create the semantics of the base register */
+            auto node3 = this->astCtxt->bvadd(baseNode, this->astCtxt->bv(offset, base.getBitSize()));
+
+            /* Create symbolic expression */
+            auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LD3 operation - Post Index");
+
+            /* Spread taint */
+            expr3->isTainted = this->taintEngine->isTainted(base);
           }
 
           /* Update the symbolic control flow */

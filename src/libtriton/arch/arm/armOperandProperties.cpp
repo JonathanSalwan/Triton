@@ -6,6 +6,7 @@
 */
 
 #include <triton/armOperandProperties.hpp>
+#include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
 
 
@@ -84,6 +85,21 @@ namespace triton {
           case ID_VAS_2D:  return "2D";
           case ID_VAS_1D:  return "1D";
           default:         return "invalid";
+        }
+      }
+
+
+      triton::uint32 ArmOperandProperties::getVASSize(void) const {
+        switch (this->vasType) {
+          case ID_VAS_16B: return triton::size::dqword;
+          case ID_VAS_8B:  return triton::size::qword;
+          case ID_VAS_8H:  return triton::size::dqword;
+          case ID_VAS_4H:  return triton::size::qword;
+          case ID_VAS_4S:  return triton::size::dqword;
+          case ID_VAS_2S:  return triton::size::qword;
+          case ID_VAS_2D:  return triton::size::dqword;
+          case ID_VAS_1D:  return triton::size::qword;
+          default:         return 0;
         }
       }
 
