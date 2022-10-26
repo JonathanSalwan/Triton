@@ -93,7 +93,7 @@ environment:
       Z3_PKG_NAME: z3-4.8.9-x64-win
       PYTHON_VERSION: 3.10
       BOOST_INTERFACE: off
-      
+
     # 64-bit, python3.10, boost on
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
@@ -108,7 +108,7 @@ environment:
       BOOST_INTERFACE: on
       BOOST_ROOT: C:\Libraries\boost_1_73_0
       Boost_INCLUDE_DIR: C:\Libraries\boost_1_73_0
-      
+
 install:
   - set PATH=%PYTHON%;%PATH%
   - cmd: cd C:\projects\triton
