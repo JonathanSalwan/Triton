@@ -127,7 +127,7 @@ Returns the type of the register. In this case this function returns `OPERAND.RE
 
 - <b>\ref py_VAS_page getVASType(void)</b><br>
 Returns the vector arrangement specifier. Mainly used for AArch64.<br>
-e.g: `VAS.ARM.8B`
+e.g: `VAS.ARM.v8B`
 
 - <b>bool isMutable(void)</b><br>
 Returns true if this register is mutable. Mainly used in AArch64 to define that some registers like XZR are immutable.
