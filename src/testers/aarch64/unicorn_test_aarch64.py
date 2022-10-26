@@ -1878,12 +1878,19 @@ CODE  = [
 
     # Armv8-A Neon
     (b"\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
-    #(b"\x21\x70\x40\x4c", "ld1 {v1.16B}, [x1]"), # TODO
+    (b"\x02\x01\x80\xd2", "movz x2, #0x8"),
+    # LD3 multiple structure
+    (b"\x20\x40\x40\x4c", "ld3 {v0.16b, v1.16b, v2.16b}, [x1]"),
+    (b"\x20\x44\x40\x4c", "ld3 {v0.8h, v1.8h, v2.8h}, [x1]"),
+    (b"\x20\x48\x40\x4c", "ld3 {v0.4s, v1.4s, v2.4s}, [x1]"),
+    (b"\x20\x4c\x40\x4c", "ld3 {v0.2d, v1.2d, v2.2d}, [x1]"),
+    (b"\x20\x40\x40\x0c", "ld3 {v0.8b, v1.8b, v2.8b}, [x1]"),
+    (b"\x20\x44\x40\x0c", "ld3 {v0.4h, v1.4h, v2.4h}, [x1]"),
+    (b"\x20\x48\x40\x0c", "ld3 {v0.2s, v1.2s, v2.2s}, [x1]"),
+    (b"\x20\x40\xc2\x4c", "ld3 {v0.16b, v1.16b, v2.16b}, [x1], x2"),
 
-    (b"\x21\x20\x00\x91", "add x1, x1, #8"), # STACK+8
-    #(b"\x22\x70\x40\x4c", "ld1 {v2.16B}, [x1]"), # TODO
-
-    #(b"\x20\x1c\x22\x2e", "eor V0.8B, V1.8B, V2.8B"), # TODO
+    #(b"\x20\x30\x40\x0d", "ld3 {v0.b, v1.b, v2.b}[4], [x1]"), # TODO
+    #(b"\x20\x60\x40\x0c", "ld1 {v0.8b, v1.8b, v2.8b}, [x1]"), # TODO
 ]
 
 def emu_with_unicorn(opcode, istate):

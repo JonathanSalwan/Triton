@@ -249,6 +249,9 @@ namespace triton {
             //! The EXTR semantics.
             void extr_s(triton::arch::Instruction& inst);
 
+            //! The LD3 semantics.
+            void ld3_s(triton::arch::Instruction& inst);
+
             //! The LDAR semantics.
             void ldar_s(triton::arch::Instruction& inst);
 
