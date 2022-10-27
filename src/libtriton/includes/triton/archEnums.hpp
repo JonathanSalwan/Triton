@@ -180,9 +180,6 @@ namespace triton {
         ID_VAS_4S,          //!< 4 lanes, each containing a 32-bit element.
         ID_VAS_2S,          //!< 2 lanes, each containing a 32-bit element.
         ID_VAS_2D,          //!< 2 lanes, each containing a 64-bit element.
-        ID_VAS_1B,          //!< 1 lane containing a 8-bit element.
-        ID_VAS_1H,          //!< 1 lane containing a 16-bit element.
-        ID_VAS_1S,          //!< 1 lane containing a 32-bit element.
         ID_VAS_1D,          //!< 1 lane containing a 64-bit element.
         ID_VAS_LAST_ITEM,   //!< must be the last item.
       };

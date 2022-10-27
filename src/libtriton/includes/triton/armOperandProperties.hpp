@@ -96,6 +96,9 @@ namespace triton {
           //! Returns the vector arrangement specifier string name.
           TRITON_EXPORT std::string getVASName(void) const;
 
+          //! Returns the vector arrangement specifier size (64 or 128 bits).
+          TRITON_EXPORT triton::uint32 getVASSize(void) const;
+
           //! Returns the size (in bits) of the extend.
           TRITON_EXPORT triton::uint32 getExtendSize(void) const;
 

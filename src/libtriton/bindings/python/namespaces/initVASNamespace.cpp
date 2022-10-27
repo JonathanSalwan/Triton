@@ -49,15 +49,6 @@ Invalid vector arrangement specifier.
 - **VAS.ARM.v2D**<br>
 2 lanes, each containing a 64-bit element.
 
-- **VAS.ARM.v1B**<br>
-1 lane containing a 8-bit element.
-
-- **VAS.ARM.v1H**<br>
-1 lane containing a 16-bit element.
-
-- **VAS.ARM.v1S**<br>
-1 lane containing a 32-bit element.
-
 - **VAS.ARM.v1D**<br>
 1 lane containing a 64-bit element.
 
@@ -82,9 +73,6 @@ namespace triton {
         xPyDict_SetItemString(armVASDict, "v4S",      PyLong_FromUint32(triton::arch::arm::ID_VAS_4S));
         xPyDict_SetItemString(armVASDict, "v2S",      PyLong_FromUint32(triton::arch::arm::ID_VAS_2S));
         xPyDict_SetItemString(armVASDict, "v2D",      PyLong_FromUint32(triton::arch::arm::ID_VAS_2D));
-        xPyDict_SetItemString(armVASDict, "v1B",      PyLong_FromUint32(triton::arch::arm::ID_VAS_1B));
-        xPyDict_SetItemString(armVASDict, "v1H",      PyLong_FromUint32(triton::arch::arm::ID_VAS_1H));
-        xPyDict_SetItemString(armVASDict, "v1S",      PyLong_FromUint32(triton::arch::arm::ID_VAS_1S));
         xPyDict_SetItemString(armVASDict, "v1D",      PyLong_FromUint32(triton::arch::arm::ID_VAS_1D));
 
         PyObject* armVASDictClass = xPyClass_New(nullptr, armVASDict, xPyString_FromString("ARM"));
