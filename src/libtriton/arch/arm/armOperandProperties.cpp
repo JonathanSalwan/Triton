@@ -23,6 +23,7 @@ namespace triton {
         this->shiftValueRegister  = triton::arch::ID_REG_INVALID;
         this->subtracted          = false;
         this->vasType             = triton::arch::arm::ID_VAS_INVALID;
+        this->vectorIndex         = -1;
       }
 
 
@@ -34,6 +35,7 @@ namespace triton {
         this->shiftValueRegister  = other.shiftValueRegister;
         this->subtracted          = other.subtracted;
         this->vasType             = other.vasType;
+        this->vectorIndex         = other.vectorIndex;
       }
 
 
@@ -45,6 +47,7 @@ namespace triton {
         this->shiftValueRegister  = other.shiftValueRegister;
         this->subtracted          = other.subtracted;
         this->vasType             = other.vasType;
+        this->vectorIndex         = other.vectorIndex;
         return *this;
       }
 
@@ -71,6 +74,11 @@ namespace triton {
 
       triton::arch::arm::vas_e ArmOperandProperties::getVASType(void) const {
         return this->vasType;
+      }
+
+
+      triton::sint32 ArmOperandProperties::getVectorIndex(void) const {
+        return this->vectorIndex;
       }
 
 
@@ -181,6 +189,11 @@ namespace triton {
 
       void ArmOperandProperties::setSubtracted(bool value) {
         this->subtracted = value;
+      }
+
+
+      void ArmOperandProperties::setVectorIndex(triton::sint32 index) {
+        this->vectorIndex = index;
       }
 
     }; /* arm namespace */
