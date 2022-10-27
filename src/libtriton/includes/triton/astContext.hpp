@@ -211,6 +211,12 @@ namespace triton {
 
         //! AST C++ API - concat node builder
         template <typename T> SharedAbstractNode concat(const T& exprs) {
+          /* Do not concat if there is only one element */
+          if (exprs.size() == 1) {
+            return exprs.front();
+          }
+
+          /* Allocate node */
           SharedAbstractNode node = std::make_shared<ConcatNode>(exprs, this->shared_from_this());
           if (node == nullptr)
             throw triton::exceptions::Ast("Node builders - Not enough memory");

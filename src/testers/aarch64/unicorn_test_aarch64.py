@@ -1879,7 +1879,7 @@ CODE  = [
     # Armv8-A Neon
     (b"\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
     (b"\x02\x01\x80\xd2", "movz x2, #0x8"),
-    # LD3 multiple structure
+
     (b"\x20\x40\x40\x4c", "ld3 {v0.16b, v1.16b, v2.16b}, [x1]"),
     (b"\x20\x44\x40\x4c", "ld3 {v0.8h, v1.8h, v2.8h}, [x1]"),
     (b"\x20\x48\x40\x4c", "ld3 {v0.4s, v1.4s, v2.4s}, [x1]"),
@@ -1888,11 +1888,24 @@ CODE  = [
     (b"\x20\x44\x40\x0c", "ld3 {v0.4h, v1.4h, v2.4h}, [x1]"),
     (b"\x20\x48\x40\x0c", "ld3 {v0.2s, v1.2s, v2.2s}, [x1]"),
     (b"\x20\x40\xc2\x4c", "ld3 {v0.16b, v1.16b, v2.16b}, [x1], x2"),
-    #(b"\x20\x40\xdf\x4c", "ld3 {v0.16b, v1.16b, v2.16b}, [x1], #48"), # working on capstone 5.x but not on 4.x
-    #(b"\x20\x44\xdf\x0c", "ld3 {v0.4h, v1.4h, v2.4h}, [x1], #24"), # working on capstone 5.x but not on 4.x
-
-    #(b"\x20\x30\x40\x0d", "ld3 {v0.b, v1.b, v2.b}[4], [x1]"), # TODO
-    #(b"\x20\x60\x40\x0c", "ld1 {v0.8b, v1.8b, v2.8b}, [x1]"), # TODO
+    #(b"\x20\x40\xdf\x4c", "ld3 {v0.16b, v1.16b, v2.16b}, [x1], #48"),   # working on capstone 5.x but not on 4.x
+    #(b"\x20\x44\xdf\x0c", "ld3 {v0.4h, v1.4h, v2.4h}, [x1], #24"),      # working on capstone 5.x but not on 4.x
+    (b"\x20\xe0\x40\x4d", "ld3r {v0.16b, v1.16b, v2.16b}, [x1]"),
+    (b"\x20\xe4\x40\x4d", "ld3r {v0.8h, v1.8h, v2.8h}, [x1]"),
+    (b"\x20\xe8\x40\x4d", "ld3r {v0.4s, v1.4s, v2.4s}, [x1]"),
+    (b"\x20\xec\x40\x4d", "ld3r {v0.2d, v1.2d, v2.2d}, [x1]"),
+    (b"\x20\xe0\x40\x0d", "ld3r {v0.8b, v1.8b, v2.8b}, [x1]"),
+    (b"\x20\xe4\x40\x0d", "ld3r {v0.4h, v1.4h, v2.4h}, [x1]"),
+    (b"\x20\xe8\x40\x0d", "ld3r {v0.2s, v1.2s, v2.2s}, [x1]"),
+    (b"\x20\xec\x40\x0d", "ld3r {v0.1d, v1.1d, v2.1d}, [x1]"),
+    #(b"\x20\xe0\xdf\x4d", "ld3r {v0.16b, v1.16b, v2.16b}, [x1], #3"),   # working on capstone 5.x but not on 4.x
+    #(b"\x20\xe4\xdf\x4d", "ld3r {v0.8h, v1.8h, v2.8h}, [x1], #6"),      # working on capstone 5.x but not on 4.x
+    #(b"\x20\xe8\xdf\x4d", "ld3r {v0.4s, v1.4s, v2.4s}, [x1], #12"),     # working on capstone 5.x but not on 4.x
+    #(b"\x20\xec\xdf\x4d", "ld3r {v0.2d, v1.2d, v2.2d}, [x1], #24"),     # working on capstone 5.x but not on 4.x
+    #(b"\x20\xe0\xdf\x0d", "ld3r {v0.8b, v1.8b, v2.8b}, [x1], #3"),      # working on capstone 5.x but not on 4.x
+    #(b"\x20\xe4\xdf\x0d", "ld3r {v0.4h, v1.4h, v2.4h}, [x1], #6"),      # working on capstone 5.x but not on 4.x
+    #(b"\x20\xe8\xdf\x0d", "ld3r {v0.2s, v1.2s, v2.2s}, [x1], #12"),     # working on capstone 5.x but not on 4.x
+    #(b"\x20\xec\xdf\x0d", "ld3r {v0.1d, v1.1d, v2.1d}, [x1], #24"),     # working on capstone 5.x but not on 4.x
 ]
 
 def emu_with_unicorn(opcode, istate):
