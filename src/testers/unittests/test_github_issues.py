@@ -586,3 +586,45 @@ class TestIssue1187(unittest.TestCase):
 
         # Processing must not call callback
         self.assertEqual(self.count, 0)
+
+
+class TestIssue1193(unittest.TestCase):
+    """Testing #1193."""
+
+    def test_1(self):
+        ctx = TritonContext(ARCH.AARCH64)
+        ctx.setMode(MODE.ALIGNED_MEMORY, True)
+
+        # setup memory
+        ctx.setConcreteMemoryAreaValue(0x129098, 0xF69078DEB08D5F08.to_bytes(length=8, byteorder='little'))
+        ctx.setConcreteMemoryAreaValue(0x1290a0, 0x939027DCB2D0494B.to_bytes(length=8, byteorder='little'))
+        ctx.setConcreteMemoryAreaValue(0x1290a8, b"\x01")
+        ctx.setConcreteMemoryAreaValue(0x0a7090, b"\x27\x2f\xff\xdf\xbd\x57\xe3\x93\x27\x2f\xff\xdf\xbd\x57\xe3\x93")
+
+        setup = [
+            (0x40918, b"\x40\x07\x00\xB0"),   # adrp x0, #0x129000
+            (0x4091C, b"\x00\x60\x02\x91"),   # add  x0, x0, #0x98
+        ]
+        for pc, op in setup:
+            inst = Instruction(pc, op)
+            ctx.processing(inst)
+
+        code = [
+            b"\x08\x40\x40\x39",# LDRB      W8, [X0,#0x10]
+            b"\xe8\x00\x00\x34",# CBZ       W8, locret_4840C
+            b"\xE8\x02\x00\xF0",# ADRP      X8, #xmmword_A7090@PAGE
+            b"\x00\x00\xC0\x3D",# LDR       Q0, [X0]
+            b"\x01\x25\xC0\x3D",# LDR       Q1, [X8,#xmmword_A7090@PAGEOFF]
+            b"\x1F\x40\x00\x39",# STRB      WZR, [X0,#0x10]
+            b"\x00\x1C\x21\x6E",# EOR       V0.16B, V0.16B, V1.16B
+            b"\x00\x00\x80\x3D",# STR       Q0, [X0]
+        ]
+
+        pc = 0x483ec
+        for op in code:
+            inst = Instruction(pc, op)
+            ctx.processing(inst)
+            pc = ctx.getConcreteRegisterValue(ctx.registers.pc)
+
+        self.assertEqual(ctx.getConcreteMemoryAreaValue(0x1290a8, 1), b'\x00')
+        self.assertEqual(ctx.getConcreteMemoryAreaValue(0x129098, 16), b'/proc/self/maps\x00')
