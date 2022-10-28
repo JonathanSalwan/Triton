@@ -1031,6 +1031,11 @@ namespace triton {
           /* Create the semantics */
           auto node = this->astCtxt->bvand(op1, op2);
 
+          /* Special case for vector registers */
+          if (dst.getConstRegister().getVASSize() == triton::size::qword) {
+            node = this->astCtxt->extract(63, 0, node);
+          }
+
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "AND(S) operation");
 

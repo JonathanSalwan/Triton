@@ -1892,6 +1892,9 @@ CODE  = [
     (b"\x20\x1c\x22\x6e", "eor v0.16b, v1.16b, v2.16b"),
     (b"\x20\x1c\x22\x2e", "eor v0.8b, v1.8b, v2.8b"),
 
+    (b"\x20\x1c\x22\x4e", "and v0.16b, v1.16b, v2.16b"),
+    (b"\x20\x1c\x22\x0e", "and v0.8b, v1.8b, v2.8b"),
+
     (b"\x20\xe0\x40\x4d", "ld3r {v0.16b, v1.16b, v2.16b}, [x1]"),
     (b"\x20\xe4\x40\x4d", "ld3r {v0.8h, v1.8h, v2.8h}, [x1]"),
     (b"\x20\xe8\x40\x4d", "ld3r {v0.4s, v1.4s, v2.4s}, [x1]"),
