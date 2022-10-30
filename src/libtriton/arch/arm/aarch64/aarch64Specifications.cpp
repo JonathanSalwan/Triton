@@ -54,6 +54,8 @@ namespace triton {
             case triton::extlibs::capstone::ARM64_SYSREG_##UPPER_NAME: \
               tritonId = triton::arch::ID_REG_AARCH64_##UPPER_NAME;    \
               break;
+            #else
+            #define SYS_REG_SPEC(_1, _2, _3, _4, _5, _6)
             #endif
             // Ignore registers not available in capstone
             #define REG_SPEC_NO_CAPSTONE(_1, _2, _3, _4, _5, _6)
