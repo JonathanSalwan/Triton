@@ -628,3 +628,35 @@ class TestIssue1193(unittest.TestCase):
 
         self.assertEqual(ctx.getConcreteMemoryAreaValue(0x1290a8, 1), b'\x00')
         self.assertEqual(ctx.getConcreteMemoryAreaValue(0x129098, 16), b'/proc/self/maps\x00')
+
+
+class TestIssue1195(unittest.TestCase):
+    """Testing #1195."""
+
+    def test_1(self):
+        ctx = TritonContext(ARCH.AARCH64)
+
+        ctx.setConcreteRegisterValue(ctx.registers.x20, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.tpidr_el0, 0x1122334455667788)
+
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.tpidr_el0), 0x1122334455667788)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x20), 0)
+
+        ctx.processing(Instruction(b"\x54\xD0\x3B\xD5")) # mrs x20, tpidr_el0
+
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.tpidr_el0), 0x1122334455667788)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x20), 0x1122334455667788)
+
+    def test_2(self):
+        ctx = TritonContext(ARCH.AARCH64)
+
+        ctx.setConcreteRegisterValue(ctx.registers.x20, 0x1122334455667788)
+        ctx.setConcreteRegisterValue(ctx.registers.tpidr_el0, 0)
+
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.tpidr_el0), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x20), 0x1122334455667788)
+
+        ctx.processing(Instruction(b"\x54\xd0\x1b\xd5")) #  msr tpidr_el0, x20
+
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.tpidr_el0), 0x1122334455667788)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x20), 0x1122334455667788)

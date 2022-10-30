@@ -345,6 +345,12 @@ namespace triton {
             //! The MOVZ semantics.
             void movz_s(triton::arch::Instruction& inst);
 
+            //! The MRS semantics.
+            void mrs_s(triton::arch::Instruction& inst);
+
+            //! The MSR semantics.
+            void msr_s(triton::arch::Instruction& inst);
+
             //! The MSUB semantics.
             void msub_s(triton::arch::Instruction& inst);
 

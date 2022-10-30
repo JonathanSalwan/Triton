@@ -106,6 +106,8 @@ MOV (to/from SP)              | Move between register and stack pointer: an alia
 MOVK                          | Move wide with keep
 MOVN                          | Move wide with NOT
 MOVZ                          | Move shifted 16-bit immediate to register
+MRS                           | Move System Register to general-purpose register
+MSR                           | Move general-purpose register to System Register
 MSUB                          | Multiply-Subtract
 MUL                           | Multiply: an alias of MADD
 MVN                           | Bitwise NOT: an alias of ORN (shifted register)
@@ -256,6 +258,8 @@ namespace triton {
             case ID_INS_MOVK:      this->movk_s(inst);          break;
             case ID_INS_MOVN:      this->movn_s(inst);          break;
             case ID_INS_MOVZ:      this->movz_s(inst);          break;
+            case ID_INS_MRS:       this->mrs_s(inst);           break;
+            case ID_INS_MSR:       this->msr_s(inst);           break;
             case ID_INS_MSUB:      this->msub_s(inst);          break;
             case ID_INS_MUL:       this->mul_s(inst);           break;
             case ID_INS_MVN:       this->mvn_s(inst);           break;
@@ -3096,6 +3100,42 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVZ operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::mrs_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create the semantics */
+          auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MRS operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::msr_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create the semantics */
+          auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MSR operation");
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
