@@ -181,7 +181,7 @@ def gen_reg_module_str(src_dir):
         x86_regs.append((match.group('name'), match.group('x86') == 'true'))
 
     aarch64_regs = []
-    reg_spec_pattern = r'REG_SPEC(_NO_CAPSTONE)?\((?P<name>.*?),.*?\)'
+    reg_spec_pattern = r'(SYS_)?REG_SPEC(_NO_CAPSTONE)?\((?P<name>.*?),.*?\)'
     for match in re.finditer(reg_spec_pattern, aarch64_reg_data):
         aarch64_regs.append(match.group('name'))
 

@@ -861,12 +861,14 @@ namespace triton {
             case triton::arch::ID_REG_AARCH64_V29:  return triton::utils::cast<triton::uint128>(this->q29);
             case triton::arch::ID_REG_AARCH64_V30:  return triton::utils::cast<triton::uint128>(this->q30);
             case triton::arch::ID_REG_AARCH64_V31:  return triton::utils::cast<triton::uint128>(this->q31);
+
             //! System registers
             #define SYS_REG_SPEC(UPPER_NAME, LOWER_NAME, _2, _3, _4, _5) \
             case triton::arch::ID_REG_AARCH64_##UPPER_NAME: return (*((triton::uint64*)(this->LOWER_NAME)));
             #define REG_SPEC(_1, _2, _3, _4, _5, _6)
             #define REG_SPEC_NO_CAPSTONE(_1, _2, _3, _4, _5, _6)
             #include "triton/aarch64.spec"
+
             default:
               throw triton::exceptions::Cpu("AArch64Cpu::getConcreteRegisterValue(): Invalid register.");
           }

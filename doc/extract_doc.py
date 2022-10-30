@@ -34,7 +34,7 @@ if SPEC.find('x86') >= 0:
 elif SPEC.find('aarch64') >= 0:
     with open(SPEC, "r") as f:
         for line in f.readlines():
-            if line.startswith("REG_SPEC"):
+            if line.startswith("REG_SPEC") or line.startswith("SYS_REG_SPEC"):
                 args = line[line.find("(") + 1: line.find(")")].split(", ")
                 aarch64_regs.append(args[0])
 
