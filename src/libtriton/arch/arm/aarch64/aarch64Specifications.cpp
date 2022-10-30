@@ -35,6 +35,7 @@ namespace triton {
               name2id.emplace(#LOWER_NAME, ID_REG_AARCH64_##UPPER_NAME);
             // Handle register not available in capstone as normal registers
             #define REG_SPEC_NO_CAPSTONE REG_SPEC
+            #define SYS_REG_SPEC REG_SPEC
             #include "triton/aarch64.spec"
         }
 
@@ -44,9 +45,13 @@ namespace triton {
 
           switch (id) {
             // Convert registers from capstone value to triton value
-            #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5)        \
-            case triton::extlibs::capstone::ARM64_REG_##UPPER_NAME: \
-              tritonId = triton::arch::ID_REG_AARCH64_##UPPER_NAME; \
+            #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5)           \
+            case triton::extlibs::capstone::ARM64_REG_##UPPER_NAME:    \
+              tritonId = triton::arch::ID_REG_AARCH64_##UPPER_NAME;    \
+              break;
+            #define SYS_REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5)       \
+            case triton::extlibs::capstone::ARM64_SYSREG_##UPPER_NAME: \
+              tritonId = triton::arch::ID_REG_AARCH64_##UPPER_NAME;    \
               break;
             // Ignore registers not available in capstone
             #define REG_SPEC_NO_CAPSTONE(_1, _2, _3, _4, _5, _6)

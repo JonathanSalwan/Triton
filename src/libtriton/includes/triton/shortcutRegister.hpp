@@ -41,6 +41,7 @@ namespace triton {
         #define REG_SPEC(_0, LOWER_NAME, _2, _3, _4, _5) \
         triton::arch::Register aarch64_##LOWER_NAME;
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
+        #define SYS_REG_SPEC REG_SPEC
         #include "triton/aarch64.spec"
 
         #define REG_SPEC(_0, LOWER_NAME, _2, _3, _4, _5) \
@@ -61,6 +62,7 @@ namespace triton {
           #define REG_SPEC(_0, LOWER_NAME, _2, _3, _4, _5) \
           this->aarch64_##LOWER_NAME = triton::arch::Register();
           #define REG_SPEC_NO_CAPSTONE REG_SPEC
+          #define SYS_REG_SPEC REG_SPEC
           #include "triton/aarch64.spec"
 
           #define REG_SPEC(_0, LOWER_NAME, _2, _3, _4, _5) \
@@ -83,6 +85,7 @@ namespace triton {
                                                                   AARCH64_LOWER,                                 \
                                                                   MUTABLE);
               #define REG_SPEC_NO_CAPSTONE REG_SPEC
+              #define SYS_REG_SPEC REG_SPEC
               #include "triton/aarch64.spec"
               }
               break;

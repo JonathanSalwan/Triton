@@ -72,6 +72,7 @@ namespace triton {
       #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5) \
       ID_REG_AARCH64_##UPPER_NAME,
       #define REG_SPEC_NO_CAPSTONE REG_SPEC
+      #define SYS_REG_SPEC REG_SPEC
       #include "triton/aarch64.spec"
 
       #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5) \

@@ -113,6 +113,7 @@ namespace triton {
           xPyDict_SetItemString(aarch64RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_AARCH64_##UPPER_NAME));
         // Use REG not available in capstone as normal register
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
+        #define SYS_REG_SPEC REG_SPEC
         #include "triton/aarch64.spec"
 
         PyObject* aarch64RegistersDictClass = xPyClass_New(nullptr, aarch64RegistersDict, xPyString_FromString("AARCH64"));

@@ -219,6 +219,13 @@ namespace triton {
             //! Concrete value of spsr
             triton::uint8 spsr[triton::size::dword];
 
+            //! System registers
+            #define SYS_REG_SPEC(_, LOWER_NAME, _2, _3, _4, _5) \
+            triton::uint8 LOWER_NAME[triton::size::qword];
+            #define REG_SPEC(_1, _2, _3, _4, _5, _6)
+            #define REG_SPEC_NO_CAPSTONE(_1, _2, _3, _4, _5, _6)
+            #include "triton/aarch64.spec"
+
           public:
             //! Constructor.
             TRITON_EXPORT AArch64Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
@@ -240,6 +247,9 @@ namespace triton {
 
             //! Returns true if regId is a vector register.
             TRITON_EXPORT bool isVectorRegister(triton::arch::register_e regId) const;
+
+            //! Returns true if regId is a system register.
+            TRITON_EXPORT bool isSystemRegister(triton::arch::register_e regId) const;
 
             /* Virtual pure inheritance ================================================= */
             TRITON_EXPORT bool isFlag(triton::arch::register_e regId) const;

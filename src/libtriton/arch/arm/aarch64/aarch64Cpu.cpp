@@ -128,6 +128,13 @@ namespace triton {
           std::memcpy(this->sp,   other.sp,   sizeof(this->sp));
           std::memcpy(this->pc,   other.pc,   sizeof(this->pc));
           std::memcpy(this->spsr, other.spsr, sizeof(this->spsr));
+
+          //! System registers
+          #define SYS_REG_SPEC(_, LOWER_NAME, _2, _3, _4, _5) \
+          std::memcpy(this->LOWER_NAME, other.LOWER_NAME, sizeof(this->LOWER_NAME));
+          #define REG_SPEC(_1, _2, _3, _4, _5, _6)
+          #define REG_SPEC_NO_CAPSTONE(_1, _2, _3, _4, _5, _6)
+          #include "triton/aarch64.spec"
         }
 
 
@@ -202,6 +209,13 @@ namespace triton {
           std::memset(this->sp,   0x00, sizeof(this->sp));
           std::memset(this->pc,   0x00, sizeof(this->pc));
           std::memset(this->spsr, 0x00, sizeof(this->spsr));
+
+          //! System registers
+          #define SYS_REG_SPEC(_, LOWER_NAME, _2, _3, _4, _5) \
+          std::memset(this->LOWER_NAME, 0x00, sizeof(this->LOWER_NAME));
+          #define REG_SPEC(_1, _2, _3, _4, _5, _6)
+          #define REG_SPEC_NO_CAPSTONE(_1, _2, _3, _4, _5, _6)
+          #include "triton/aarch64.spec"
         }
 
 
@@ -222,7 +236,7 @@ namespace triton {
 
 
         bool AArch64Cpu::isRegister(triton::arch::register_e regId) const {
-          return (this->isGPR(regId) || this->isScalarRegister(regId) || this->isVectorRegister(regId));
+          return (this->isGPR(regId) || this->isScalarRegister(regId) || this->isVectorRegister(regId) || this->isSystemRegister(regId));
         }
 
 
@@ -243,6 +257,11 @@ namespace triton {
 
         bool AArch64Cpu::isVectorRegister(triton::arch::register_e regId) const {
           return ((regId >= triton::arch::ID_REG_AARCH64_V0 && regId <= triton::arch::ID_REG_AARCH64_V31) ? true : false);
+        }
+
+
+        bool AArch64Cpu::isSystemRegister(triton::arch::register_e regId) const {
+          return ((regId >= triton::arch::ID_REG_AARCH64_ACTLR_EL1 && regId <= triton::arch::ID_REG_AARCH64_ZCR_EL3) ? true : false);
         }
 
 
@@ -272,6 +291,10 @@ namespace triton {
           for (const auto& kv: this->id2reg) {
             auto regId = kv.first;
             const auto& reg = kv.second;
+
+            /* Skip Vector and System registers */
+            if (this->isVectorRegister(regId) || this->isSystemRegister(regId))
+              continue;
 
             /* Add GPR */
             if (reg.getSize() == this->gprSize())
@@ -472,6 +495,19 @@ namespace triton {
 
                   /* Init the vector index (-1 if irrelevant) */
                   reg.setVectorIndex(op->vector_index);
+
+                  /* Define a base address for next operand */
+                  size = this->getMemoryOperandSpecialSize(inst.getType());
+                  if (!size) {
+                    size = reg.getSize();
+                  }
+
+                  inst.operands.push_back(triton::arch::OperandWrapper(reg));
+                  break;
+                }
+
+                case triton::extlibs::capstone::ARM64_OP_SYS: {
+                  triton::arch::Register reg(*this, this->capstoneRegisterToTritonRegister(op->reg));
 
                   /* Define a base address for next operand */
                   size = this->getMemoryOperandSpecialSize(inst.getType());
@@ -825,6 +861,12 @@ namespace triton {
             case triton::arch::ID_REG_AARCH64_V29:  return triton::utils::cast<triton::uint128>(this->q29);
             case triton::arch::ID_REG_AARCH64_V30:  return triton::utils::cast<triton::uint128>(this->q30);
             case triton::arch::ID_REG_AARCH64_V31:  return triton::utils::cast<triton::uint128>(this->q31);
+            //! System registers
+            #define SYS_REG_SPEC(UPPER_NAME, LOWER_NAME, _2, _3, _4, _5) \
+            case triton::arch::ID_REG_AARCH64_##UPPER_NAME: return (*((triton::uint64*)(this->LOWER_NAME)));
+            #define REG_SPEC(_1, _2, _3, _4, _5, _6)
+            #define REG_SPEC_NO_CAPSTONE(_1, _2, _3, _4, _5, _6)
+            #include "triton/aarch64.spec"
             default:
               throw triton::exceptions::Cpu("AArch64Cpu::getConcreteRegisterValue(): Invalid register.");
           }
@@ -1172,6 +1214,13 @@ namespace triton {
             case triton::arch::ID_REG_AARCH64_B29: (*((triton::uint8*)(this->q29))) = static_cast<triton::uint8>(value); break;
             case triton::arch::ID_REG_AARCH64_B30: (*((triton::uint8*)(this->q30))) = static_cast<triton::uint8>(value); break;
             case triton::arch::ID_REG_AARCH64_B31: (*((triton::uint8*)(this->q31))) = static_cast<triton::uint8>(value); break;
+
+            //! System registers
+            #define SYS_REG_SPEC(UPPER_NAME, LOWER_NAME, _2, _3, _4, _5) \
+            case triton::arch::ID_REG_AARCH64_##UPPER_NAME: (*((triton::uint64*)(this->LOWER_NAME))) = static_cast<triton::uint64>(value); break;
+            #define REG_SPEC(_1, _2, _3, _4, _5, _6)
+            #define REG_SPEC_NO_CAPSTONE(_1, _2, _3, _4, _5, _6)
+            #include "triton/aarch64.spec"
 
             default:
               throw triton::exceptions::Cpu("AArch64Cpu:setConcreteRegisterValue(): Invalid register.");
