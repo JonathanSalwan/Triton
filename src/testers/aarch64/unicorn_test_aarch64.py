@@ -1904,6 +1904,16 @@ CODE  = [
     (b"\x20\xe8\x40\x0d", "ld3r {v0.2s, v1.2s, v2.2s}, [x1]"),
     (b"\x20\xec\x40\x0d", "ld3r {v0.1d, v1.1d, v2.1d}, [x1]"),
 
+    (b"\x00\xe4\x01\x4f", "movi v0.16b, #32"),
+    (b"\xc0\xe6\x00\x0f", "movi v0.8b, #22"),
+    (b"\x80\x85\x00\x4f", "movi v0.8h, #12"),
+    (b"\x40\x85\x01\x0f", "movi v0.4h, #42"),
+    (b"\x80\x06\x01\x4f", "movi v0.4s, #52"),
+    (b"\x80\x06\x00\x0f", "movi v0.2s, #20"),
+    (b"\x00\xe4\x00\x6f", "movi v0.2d, #0"),
+    (b"\x80\xa5\x00\x4f", "movi v0.8h, #12, LSL #8"),
+    (b"\x80\x46\x00\x4f", "movi v0.4s, #20, LSL #16"),
+
     #(b"\x20\x40\xdf\x4c", "ld3 {v0.16b, v1.16b, v2.16b}, [x1], #48"),   # working on capstone 5.x but not on 4.x
     #(b"\x20\x44\xdf\x0c", "ld3 {v0.4h, v1.4h, v2.4h}, [x1], #24"),      # working on capstone 5.x but not on 4.x
     #(b"\x20\xe0\xdf\x4d", "ld3r {v0.16b, v1.16b, v2.16b}, [x1], #3"),   # working on capstone 5.x but not on 4.x

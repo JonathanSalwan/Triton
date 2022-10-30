@@ -103,6 +103,7 @@ MNEG                          | Multiply-Negate: an alias of MSUB
 MOV (bitmask immediate)       | Move (bitmask immediate): an alias of ORR (immediate)
 MOV (register)                | Move (register): an alias of ORR (shifted register)
 MOV (to/from SP)              | Move between register and stack pointer: an alias of ADD (immediate)
+MOVI                          | Move Immediate (vector)
 MOVK                          | Move wide with keep
 MOVN                          | Move wide with NOT
 MOVZ                          | Move shifted 16-bit immediate to register
@@ -255,6 +256,7 @@ namespace triton {
             case ID_INS_MADD:      this->madd_s(inst);          break;
             case ID_INS_MNEG:      this->mneg_s(inst);          break;
             case ID_INS_MOV:       this->mov_s(inst);           break;
+            case ID_INS_MOVI:      this->movi_s(inst);          break;
             case ID_INS_MOVK:      this->movk_s(inst);          break;
             case ID_INS_MOVN:      this->movn_s(inst);          break;
             case ID_INS_MOVZ:      this->movz_s(inst);          break;
@@ -2997,6 +2999,91 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOV operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::movi_s(triton::arch::Instruction& inst) {
+          std::list<triton::ast::SharedAbstractNode> vec;
+
+          triton::arch::OperandWrapper& dst = inst.operands[0]; /* vas register */
+          triton::arch::OperandWrapper& src = inst.operands[1]; /* imm */
+
+          /* Create symbolic operands */
+          auto imm = this->symbolicEngine->getOperandAst(inst, src);
+          auto vas_e = dst.getConstRegister().getVASType();
+
+          switch (vas_e) {
+            case triton::arch::arm::ID_VAS_16B: {
+              for (triton::uint32 i = 0; i != 16; i++) {
+                vec.push_front(this->astCtxt->extract(7, 0, imm));
+              }
+              break;
+            }
+
+            case triton::arch::arm::ID_VAS_8B: {
+              for (triton::uint32 i = 0; i != 8; i++) {
+                vec.push_front(this->astCtxt->extract(7, 0, imm));
+              }
+              break;
+            }
+
+            case triton::arch::arm::ID_VAS_8H: {
+              for (triton::uint32 i = 0; i != 16; i += 2) {
+                vec.push_front(this->astCtxt->extract(15, 0, imm));
+              }
+              break;
+            }
+
+            case triton::arch::arm::ID_VAS_4H: {
+              for (triton::uint32 i = 0; i != 8; i += 2) {
+                vec.push_front(this->astCtxt->extract(15, 0, imm));
+              }
+              break;
+            }
+
+            case triton::arch::arm::ID_VAS_4S: {
+              for (triton::uint32 i = 0; i != 16; i += 4) {
+                vec.push_front(this->astCtxt->extract(31, 0, imm));
+              }
+              break;
+            }
+
+            case triton::arch::arm::ID_VAS_2S: {
+              for (triton::uint32 i = 0; i != 8; i += 4) {
+                vec.push_front(this->astCtxt->extract(31, 0, imm));
+              }
+              break;
+            }
+
+            case triton::arch::arm::ID_VAS_2D: {
+              for (triton::uint32 i = 0; i != 16; i += 8) {
+                vec.push_front(this->astCtxt->extract(63, 0, imm));
+              }
+              break;
+            }
+
+            case triton::arch::arm::ID_VAS_1D: {
+              for (triton::uint32 i = 0; i != 8; i += 8) {
+                vec.push_front(this->astCtxt->extract(63, 0, imm));
+              }
+              break;
+            }
+
+            default:
+              throw triton::exceptions::Semantics("AArch64Semantics::movi_s(): Invalid VAS encoding.");
+          }
+
+          /* Create the semantics */
+          auto node = this->astCtxt->concat(vec);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVI operation");
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
