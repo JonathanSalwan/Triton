@@ -973,7 +973,6 @@ namespace triton {
         if (this->isAlignedMode() && this->isArrayMode() == false) {
           const SharedSymbolicExpression& aligned = this->newSymbolicExpression(node, MEMORY_EXPRESSION, "Aligned optimization - " + comment);
           aligned->setOriginMemory(mem);
-          aligned->setAddress(inst.getAddress());
           this->addAlignedMemory(address, writeSize, aligned);
           /* Refresh the current id to not link the aligned expression to the instruction */
           id = this->uniqueSymExprId;
@@ -1004,14 +1003,12 @@ namespace triton {
             auto cell = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), final_ea, tmp);
             this->memoryArray = this->newSymbolicExpression(cell, MEMORY_EXPRESSION, "Byte reference - " + comment);
             this->memoryArray->setOriginMemory(triton::arch::MemoryAccess((address + writeSize) - 1, triton::size::byte));
-            this->memoryArray->setAddress(inst.getAddress());
             this->addBitvectorMemory((address + writeSize) - 1, this->memoryArray);
           }
           /* Symbolic bitvector */
           else {
             se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference - " + comment);
             se->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
-            se->setAddress(inst.getAddress());
             this->addBitvectorMemory((address + writeSize) - 1, se);
           }
 
@@ -1030,7 +1027,6 @@ namespace triton {
 
         /* Keep a symbolic expression that represents the original store assignment */
         se = this->newSymbolicExpression(node, MEMORY_EXPRESSION, "Original memory access - " + comment);
-        se->setAddress(inst.getAddress());
         se->setOriginMemory(mem);
 
         return this->addSymbolicExpressions(inst, id);
@@ -1119,7 +1115,6 @@ namespace triton {
       const SharedSymbolicExpression& SymbolicEngine::createSymbolicVolatileExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const std::string& comment) {
         triton::usize id = this->uniqueSymExprId;
         const SharedSymbolicExpression& se = this->newSymbolicExpression(node, VOLATILE_EXPRESSION, comment);
-        se->setAddress(inst.getAddress());
         return this->addSymbolicExpressions(inst, id);
       }
 
