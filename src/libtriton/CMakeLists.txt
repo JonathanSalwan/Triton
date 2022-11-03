@@ -264,7 +264,7 @@ set_target_properties(triton PROPERTIES PUBLIC_HEADER
     "${LIBTRITON_HEADER_FILES};${CMAKE_CURRENT_BINARY_DIR}/includes/triton/version.hpp;${CMAKE_CURRENT_BINARY_DIR}/includes/triton/config.hpp"
 )
 
-target_include_directories(triton PUBLIC
+target_include_directories(triton BEFORE PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/includes>"
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/includes>"
 )

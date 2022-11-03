@@ -8,8 +8,8 @@
 #ifndef TRITON_SYMBOLICEXPRESSION_H
 #define TRITON_SYMBOLICEXPRESSION_H
 
-#include <string>
 #include <memory>
+#include <string>
 
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
@@ -55,6 +55,9 @@ namespace triton {
 
           //! The comment of the symbolic expression.
           std::string comment;
+
+          //! The address of the instruction behind the symbolic expression. 0 if empty.
+          uint64_t address;
 
           //! The instruction disassembly where the symbolic expression comes from.
           std::string disassembly;
@@ -138,6 +141,12 @@ namespace triton {
 
           //! Sets the kind of the symbolic expression.
           TRITON_EXPORT void setType(triton::engines::symbolic::expression_e type);
+
+          //! Sets the symbolic expression address.
+          TRITON_EXPORT void setAddress(triton::uint64 address);
+
+          //! Get the address of the symbolic expression, if any.
+          TRITON_EXPORT triton::uint64 getAddress(void) const;
 
           //! Sets the origin memory acccess.
           TRITON_EXPORT void setOriginMemory(const triton::arch::MemoryAccess& mem);
