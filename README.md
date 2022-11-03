@@ -134,7 +134,8 @@ Could NOT find PythonLibs (missing: PYTHON_LIBRARIES PYTHON_INCLUDE_DIRS)
 Try to specify `PYTHON_EXECUTABLE`, `PYTHON_LIBRARIES` and `PYTHON_INCLUDE_DIRS` for your specific Python version:
 
 ```console
-cmake -DPYTHON_EXECUTABLE=/opt/homebrew/bin/python3 \
+cmake -DCMAKE_INSTALL_PREFIX=/opt/homebrew/ \
+      -DPYTHON_EXECUTABLE=/opt/homebrew/bin/python3 \
       -DPYTHON_LIBRARIES=/opt/homebrew/Cellar/python@3.10/3.10.8/Frameworks/Python.framework/Versions/3.10/lib/libpython3.10.dylib \
       -DPYTHON_INCLUDE_DIRS=/opt/homebrew/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/include/python3.10/ \
       ..
