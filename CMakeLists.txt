@@ -49,7 +49,9 @@ if(PYTHON_BINDINGS)
     if(NOT PYTHON_VERSION)
         set(PYTHON_VERSION 3.6)
     endif()
-    find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
+    if(NOT PYTHON_EXECUTABLE)
+        find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
+    endif()
     if(NOT PYTHON_LIBRARIES AND NOT PYTHON_INCLUDE_DIRS)
         find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
     endif()
@@ -93,7 +95,7 @@ endif()
 # Specific OSX POLICY
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     if(POLICY CMP0025)
-        cmake_policy(SET CMP0025 OLD) # report Apple's Clang as just Clang
+        cmake_policy(SET CMP0025 NEW) # report Apple's Clang as just Clang
     endif()
     if(POLICY CMP0042)
         cmake_policy(SET CMP0042 NEW) # MACOSX_RPATH

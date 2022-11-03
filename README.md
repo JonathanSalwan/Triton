@@ -122,28 +122,32 @@ By default, LLVM and Bitwuzla are not compiled. If you want to enjoy the full po
 ```console
 $ cmake -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=$(llvm-config --prefix) -DBITWUZLA_INTERFACE=ON ..
 ```
+
 #### MacOS M1 Note:
 
-In case if you get compilation errors like 
+In case if you get compilation errors like:
+
 ```
-...
 Could NOT find PythonLibs (missing: PYTHON_LIBRARIES PYTHON_INCLUDE_DIRS)
-...
 ```
 
-Try to specify `PYTHON_LIBRARIES` and `PYTHON_INCLUDE_DIRS` for your specific Python version: 
+Try to specify `PYTHON_EXECUTABLE`, `PYTHON_LIBRARIES` and `PYTHON_INCLUDE_DIRS` for your specific Python version:
+
+```console
+cmake -DPYTHON_EXECUTABLE=/opt/homebrew/bin/python3 \
+      -DPYTHON_LIBRARIES=/opt/homebrew/Cellar/python@3.10/3.10.8/Frameworks/Python.framework/Versions/3.10/lib/libpython3.10.dylib \
+      -DPYTHON_INCLUDE_DIRS=/opt/homebrew/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/include/python3.10/ \
+      ..
 ```
-cmake -DPYTHON_LIBRARIES=/opt/homebrew/Cellar/python@3.10/3.10.8/Frameworks/Python.framework/Versions/3.10/lib/libpython3.10.dylib  -DPYTHON_INCLUDE_DIRS=/opt/homebrew/opt/python@3.10/Frameworks/Python.framework/Vers
-ions/3.10/include/python3.10/ ..
-```
-This information you can get out from this snippet
+
+This information you can get out from this snippet:
 
 ```python
 from sysconfig import get_paths
 info = get_paths()
 print(info)
-# This will ouput the /include/
 ```
+
 ### Windows
 
 You can use cmake to generate the .sln file of libTriton.
