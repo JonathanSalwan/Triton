@@ -28,7 +28,6 @@ namespace triton {
           originRegister() {
         this->ast           = node;
         this->comment       = comment;
-        this->address       = 0;
         this->id            = id;
         this->isTainted     = false;
         this->type          = type;
@@ -43,7 +42,6 @@ namespace triton {
         this->originMemory   = other.originMemory;
         this->originRegister = other.originRegister;
         this->type           = other.type;
-        this->address        = other.address;
       }
 
 
@@ -55,7 +53,6 @@ namespace triton {
         this->originMemory   = other.originMemory;
         this->originRegister = other.originRegister;
         this->type           = other.type;
-        this->address        = other.address;
         return *this;
       }
 
@@ -225,16 +222,6 @@ namespace triton {
 
       void SymbolicExpression::setComment(const std::string& comment) {
         this->comment = comment;
-      }
-
-
-      void SymbolicExpression::setAddress(const uint64_t address) {
-        this->address = address;
-      }
-
-
-      uint64_t SymbolicExpression::getAddress() const {
-        return this->address;
       }
 
 
