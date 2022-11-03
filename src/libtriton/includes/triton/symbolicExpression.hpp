@@ -56,8 +56,8 @@ namespace triton {
           //! The comment of the symbolic expression.
           std::string comment;
 
-          //! The address of the instruction behind the symbolic expression. 0 if empty.
-          uint64_t address;
+          //! The address of the instruction behind the symbolic expression. -1 if not defined.
+          triton::uint64 address;
 
           //! The instruction disassembly where the symbolic expression comes from.
           std::string disassembly;
