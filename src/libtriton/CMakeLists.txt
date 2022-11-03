@@ -339,11 +339,6 @@ if(PYTHON_BINDINGS)
         COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE_DIR:triton>/${CMAKE_SHARED_MODULE_PREFIX}triton${CMAKE_SHARED_LIBRARY_SUFFIX}" "$<TARGET_FILE_DIR:triton>/triton${PYTHON_SUFFIX}"
         DEPENDS triton
     )
-    if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-        execute_process (COMMAND ${PYTHON_EXECUTABLE} -c "from sysconfig import get_path; print(get_path('platlib'))" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
-        install (FILES $<TARGET_FILE_DIR:triton>/triton${PYTHON_SUFFIX} DESTINATION ${PYTHON_SITE_PACKAGES})
-    else()
-        execute_process (COMMAND ${PYTHON_EXECUTABLE} -c "from sys import version_info; print(f'lib/python{version_info[0]}.{version_info[1]}/site-packages')" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
-        install (FILES $<TARGET_FILE_DIR:triton>/triton${PYTHON_SUFFIX} DESTINATION ${CMAKE_INSTALL_PREFIX}/${PYTHON_SITE_PACKAGES})
-    endif()
+    execute_process (COMMAND ${PYTHON_EXECUTABLE} -c "from sysconfig import get_path; print(get_path('platlib'))" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
+    install (FILES $<TARGET_FILE_DIR:triton>/triton${PYTHON_SUFFIX} DESTINATION ${PYTHON_SITE_PACKAGES})
 endif()
