@@ -359,6 +359,7 @@ namespace triton {
       if (expr == nullptr)
         throw triton::exceptions::Instruction("Instruction::addSymbolicExpression(): Cannot add a null expression.");
       expr->writeBackDisassembly(triton::utils::toString(*this));
+      expr->setAddress(this->getAddress());
       this->symbolicExpressions.push_back(expr);
     }
 

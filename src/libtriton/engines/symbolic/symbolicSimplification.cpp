@@ -260,10 +260,10 @@ namespace triton {
 
         /* Get back the origin assembly of expressions that still alive */
         for (auto& se : lifetime) {
-          auto assembly = se.second->getDisassembly();
-          if (assembly.empty())
+          if (se.second->getDisassembly().empty()) {
             continue;
-          triton::uint64 addr = std::stoull(assembly, nullptr, 16);
+          }
+          auto addr = se.second->getAddress();
           for (auto& inst : in.getInstructions()) {
             if (inst.getAddress() == addr) {
               instructions[addr] = inst;
