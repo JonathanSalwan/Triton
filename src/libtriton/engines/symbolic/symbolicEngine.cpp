@@ -1104,6 +1104,7 @@ namespace triton {
         SharedSymbolicExpression se = nullptr;
 
         se = this->newSymbolicExpression(this->insertSubRegisterInParent(reg, node), REGISTER_EXPRESSION, comment);
+        se->setAddress(inst.getAddress());
         this->assignSymbolicExpressionToRegister(se, this->architecture->getParentRegister(reg));
 
         inst.setWrittenRegister(reg, node);
