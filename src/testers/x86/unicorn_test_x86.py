@@ -769,7 +769,6 @@ CODE  = [
     (None, [], b"\x48\x89\x44\x24\x10",                       "mov qword ptr ss:[rsp+10], rax"),
     (None, [], b"\x48\xB8\x44\x56\xE0\xA9\x0D\x06\x8B\xC6",   "mov rax, C68B060DA9E05644"),
     (None, [], b"\x48\x89\x44\x24\x18",                       "mov qword ptr ss:[rsp+18], rax"),
-    (None, [], b"\xC5\xFD\x6F\x04\x24",                       "vmovdqa ymm0, yword ptr ss:[rsp]"),
     (None, [], b"\x48\xB8\x8D\x8D\xB6\x84\x3C\x1B\x9B\xDC",   "mov rax, DC9B1B3C84B68D8D"),
     (None, [], b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
     (None, [], b"\x48\xB8\x92\x11\xD9\xF9\x80\x98\x38\xC0",   "mov rax, C0389880F9D91192"),
@@ -778,7 +777,6 @@ CODE  = [
     (None, [], b"\x48\x89\x44\x24\x10",                       "mov qword ptr ss:[rsp+10], rax"),
     (None, [], b"\x48\xB8\x20\x56\xE0\xA9\x0D\x06\x8B\xC6",   "mov rax, C68B060DA9E05620"),
     (None, [], b"\x48\x89\x44\x24\x18",                       "mov qword ptr ss:[rsp+18], rax"),
-    (None, [], b"\xC5\xFD\x6F\x0C\x24",                       "vmovdqa ymm1, yword ptr ss:[rsp]"),
     (None, [], b"\xC5\xFD\xEF\xC1",                           "vpxor ymm0, ymm0, ymm1"),
 
     (None, [],              b"\xbb\xd5\x71\x36\x00",          "mov ebx, 0x3671d5"),

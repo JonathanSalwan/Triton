@@ -22,19 +22,19 @@ project(triton VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
 # Define cmake options
 include(CMakeDependentOption)
 
-option(ASAN                 "Enable the ASAN linking"                  OFF)
-option(BITWUZLA_INTERFACE   "Use Bitwuzla as SMT solver"               OFF)
-option(BUILD_SHARED_LIBS    "Build a shared library"                   ON)
-option(GCOV                 "Enable code coverage"                     OFF)
-option(LLVM_INTERFACE       "Use LLVM for lifting"                     OFF)
-option(MSVC_STATIC          "Use statically-linked runtime library"    OFF)
-option(Z3_INTERFACE         "Use Z3 as SMT solver"                     ON)
-option(BOOST_INTERFACE      "Use Boost as multiprecision library"      ON)
+option(ASAN                 "Enable the ASAN linking"                   OFF)
+option(BITWUZLA_INTERFACE   "Use Bitwuzla as SMT solver"                OFF)
+option(BUILD_SHARED_LIBS    "Build a shared library"                    ON)
+option(GCOV                 "Enable code coverage"                      OFF)
+option(LLVM_INTERFACE       "Use LLVM for lifting"                      OFF)
+option(MSVC_STATIC          "Use statically-linked runtime library"     OFF)
+option(Z3_INTERFACE         "Use Z3 as SMT solver"                      ON)
+option(BOOST_INTERFACE      "Use Boost as multiprecision library"       ON)
 
 # Define cmake dependent options
-cmake_dependent_option(BUILD_EXAMPLES       "Build the examples"                            ON  BUILD_SHARED_LIBS OFF)
-cmake_dependent_option(ENABLE_TEST          "Do testing"                                    ON  BUILD_SHARED_LIBS OFF)
-cmake_dependent_option(PYTHON_BINDINGS      "Enable Python bindings"                        ON  BUILD_SHARED_LIBS OFF)
+cmake_dependent_option(BUILD_EXAMPLES   "Build the examples"            ON  BUILD_SHARED_LIBS OFF)
+cmake_dependent_option(ENABLE_TEST      "Do testing"                    ON  BUILD_SHARED_LIBS OFF)
+cmake_dependent_option(PYTHON_BINDINGS  "Enable Python bindings"        ON  BUILD_SHARED_LIBS OFF)
 
 #Enable ctest
 include(CTest)
@@ -49,7 +49,9 @@ if(PYTHON_BINDINGS)
     if(NOT PYTHON_VERSION)
         set(PYTHON_VERSION 3.6)
     endif()
-    find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
+    if(NOT PYTHON_EXECUTABLE)
+        find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
+    endif()
     if(NOT PYTHON_LIBRARIES AND NOT PYTHON_INCLUDE_DIRS)
         find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
     endif()
@@ -93,7 +95,7 @@ endif()
 # Specific OSX POLICY
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     if(POLICY CMP0025)
-        cmake_policy(SET CMP0025 OLD) # report Apple's Clang as just Clang
+        cmake_policy(SET CMP0025 NEW) # report Apple's Clang as just Clang
     endif()
     if(POLICY CMP0042)
         cmake_policy(SET CMP0042 NEW) # MACOSX_RPATH
