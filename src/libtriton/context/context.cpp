@@ -21,7 +21,7 @@
 
 /*!
 
-\mainpage Triton: Dynamic Binary Analysis Framework
+\mainpage Triton: A dynamic binary analysis library
 
 \tableofcontents
 
