@@ -168,3 +168,103 @@ class TestStubsi386(unittest.TestCase):
         edx = self.ctx.getConcreteRegisterValue(self.ctx.registers.edx)
         self.assertEqual(eax, 0x55667788)
         self.assertEqual(edx, 0x11223344)
+
+
+class TestStubsAArch64(unittest.TestCase):
+    """Testing stubs."""
+
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.AARCH64)
+        self.ctx.setConcreteMemoryAreaValue(0x66600000, STUBS.AARCH64.LIBC.code)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.sp, 0x7ffffff0)
+
+    def emulate(self, pc):
+        while pc:
+            opcode = self.ctx.getConcreteMemoryAreaValue(pc, 4)
+            instruction = Instruction(pc, opcode)
+            self.ctx.processing(instruction)
+            pc = self.ctx.getConcreteRegisterValue(self.ctx.registers.pc)
+        return
+
+    def test_strlen(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"triton stubs")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x0, 0x1000)
+        self.emulate(0x66600000 + STUBS.AARCH64.LIBC.symbols["strlen"])
+        x0 = self.ctx.getConcreteRegisterValue(self.ctx.registers.x0)
+        self.assertEqual(x0, 12)
+
+    def test_strcmp(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"triton stubs")
+        self.ctx.setConcreteMemoryAreaValue(0x2000, b"triton stubs")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x0, 0x1000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x1, 0x2000)
+        self.emulate(0x66600000 + STUBS.AARCH64.LIBC.symbols["strcmp"])
+        x0 = self.ctx.getConcreteRegisterValue(self.ctx.registers.x0)
+        self.assertEqual(x0, 0)
+
+    def test_strtoul1(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"123456")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x0, 0x1000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x1, 0)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x2, 10)
+        self.emulate(0x66600000 + STUBS.AARCH64.LIBC.symbols["strtoul"])
+        x0 = self.ctx.getConcreteRegisterValue(self.ctx.registers.x0)
+        self.assertEqual(x0, 123456)
+
+    def test_strtoul2(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"0xdeadbeef")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x0, 0x1000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x1, 0)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x2, 16)
+        self.emulate(0x66600000 + STUBS.AARCH64.LIBC.symbols["strtoul"])
+        x0 = self.ctx.getConcreteRegisterValue(self.ctx.registers.x0)
+        self.assertEqual(x0, 0xdeadbeef)
+
+    def test_atoi1(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"12345")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x0, 0x1000)
+        self.emulate(0x66600000 + STUBS.AARCH64.LIBC.symbols["atoi"])
+        x0 = self.ctx.getConcreteRegisterValue(self.ctx.registers.x0)
+        self.assertEqual(x0, 12345)
+
+    def test_atoi2(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"-1")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x0, 0x1000)
+        self.emulate(0x66600000 + STUBS.AARCH64.LIBC.symbols["atoi"])
+        x0 = self.ctx.getConcreteRegisterValue(self.ctx.registers.x0)
+        self.assertEqual(x0, 0xffffffffffffffff)
+
+    def test_a64l1(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"zz1")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x0, 0x1000)
+        self.emulate(0x66600000 + STUBS.AARCH64.LIBC.symbols["a64l"])
+        x0 = self.ctx.getConcreteRegisterValue(self.ctx.registers.x0)
+        self.assertEqual(x0, 0x3fff)
+
+    def test_a64l2(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"FT")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x0, 0x1000)
+        self.emulate(0x66600000 + STUBS.AARCH64.LIBC.symbols["a64l"])
+        x0 = self.ctx.getConcreteRegisterValue(self.ctx.registers.x0)
+        self.assertEqual(x0, 2001)
+
+    def test_strncasecmp(self):
+        # Equal
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"trIton StuBS")
+        self.ctx.setConcreteMemoryAreaValue(0x2000, b"TritOn stUbS")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x0, 0x1000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x1, 0x2000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x2, 12)
+        self.emulate(0x66600000 + STUBS.AARCH64.LIBC.symbols["strncasecmp"])
+        x0 = self.ctx.getConcreteRegisterValue(self.ctx.registers.x0)
+        self.assertEqual(x0, 0)
+
+        # Not equal
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"trIton St..S")
+        self.ctx.setConcreteMemoryAreaValue(0x2000, b"TritOn stUbS")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x0, 0x1000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x1, 0x2000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.x2, 12)
+        self.emulate(0x66600000 + STUBS.AARCH64.LIBC.symbols["strncasecmp"])
+        x0 = self.ctx.getConcreteRegisterValue(self.ctx.registers.x0)
+        self.assertNotEqual(x0, 0)

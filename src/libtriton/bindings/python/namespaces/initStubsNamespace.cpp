@@ -28,14 +28,29 @@ The STUBS namespace contains all stubs.
 \section STUBS_py_api Python API - Items of the STUBS namespace
 <hr>
 
+- <b>STUBS.AARCH64.LIBC.code</b><br>
+The libc stub on AArch64 architecture with the ARM64 ABI calling convention.
+
+- <b>STUBS.AARCH64.LIBC.symbols</b><br>
+The symbols map of the AArch64 libc stub.
+
+- <b>STUBS.I386.SYSTEMV.LIBC.code</b><br>
+The libc stub on i386 architecture with the SystemV ABI calling convention.
+
+- <b>STUBS.I386.SYSTEMV.LIBC.symbols</b><br>
+The symbols map of the i386-systemv libc stub.
+
 - <b>STUBS.X8664.MS.LIBC.code</b><br>
 The libc stub on x8664 architecture with the MS ABI calling convention.
+
+- <b>STUBS.X8664.MS.LIBC.symbols</b><br>
+The symbols map of the x8664-ms libc stub.
 
 - <b>STUBS.X8664.SYSTEMV.LIBC.code</b><br>
 The libc stub on x8664 architecture with the SystemV ABI calling convention.
 
 - <b>STUBS.X8664.SYSTEMV.LIBC.symbols</b><br>
-The symbols map of the libc stub.
+The symbols map of the x8664-systemv libc stub.
 
 */
 
@@ -93,7 +108,7 @@ namespace triton {
       }
 
 
-      static PyObject* initx8664(void) {
+      static PyObject* initX8664(void) {
         PyObject* dict = xPyDict_New();
         xPyDict_SetItemString(dict, "SYSTEMV", initSystemV(triton::stubs::x8664::systemv::libc::code, triton::stubs::x8664::systemv::libc::symbols));
         xPyDict_SetItemString(dict, "MS", initMS(triton::stubs::x8664::ms::libc::code, triton::stubs::x8664::ms::libc::symbols));
@@ -102,16 +117,26 @@ namespace triton {
       }
 
 
-      static PyObject* initi386(void) {
+      static PyObject* initAArch64(void) {
+        PyObject* dict = xPyDict_New();
+        xPyDict_SetItemString(dict, "LIBC", initLibc(triton::stubs::aarch64::libc::code, triton::stubs::aarch64::libc::symbols));
+        PyObject* dictClass = xPyClass_New(nullptr, dict, xPyString_FromString("AARCH64"));
+        return dictClass;
+      }
+
+
+      static PyObject* initI386(void) {
         PyObject* dict = xPyDict_New();
         xPyDict_SetItemString(dict, "SYSTEMV", initSystemV(triton::stubs::i386::systemv::libc::code, triton::stubs::i386::systemv::libc::symbols));
         PyObject* dictClass = xPyClass_New(nullptr, dict, xPyString_FromString("I386"));
         return dictClass;
       }
 
+
       void initStubsNamespace(PyObject* stubsDict) {
-        xPyDict_SetItemString(stubsDict, "X8664", initx8664());
-        xPyDict_SetItemString(stubsDict, "I386", initi386());
+        xPyDict_SetItemString(stubsDict, "AARCH64", initAArch64());
+        xPyDict_SetItemString(stubsDict, "I386",    initI386());
+        xPyDict_SetItemString(stubsDict, "X8664",   initX8664());
       }
 
     }; /* python namespace */
