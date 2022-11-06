@@ -106,7 +106,7 @@ Triton relies on the following dependencies:
 ```
 
 
-### Linux and OS X
+### Linux and MacOS
 
 ```console
 $ git clone https://github.com/JonathanSalwan/Triton
