@@ -43,6 +43,7 @@ BICS                          | Bitwise Bit Clear, setting flags
 BL                            | Branch with Link
 BLR                           | Branch with Link to Register
 BR                            | Branch to Register
+BRK                           | Breakpoint instruction
 CBNZ                          | Compare and Branch on Nonzero
 CBZ                           | Compare and Branch on Zero
 CCMP (immediate)              | Conditional Compare (immediate)
@@ -216,6 +217,7 @@ namespace triton {
             case ID_INS_BL:        this->bl_s(inst);            break;
             case ID_INS_BLR:       this->blr_s(inst);           break;
             case ID_INS_BR:        this->br_s(inst);            break;
+            case ID_INS_BRK:       this->brk_s(inst);           break;
             case ID_INS_CBNZ:      this->cbnz_s(inst);          break;
             case ID_INS_CBZ:       this->cbz_s(inst);           break;
             case ID_INS_CCMP:      this->ccmp_s(inst);          break;
@@ -1287,6 +1289,15 @@ namespace triton {
 
           /* Create the path constraint */
           this->symbolicEngine->pushPathConstraint(inst, expr);
+        }
+
+
+        void AArch64Semantics::brk_s(triton::arch::Instruction& inst) {
+          /* Set the exception */
+          this->exception = triton::arch::FAULT_BP;
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
         }
 
 

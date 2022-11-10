@@ -207,6 +207,9 @@ namespace triton {
             //! The BR semantics.
             void br_s(triton::arch::Instruction& inst);
 
+            //! The BRK semantics.
+            void brk_s(triton::arch::Instruction& inst);
+
             //! The CBNZ semantics
             void cbnz_s(triton::arch::Instruction& inst);
 
