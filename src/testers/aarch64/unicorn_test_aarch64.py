@@ -1880,6 +1880,11 @@ CODE  = [
     (b"\x22\xf4\x7e\x92", "bic x2, x1, #3"),
     (b"\x22\xf8\x7d\x92", "bic x2, x1, #4"),
 
+    (b"\x22\xf0\x7d\xf2", "bics x2, x1, #7"),
+    (b"\x22\xf8\x7c\xf2", "bics x2, x1, #8"),
+    (b"\x22\x70\x1d\x72", "bics w2, w1, #7"),
+    (b"\x22\x78\x1c\x72", "bics w2, w1, #8"),
+
     (b"\x28\x00\x00\x37", "tbnz w8, #0, #4"),
     (b"\x48\x00\x00\x36", "tbz w8, #0, #0"),
 
