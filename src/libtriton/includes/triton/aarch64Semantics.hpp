@@ -402,6 +402,9 @@ namespace triton {
             //! The ROR semantics.
             void ror_s(triton::arch::Instruction& inst);
 
+            //! The SBC semantics.
+            void sbc_s(triton::arch::Instruction& inst);
+
             //! The SBFX semantics.
             void sbfx_s(triton::arch::Instruction& inst);
 

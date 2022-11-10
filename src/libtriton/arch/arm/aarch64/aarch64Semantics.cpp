@@ -130,6 +130,7 @@ REV64                         | Reverse Bytes: an alias of REV
 ROR (immediate)               | Rotate right (immediate): an alias of EXTR
 ROR (register)                | Rotate Right (register): an alias of RORV
 RORV                          | Rotate Right Variable
+SBC                           | Subtract with Carry
 SBFX                          | Signed Bitfield Extract: an alias of SBFM
 SDIV                          | Signed Divide
 SMADDL                        | Signed Multiply-Add Long
@@ -285,6 +286,7 @@ namespace triton {
             case ID_INS_REV64:     this->rev_s(inst);           break;
             case ID_INS_REV:       this->rev_s(inst);           break;
             case ID_INS_ROR:       this->ror_s(inst);           break;
+            case ID_INS_SBC:       this->sbc_s(inst);           break;
             case ID_INS_SBFX:      this->sbfx_s(inst);          break;
             case ID_INS_SDIV:      this->sdiv_s(inst);          break;
             case ID_INS_SMADDL:    this->smaddl_s(inst);        break;
@@ -3871,6 +3873,31 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::sbc_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src1 = inst.operands[1];
+          auto& src2 = inst.operands[2];
+          auto  cf   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_C));
+
+          /* Create symbolic operands */
+          auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+          auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+          auto op3 = this->symbolicEngine->getOperandAst(inst, cf);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->bvadd(this->astCtxt->bvadd(op1, this->astCtxt->bvnot(op2)), this->astCtxt->zx(dst.getBitSize()-1, op3));
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SBC operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(cf));
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
