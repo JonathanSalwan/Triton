@@ -159,6 +159,8 @@ SVC                           | Supervisor Call
 SXTB                          | Signed Extend Byte: an alias of SBFM
 SXTH                          | Sign Extend Halfword: an alias of SBFM
 SXTW                          | Sign Extend Word: an alias of SBFM
+TBNZ                          | Test bit and Branch if Nonzero
+TBZ                           | Test bit and Branch if Zero
 TST (immediate)               | Test bits (immediate): an alias of ANDS (immediate)
 TST (shifted register)        | Test (shifted register): an alias of ANDS (shifted register)
 UBFIZ                         | Unsigned Bitfield Insert in Zero: an alias of UBFM
