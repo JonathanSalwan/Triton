@@ -54,6 +54,7 @@ CMN (shifted register)        | Compare Negative (shifted register): an alias of
 CMP (extended register)       | Compare (extended register): an alias of SUBS (extended register)
 CMP (immediate)               | Compare (immediate): an alias of SUBS (immediate)
 CMP (shifted register)        | Compare (shifted register): an alias of SUBS (shifted register)
+CNEG                          | Conditional Negate returns: an alias of CSNEG
 CSEL                          | Conditional Select
 CSET                          | Conditional Set: an alias of CSINC
 CSINC                         | Conditional Select Increment
@@ -221,6 +222,7 @@ namespace triton {
             case ID_INS_CLZ:       this->clz_s(inst);           break;
             case ID_INS_CMN:       this->cmn_s(inst);           break;
             case ID_INS_CMP:       this->cmp_s(inst);           break;
+            case ID_INS_CNEG:      this->cneg_s(inst);          break;
             case ID_INS_CSEL:      this->csel_s(inst);          break;
             case ID_INS_CSET:      this->cset_s(inst);          break;
             case ID_INS_CSINC:     this->csinc_s(inst);         break;
@@ -1574,6 +1576,28 @@ namespace triton {
           this->nf_s(inst, expr, src1);
           this->vfSub_s(inst, expr, src1, op1, op2);
           this->zf_s(inst, expr, src1);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::cneg_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = this->astCtxt->bvneg(this->symbolicEngine->getOperandAst(inst, src));
+          auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->getCodeConditionAst(inst, op1, op2);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CNEG operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);

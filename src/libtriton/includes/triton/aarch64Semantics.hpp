@@ -228,6 +228,9 @@ namespace triton {
             //! The CMP semantics
             void cmp_s(triton::arch::Instruction& inst);
 
+            //! The CNEG semantics
+            void cneg_s(triton::arch::Instruction& inst);
+
             //! The CSEL semantics
             void csel_s(triton::arch::Instruction& inst);
 

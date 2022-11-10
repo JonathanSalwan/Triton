@@ -740,6 +740,13 @@ CODE  = [
     (b"\x20\x14\x82\xda", "csneg x0, x1, x2, ne"),
     (b"\x40\x14\x81\xda", "csneg x0, x2, x1, ne"),
 
+    (b"\x41\x14\x82\xda", "cneg x1, x2, eq"),
+    (b"\x22\x14\x81\xda", "cneg x2, x1, eq"),
+    (b"\x41\x04\x82\xda", "cneg x1, x2, ne"),
+    (b"\x22\x04\x81\xda", "cneg x2, x1, ne"),
+    (b"\x22\xa4\x81\xda", "cneg x2, x1, lt"),
+    (b"\x22\xd4\x81\xda", "cneg x2, x1, gt"),
+
     (b"\x41\x9a\x80\xd2", "movz x1, #1234"),
     (b"\x20\xf8\x7f\xd3", "lsl x0, x1, #1"),
     (b"\x20\xf4\x7e\xd3", "lsl x0, x1, #2"),
