@@ -153,6 +153,7 @@ STLRH                         | Store-Release Register Halfword
 STLXR                         | Store-Release Exclusive Register
 STLXRB                        | Store-Release Exclusive Register Byte
 STLXRH                        | Store-Release Exclusive Register Halfword
+STNP                          | Store Pair of Registers with non-temporal hint
 STP                           | Store Pair of Registers
 STR (immediate)               | Store Register (immediate)
 STR (register)                | Store Register (register)
@@ -326,6 +327,7 @@ namespace triton {
             case ID_INS_STLXR:     this->stlxr_s(inst);         break;
             case ID_INS_STLXRB:    this->stlxrb_s(inst);        break;
             case ID_INS_STLXRH:    this->stlxrh_s(inst);        break;
+            case ID_INS_STNP:      this->stnp_s(inst);          break;
             case ID_INS_STP:       this->stp_s(inst);           break;
             case ID_INS_STR:       this->str_s(inst);           break;
             case ID_INS_STRB:      this->strb_s(inst);          break;
@@ -4692,6 +4694,32 @@ namespace triton {
           /* Spread taint */
           expr1->isTainted = this->taintEngine->setTaint(dst1, false);
           expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::stnp_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& src1 = inst.operands[0];
+          triton::arch::OperandWrapper& src2 = inst.operands[1];
+          triton::arch::OperandWrapper& dst  = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+          auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->concat(op2, op1);
+
+          /* Special behavior: Define that the size of the memory access is src1.size + src2.size */
+          dst.getMemory().setBits(node->getBitvectorSize()-1, 0);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STNP operation - STORE access");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);

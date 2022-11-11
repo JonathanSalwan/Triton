@@ -465,6 +465,9 @@ namespace triton {
             //! The STLXRH semantics.
             void stlxrh_s(triton::arch::Instruction& inst);
 
+            //! The STNP semantics.
+            void stnp_s(triton::arch::Instruction& inst);
+
             //! The STP semantics.
             void stp_s(triton::arch::Instruction& inst);
 
