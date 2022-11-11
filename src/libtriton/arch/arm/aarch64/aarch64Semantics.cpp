@@ -77,6 +77,7 @@ LDAXR                         | Load-Acquire Exclusive Register
 LDAXRB                        | Load-Acquire Exclusive Register Byte
 LDAXRH                        | Load-Acquire Exclusive Register Halfword
 LDP                           | Load Pair of Registers
+LDPSW                         | Load Pair of Registers Signed Word
 LDR (immediate)               | Load Register (immediate)
 LDR (literal)                 | Load Register (literal)
 LDR (register)                | Load Register (register)
@@ -265,6 +266,7 @@ namespace triton {
             case ID_INS_LDAXRB:    this->ldaxrb_s(inst);        break;
             case ID_INS_LDAXRH:    this->ldaxrh_s(inst);        break;
             case ID_INS_LDP:       this->ldp_s(inst);           break;
+            case ID_INS_LDPSW:     this->ldpsw_s(inst);         break;
             case ID_INS_LDR:       this->ldr_s(inst);           break;
             case ID_INS_LDRB:      this->ldrb_s(inst);          break;
             case ID_INS_LDRH:      this->ldrh_s(inst);          break;
@@ -2991,6 +2993,65 @@ namespace triton {
 
             /* Create symbolic expression */
             auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDP operation - Base register computation");
+
+            /* Spread taint */
+            expr3->isTainted = this->taintEngine->isTainted(base);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldpsw_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst1 = inst.operands[0];
+          triton::arch::OperandWrapper& dst2 = inst.operands[1];
+          triton::arch::OperandWrapper& src  = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->sx(32, this->astCtxt->extract(31, 0, op));
+          auto node2 = this->astCtxt->sx(32, this->astCtxt->extract(63, 32, op));
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "LDPSW operation - LOAD access");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "LDPSW operation - LOAD access");
+
+          /* Spread taint */
+          expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
+          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Optional behavior. Post computation of the base register */
+          /* LDPSW <Xt1>, <Xt2>, [<Xn|SP>], #<imm> */
+          if (inst.operands.size() == 4) {
+            triton::arch::Immediate& imm = inst.operands[3].getImmediate();
+            triton::arch::Register& base = src.getMemory().getBaseRegister();
+
+            /* Create symbolic operands of the post computation */
+            auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+            auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
+
+            /* Create the semantics of the base register */
+            auto node2 = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
+
+            /* Create symbolic expression */
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDPSW operation - Base register computation");
+
+            /* Spread taint */
+            expr2->isTainted = this->taintEngine->isTainted(base);
+          }
+
+          /* LDPSW <Xt1>, <Xt2>, [<Xn|SP>, #<imm>]! */
+          else if (inst.operands.size() == 3 && inst.isWriteBack() == true) {
+            triton::arch::Register& base = src.getMemory().getBaseRegister();
+
+            /* Create the semantics of the base register */
+            auto node3 = src.getMemory().getLeaAst();
+
+            /* Create symbolic expression */
+            auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDPSW operation - Base register computation");
 
             /* Spread taint */
             expr3->isTainted = this->taintEngine->isTainted(base);

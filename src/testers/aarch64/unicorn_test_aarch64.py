@@ -431,6 +431,16 @@ CODE  = [
     (b"\xea\x2f\x40\x29", "ldp w10, w11, [sp]"),
 
     (b"\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
+    (b"\x28\x24\x40\x69", "ldpsw x8, x9, [x1]"),
+    (b"\x28\x24\x41\x69", "ldpsw x8, x9, [x1, #8]"),
+    (b"\x28\xa4\xc0\x68", "ldpsw x8, x9, [x1], #4"),
+    (b"\x28\x24\xc1\x69", "ldpsw x8, x9, [x1, #8]!"),
+    (b"\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
+    (b"\x21\x28\x00\x91", "add x1, x1, #10"), # STACK+10
+    (b"\x28\xa4\x7f\x69", "ldpsw x8, x9, [x1, #-4]"),
+    (b"\x28\xa4\xff\x69", "ldpsw x8, x9, [x1, #-4]!"),
+
+    (b"\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
     (b"\x21\x30\x00\x91", "add x1, x1, #12"), # STACK+12
     (b"\x20\x00\x40\xf8", "ldur x0, [x1]"),
     (b"\x20\x10\x40\xf8", "ldur x0, [x1, #1]"),

@@ -288,6 +288,9 @@ namespace triton {
             //! The LDP semantics.
             void ldp_s(triton::arch::Instruction& inst);
 
+            //! The LDPSW semantics.
+            void ldpsw_s(triton::arch::Instruction& inst);
+
             //! The LDR semantics.
             void ldr_s(triton::arch::Instruction& inst);
 
