@@ -223,9 +223,6 @@ namespace triton {
           this->exception = triton::arch::NO_FAULT;
           switch (inst.getType()) {
             case ID_INS_ADC:       this->adc_s(inst);           break;
-            #if CS_API_MAJOR >= 5
-            case ID_INS_ADCS:      this->adc_s(inst);           break;
-            #endif
             case ID_INS_ADD:       this->add_s(inst);           break;
             case ID_INS_ADR:       this->adr_s(inst);           break;
             case ID_INS_ADRP:      this->adrp_s(inst);          break;
@@ -312,9 +309,6 @@ namespace triton {
             case ID_INS_REV:       this->rev_s(inst);           break;
             case ID_INS_ROR:       this->ror_s(inst);           break;
             case ID_INS_SBC:       this->sbc_s(inst);           break;
-            #if CS_API_MAJOR >= 5
-            case ID_INS_SBCS:      this->sbc_s(inst);           break;
-            #endif
             case ID_INS_SBFX:      this->sbfx_s(inst);          break;
             case ID_INS_SDIV:      this->sdiv_s(inst);          break;
             case ID_INS_SMADDL:    this->smaddl_s(inst);        break;
