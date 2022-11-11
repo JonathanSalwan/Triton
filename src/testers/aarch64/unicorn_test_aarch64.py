@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python4
 ## -*- coding: utf-8 -*-
 
 from __future__          import print_function
@@ -1909,15 +1909,6 @@ CODE  = [
     (b"\x20\x48\x40\x0c", "ld3 {v0.2s, v1.2s, v2.2s}, [x1]"),
     (b"\x20\x40\xc2\x4c", "ld3 {v0.16b, v1.16b, v2.16b}, [x1], x2"),
 
-    (b"\x20\x1c\x22\x6e", "eor v0.16b, v1.16b, v2.16b"),
-    (b"\x20\x1c\x22\x2e", "eor v0.8b, v1.8b, v2.8b"),
-
-    (b"\x20\x1c\xa2\x4e", "orr v0.16b, v1.16b, v2.16b"),
-    (b"\x20\x1c\xa2\x0e", "orr v0.8b, v1.8b, v2.8b"),
-
-    (b"\x20\x1c\x22\x4e", "and v0.16b, v1.16b, v2.16b"),
-    (b"\x20\x1c\x22\x0e", "and v0.8b, v1.8b, v2.8b"),
-
     (b"\x20\xe0\x40\x4d", "ld3r {v0.16b, v1.16b, v2.16b}, [x1]"),
     (b"\x20\xe4\x40\x4d", "ld3r {v0.8h, v1.8h, v2.8h}, [x1]"),
     (b"\x20\xe8\x40\x4d", "ld3r {v0.4s, v1.4s, v2.4s}, [x1]"),
@@ -1948,6 +1939,15 @@ CODE  = [
     (b"\x80\xa5\x00\x4f", "movi v0.8h, #12, LSL #8"),
     (b"\x80\x46\x00\x4f", "movi v0.4s, #20, LSL #16"),
 
+    (b"\x20\x00\x40\x4c", "ld4 {v0.16b, v1.16b, v2.16b, v3.16b}, [x1]"),
+    (b"\x20\x04\x40\x4c", "ld4 {v0.8h, v1.8h, v2.8h, v3.8h}, [x1]"),
+    (b"\x20\x08\x40\x4c", "ld4 {v0.4s, v1.4s, v2.4s, v3.4s}, [x1]"),
+    (b"\x20\x0c\x40\x4c", "ld4 {v0.2d, v1.2d, v2.2d, v3.2d}, [x1]"),
+    (b"\x20\x00\x40\x0c", "ld4 {v0.8b, v1.8b, v2.8b, v3.8b}, [x1]"),
+    (b"\x20\x04\x40\x0c", "ld4 {v0.4h, v1.4h, v2.4h, v3.4h}, [x1]"),
+    (b"\x20\x08\x40\x0c", "ld4 {v0.2s, v1.2s, v2.2s, v3.2s}, [x1]"),
+    (b"\x20\x00\xc2\x4c", "ld4 {v0.16b, v1.16b, v2.16b, v3.16b}, [x1], x2"),
+
     (b"\x20\xe0\x60\x4d", "ld4r {v0.16b, v1.16b, v2.16b, v3.16b}, [x1]"),
     (b"\x20\xe4\x60\x4d", "ld4r {v0.8h, v1.8h, v2.8h, v3.8h}, [x1]"),
     (b"\x20\xe8\x60\x4d", "ld4r {v0.4s, v1.4s, v2.4s, v3.4s}, [x1]"),
@@ -1956,6 +1956,15 @@ CODE  = [
     (b"\x20\xe4\x60\x0d", "ld4r {v0.4h, v1.4h, v2.4h, v3.4h}, [x1]"),
     (b"\x20\xe8\x60\x0d", "ld4r {v0.2s, v1.2s, v2.2s, v3.2s}, [x1]"),
     (b"\x20\xec\x60\x0d", "ld4r {v0.1d, v1.1d, v2.1d, v3.1d}, [x1]"),
+
+    (b"\x20\x1c\x22\x6e", "eor v0.16b, v1.16b, v2.16b"),
+    (b"\x20\x1c\x22\x2e", "eor v0.8b, v1.8b, v2.8b"),
+
+    (b"\x20\x1c\xa2\x4e", "orr v0.16b, v1.16b, v2.16b"),
+    (b"\x20\x1c\xa2\x0e", "orr v0.8b, v1.8b, v2.8b"),
+
+    (b"\x20\x1c\x22\x4e", "and v0.16b, v1.16b, v2.16b"),
+    (b"\x20\x1c\x22\x0e", "and v0.8b, v1.8b, v2.8b"),
 ]
 
 def emu_with_unicorn(opcode, istate):

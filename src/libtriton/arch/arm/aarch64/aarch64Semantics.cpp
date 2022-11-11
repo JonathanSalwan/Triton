@@ -67,6 +67,7 @@ EOR (shifted register)        | Bitwise Exclusive OR (shifted register)
 EXTR                          | EXTR: Extract register
 LD3 (multiple structure)      | Load multiple 3-element structures to three registers.
 LD3R                          | Load single 3-element structure and Replicate to all lanes of three registers.
+LD4 (multiple structure)      | Load multiple 4-element structures to four registers.
 LD4R                          | Load single 4-element structure and Replicate to all lanes of four registers.
 LDAR                          | Load-Acquire Register
 LDARB                         | Load-Acquire Register Byte
@@ -238,6 +239,7 @@ namespace triton {
             case ID_INS_EXTR:      this->extr_s(inst);          break;
             case ID_INS_LD3:       this->ld3_s(inst);           break;
             case ID_INS_LD3R:      this->ld3r_s(inst);          break;
+            case ID_INS_LD4:       this->ld4_s(inst);           break;
             case ID_INS_LD4R:      this->ld4r_s(inst);          break;
             case ID_INS_LDAR:      this->ldar_s(inst);          break;
             case ID_INS_LDARB:     this->ldarb_s(inst);         break;
@@ -2258,6 +2260,256 @@ namespace triton {
 
             /* Spread taint */
             expr3->isTainted = this->taintEngine->isTainted(base);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ld4_s(triton::arch::Instruction& inst) {
+          std::list<triton::ast::SharedAbstractNode> vec0;
+          std::list<triton::ast::SharedAbstractNode> vec1;
+          std::list<triton::ast::SharedAbstractNode> vec2;
+          std::list<triton::ast::SharedAbstractNode> vec3;
+
+          triton::arch::OperandWrapper& vt0 = inst.operands[0]; /* vas register */
+          triton::arch::OperandWrapper& vt1 = inst.operands[1]; /* vas register */
+          triton::arch::OperandWrapper& vt2 = inst.operands[2]; /* vas register */
+          triton::arch::OperandWrapper& vt3 = inst.operands[3]; /* vas register */
+          triton::arch::OperandWrapper& src = inst.operands[4]; /* memory */
+
+          bool vt0_t = false; /* taint state of vt0 */
+          bool vt1_t = false; /* taint state of vt1 */
+          bool vt2_t = false; /* taint state of vt2 */
+          bool vt3_t = false; /* taint state of vt3 */
+
+          /*
+           * Is the post-index immediate offset, encoded in Q:
+           * 0 #32
+           * 1 #64
+           */
+          triton::uint32 postIndex = 0;
+
+          auto mem   = src.getConstMemory();
+          auto vas_e = vt0.getConstRegister().getVASType();
+
+          switch (vas_e) {
+            /* LD4 multiple structure */
+            case triton::arch::arm::ID_VAS_16B: {
+              for (triton::uint32 i = 0; i != 16; i++) {
+                auto vt0_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 0, triton::size::byte);
+                auto vt1_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 1, triton::size::byte);
+                auto vt2_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 2, triton::size::byte);
+                auto vt3_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 3, triton::size::byte);
+
+                vec0.push_front(this->symbolicEngine->getMemoryAst(inst, vt0_m));
+                vec1.push_front(this->symbolicEngine->getMemoryAst(inst, vt1_m));
+                vec2.push_front(this->symbolicEngine->getMemoryAst(inst, vt2_m));
+                vec3.push_front(this->symbolicEngine->getMemoryAst(inst, vt3_m));
+
+                vt0_t |= this->taintEngine->isMemoryTainted(vt0_m);
+                vt1_t |= this->taintEngine->isMemoryTainted(vt1_m);
+                vt2_t |= this->taintEngine->isMemoryTainted(vt2_m);
+                vt3_t |= this->taintEngine->isMemoryTainted(vt3_m);
+              }
+              postIndex = 64;
+              break;
+            }
+
+            /* LD4 multiple structure */
+            case triton::arch::arm::ID_VAS_8B: {
+              for (triton::uint32 i = 0; i != 8; i++) {
+                auto vt0_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 0, triton::size::byte);
+                auto vt1_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 1, triton::size::byte);
+                auto vt2_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 2, triton::size::byte);
+                auto vt3_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 3, triton::size::byte);
+
+                vec0.push_front(this->symbolicEngine->getMemoryAst(inst, vt0_m));
+                vec1.push_front(this->symbolicEngine->getMemoryAst(inst, vt1_m));
+                vec2.push_front(this->symbolicEngine->getMemoryAst(inst, vt2_m));
+                vec3.push_front(this->symbolicEngine->getMemoryAst(inst, vt3_m));
+
+                vt0_t |= this->taintEngine->isMemoryTainted(vt0_m);
+                vt1_t |= this->taintEngine->isMemoryTainted(vt1_m);
+                vt2_t |= this->taintEngine->isMemoryTainted(vt2_m);
+                vt3_t |= this->taintEngine->isMemoryTainted(vt3_m);
+              }
+              postIndex = 32;
+              break;
+            }
+
+            /* LD4 multiple structure */
+            case triton::arch::arm::ID_VAS_8H: {
+              for (triton::uint32 i = 0; i != 16; i += 2) {
+                auto vt0_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 0, triton::size::word);
+                auto vt1_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 2, triton::size::word);
+                auto vt2_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 4, triton::size::word);
+                auto vt3_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 6, triton::size::word);
+
+                vec0.push_front(this->symbolicEngine->getMemoryAst(inst, vt0_m));
+                vec1.push_front(this->symbolicEngine->getMemoryAst(inst, vt1_m));
+                vec2.push_front(this->symbolicEngine->getMemoryAst(inst, vt2_m));
+                vec3.push_front(this->symbolicEngine->getMemoryAst(inst, vt3_m));
+
+                vt0_t |= this->taintEngine->isMemoryTainted(vt0_m);
+                vt1_t |= this->taintEngine->isMemoryTainted(vt1_m);
+                vt2_t |= this->taintEngine->isMemoryTainted(vt2_m);
+                vt3_t |= this->taintEngine->isMemoryTainted(vt3_m);
+              }
+              postIndex = 64;
+              break;
+            }
+
+            /* LD4 multiple structure */
+            case triton::arch::arm::ID_VAS_4H: {
+              for (triton::uint32 i = 0; i != 8; i += 2) {
+                auto vt0_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 0, triton::size::word);
+                auto vt1_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 2, triton::size::word);
+                auto vt2_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 4, triton::size::word);
+                auto vt3_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 6, triton::size::word);
+
+                vec0.push_front(this->symbolicEngine->getMemoryAst(inst, vt0_m));
+                vec1.push_front(this->symbolicEngine->getMemoryAst(inst, vt1_m));
+                vec2.push_front(this->symbolicEngine->getMemoryAst(inst, vt2_m));
+                vec3.push_front(this->symbolicEngine->getMemoryAst(inst, vt3_m));
+
+                vt0_t |= this->taintEngine->isMemoryTainted(vt0_m);
+                vt1_t |= this->taintEngine->isMemoryTainted(vt1_m);
+                vt2_t |= this->taintEngine->isMemoryTainted(vt2_m);
+                vt3_t |= this->taintEngine->isMemoryTainted(vt3_m);
+              }
+              postIndex = 32;
+              break;
+            }
+
+            /* LD4 multiple structure */
+            case triton::arch::arm::ID_VAS_4S: {
+              for (triton::uint32 i = 0; i != 16; i += 4) {
+                auto vt0_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 0, triton::size::dword);
+                auto vt1_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 4, triton::size::dword);
+                auto vt2_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 8, triton::size::dword);
+                auto vt3_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 12, triton::size::dword);
+
+                vec0.push_front(this->symbolicEngine->getMemoryAst(inst, vt0_m));
+                vec1.push_front(this->symbolicEngine->getMemoryAst(inst, vt1_m));
+                vec2.push_front(this->symbolicEngine->getMemoryAst(inst, vt2_m));
+                vec3.push_front(this->symbolicEngine->getMemoryAst(inst, vt3_m));
+
+                vt0_t |= this->taintEngine->isMemoryTainted(vt0_m);
+                vt1_t |= this->taintEngine->isMemoryTainted(vt1_m);
+                vt2_t |= this->taintEngine->isMemoryTainted(vt2_m);
+                vt3_t |= this->taintEngine->isMemoryTainted(vt3_m);
+              }
+              postIndex = 64;
+              break;
+            }
+
+            /* LD4 multiple structure */
+            case triton::arch::arm::ID_VAS_2S: {
+              for (triton::uint32 i = 0; i != 8; i += 4) {
+                auto vt0_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 0, triton::size::dword);
+                auto vt1_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 4, triton::size::dword);
+                auto vt2_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 8, triton::size::dword);
+                auto vt3_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 12, triton::size::dword);
+
+                vec0.push_front(this->symbolicEngine->getMemoryAst(inst, vt0_m));
+                vec1.push_front(this->symbolicEngine->getMemoryAst(inst, vt1_m));
+                vec2.push_front(this->symbolicEngine->getMemoryAst(inst, vt2_m));
+                vec3.push_front(this->symbolicEngine->getMemoryAst(inst, vt3_m));
+
+                vt0_t |= this->taintEngine->isMemoryTainted(vt0_m);
+                vt1_t |= this->taintEngine->isMemoryTainted(vt1_m);
+                vt2_t |= this->taintEngine->isMemoryTainted(vt2_m);
+                vt3_t |= this->taintEngine->isMemoryTainted(vt3_m);
+              }
+              postIndex = 32;
+              break;
+            }
+
+            /* LD4 multiple structure */
+            case triton::arch::arm::ID_VAS_2D: {
+              for (triton::uint32 i = 0; i != 16; i += 8) {
+                auto vt0_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 0,  triton::size::qword);
+                auto vt1_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 8,  triton::size::qword);
+                auto vt2_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 16, triton::size::qword);
+                auto vt3_m = triton::arch::MemoryAccess(mem.getAddress() + (i * 4) + 24, triton::size::qword);
+
+                vec0.push_front(this->symbolicEngine->getMemoryAst(inst, vt0_m));
+                vec1.push_front(this->symbolicEngine->getMemoryAst(inst, vt1_m));
+                vec2.push_front(this->symbolicEngine->getMemoryAst(inst, vt2_m));
+                vec3.push_front(this->symbolicEngine->getMemoryAst(inst, vt3_m));
+
+                vt0_t |= this->taintEngine->isMemoryTainted(vt0_m);
+                vt1_t |= this->taintEngine->isMemoryTainted(vt1_m);
+                vt2_t |= this->taintEngine->isMemoryTainted(vt2_m);
+                vt3_t |= this->taintEngine->isMemoryTainted(vt3_m);
+              }
+              postIndex = 64;
+              break;
+            }
+
+            default:
+              throw triton::exceptions::Semantics("AArch64Semantics::ld4_s(): Invalid VAS encoding.");
+          }
+
+          /* Create the semantics of the LD3 */
+          auto node0 = this->astCtxt->concat(vec0);
+          auto node1 = this->astCtxt->concat(vec1);
+          auto node2 = this->astCtxt->concat(vec2);
+          auto node3 = this->astCtxt->concat(vec3);
+
+          /* Create symbolic expression */
+          auto expr0 = this->symbolicEngine->createSymbolicExpression(inst, node0, vt0, "LD4 operation - LOAD access");
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, vt1, "LD4 operation - LOAD access");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, vt2, "LD4 operation - LOAD access");
+          auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, vt3, "LD4 operation - LOAD access");
+
+          /* Spread taint */
+          expr0->isTainted = vt0_t;
+          expr1->isTainted = vt1_t;
+          expr2->isTainted = vt2_t;
+          expr3->isTainted = vt3_t;
+
+          /*
+           * Register offset (Rm != 11111)
+           * LD4 { <Vt>.<T>, <Vt2>.<T>, <Vt3>.<T>, <Vt4>.<T> }, [<Xn|SP>], <Xm>
+           */
+          if (inst.operands.size() == 6 && inst.operands[5].getType() == triton::arch::OP_REG) {
+            auto base   = mem.getBaseRegister();
+            auto offset = inst.operands[5].getRegister();
+
+            /* Create symbolic operands of the post computation */
+            auto baseNode   = this->symbolicEngine->getOperandAst(inst, base);
+            auto offsetNode = this->symbolicEngine->getOperandAst(inst, offset);
+
+            /* Create the semantics of the base register */
+            auto node4 = this->astCtxt->bvadd(baseNode, offsetNode);
+
+            /* Create symbolic expression */
+            auto expr4 = this->symbolicEngine->createSymbolicExpression(inst, node4, base, "LD4 operation - Post Index");
+
+            /* Spread taint */
+            expr4->isTainted = this->taintEngine->isTainted(base) | this->taintEngine->isTainted(offset);
+          }
+
+          /*
+           * Register offset (Rm == 11111)
+           * LD4 { <Vt>.<T>, <Vt2>.<T>, <Vt3>.<T>, <Vt4>.<T> }, [<Xn|SP>], <imm>
+           */
+          else if (inst.operands.size() == 5 && inst.isWriteBack()) {
+            /* Create symbolic operands of the post computation */
+            auto base = mem.getBaseRegister();
+            auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+
+            /* Create the semantics of the base register */
+            auto node4 = this->astCtxt->bvadd(baseNode, this->astCtxt->bv(postIndex, base.getBitSize()));
+
+            /* Create symbolic expression */
+            auto expr4 = this->symbolicEngine->createSymbolicExpression(inst, node4, base, "LD4 operation - Post Index");
+
+            /* Spread taint */
+            expr4->isTainted = this->taintEngine->isTainted(base);
           }
 
           /* Update the symbolic control flow */
