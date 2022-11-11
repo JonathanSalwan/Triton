@@ -837,6 +837,10 @@ CODE  = [
     (b"\x27\xc8\x00\x78", "sttrh w7, [x1, #12]"),
     (b"\x26\x08\x00\x38", "sttrb w6, [x1]"),
     (b"\x27\x08\x00\x78", "sttrh w7, [x1]"),
+    #(b"\x2a\xfc\x09\x08", "stlxrb w9, w10, [x1]"), # FIXME: Not working with Unicorn (store is not performed)
+    #(b"\x2a\xfc\x09\x48", "stlxrh w9, w10, [x1]"), # FIXME: Not working with Unicorn (store is not performed)
+    #(b"\x2a\xfc\x09\x88", "stlxr w9, w10, [x1]"), # FIXME: Not working with Unicorn (store is not performed)
+    #(b"\x2a\xfc\x09\xc8", "stlxr w9, x10, [x1]"), # FIXME: Not working with Unicorn (store is not performed)
 
     (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     (b"\xe5\x24\x81\xd2", "movz x5, #2343"),

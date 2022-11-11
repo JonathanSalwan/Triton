@@ -453,6 +453,15 @@ namespace triton {
             //! The STLRH semantics.
             void stlrh_s(triton::arch::Instruction& inst);
 
+            //! The STLXR semantics.
+            void stlxr_s(triton::arch::Instruction& inst);
+
+            //! The STLXRB semantics.
+            void stlxrb_s(triton::arch::Instruction& inst);
+
+            //! The STLXRH semantics.
+            void stlxrh_s(triton::arch::Instruction& inst);
+
             //! The STP semantics.
             void stp_s(triton::arch::Instruction& inst);
 
