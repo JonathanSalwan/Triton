@@ -165,6 +165,9 @@ STTRH                         | Store Register Halfword (unprivileged)
 STUR                          | Store Register (unscaled)
 STURB                         | Store Register Byte (unscaled)
 STURH                         | Store Register Halfword (unscaled)
+STXR                          | Store Exclusive Register
+STXRB                         | Store Exclusive Register Byte
+STXRH                         | Store Exclusive Register Halfword
 SUB (extended register)       | Subtract (extended register)
 SUB (immediate)               | Subtract (immediate)
 SUB (shifted register)        | Subtract (shifted register)
@@ -331,6 +334,9 @@ namespace triton {
             case ID_INS_STUR:      this->stur_s(inst);          break;
             case ID_INS_STURB:     this->sturb_s(inst);         break;
             case ID_INS_STURH:     this->sturh_s(inst);         break;
+            case ID_INS_STXR:      this->stxr_s(inst);          break;
+            case ID_INS_STXRB:     this->stxrb_s(inst);         break;
+            case ID_INS_STXRH:     this->stxrh_s(inst);         break;
             case ID_INS_SUB:       this->sub_s(inst);           break;
             case ID_INS_SVC:       this->svc_s(inst);           break;
             case ID_INS_SXTB:      this->sxtb_s(inst);          break;
@@ -4967,6 +4973,78 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::stxr_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst1 = inst.operands[0]; /* status */
+          triton::arch::OperandWrapper& src  = inst.operands[1];
+          triton::arch::OperandWrapper& dst2 = inst.operands[2];
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->bv(0, dst1.getBitSize());
+          auto node2 = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STXR operation - write status");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STXR operation - STORE access");
+
+          /* Spread taint */
+          expr1->isTainted = this->taintEngine->setTaint(dst1, false);
+          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::stxrb_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst1 = inst.operands[0]; /* status */
+          triton::arch::OperandWrapper& src  = inst.operands[1];
+          triton::arch::OperandWrapper& dst2 = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->bv(0, dst1.getBitSize());
+          auto node2 = this->astCtxt->extract(7, 0, op);
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STXRB operation - write status");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STXRB operation - STORE access");
+
+          /* Spread taint */
+          expr1->isTainted = this->taintEngine->setTaint(dst1, false);
+          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::stxrh_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst1 = inst.operands[0]; /* status */
+          triton::arch::OperandWrapper& src  = inst.operands[1];
+          triton::arch::OperandWrapper& dst2 = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->bv(0, dst1.getBitSize());
+          auto node2 = this->astCtxt->extract(15, 0, op);
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STXRH operation - write status");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STXRH operation - STORE access");
+
+          /* Spread taint */
+          expr1->isTainted = this->taintEngine->setTaint(dst1, false);
+          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);

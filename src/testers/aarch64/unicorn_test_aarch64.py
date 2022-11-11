@@ -841,6 +841,10 @@ CODE  = [
     #(b"\x2a\xfc\x09\x48", "stlxrh w9, w10, [x1]"), # FIXME: Not working with Unicorn (store is not performed)
     #(b"\x2a\xfc\x09\x88", "stlxr w9, w10, [x1]"), # FIXME: Not working with Unicorn (store is not performed)
     #(b"\x2a\xfc\x09\xc8", "stlxr w9, x10, [x1]"), # FIXME: Not working with Unicorn (store is not performed)
+    #(b"\x2a\x7c\x09\x08", "stxrb w9, w10, [x1]"), # FIXME: Not working with Unicorn (store is not performed)
+    #(b"\x2a\x7c\x09\x48", "stxrh w9, w10, [x1]"), # FIXME: Not working with Unicorn (store is not performed)
+    #(b"\x2a\x7c\x09\x88", "stxr w9, w10, [x1]"), # FIXME: Not working with Unicorn (store is not performed)
+    #(b"\x2a\x7c\x09\xc8", "stxr w9, x10, [x1]"), # FIXME: Not working with Unicorn (store is not performed)
 
     (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     (b"\xe5\x24\x81\xd2", "movz x5, #2343"),
@@ -2100,10 +2104,8 @@ CODE  = [
 
     (b"\x20\x1c\x22\x6e", "eor v0.16b, v1.16b, v2.16b"),
     (b"\x20\x1c\x22\x2e", "eor v0.8b, v1.8b, v2.8b"),
-
     (b"\x20\x1c\xa2\x4e", "orr v0.16b, v1.16b, v2.16b"),
     (b"\x20\x1c\xa2\x0e", "orr v0.8b, v1.8b, v2.8b"),
-
     (b"\x20\x1c\x22\x4e", "and v0.16b, v1.16b, v2.16b"),
     (b"\x20\x1c\x22\x0e", "and v0.8b, v1.8b, v2.8b"),
 ]

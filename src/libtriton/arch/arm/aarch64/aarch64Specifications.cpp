@@ -2147,6 +2147,7 @@ namespace triton {
             case ID_INS_STRB:
             case ID_INS_STTRB:
             case ID_INS_STURB:
+            case ID_INS_STXRB:
               return 1;
             case ID_INS_LDARH:
             case ID_INS_LDAXRH:
@@ -2162,6 +2163,7 @@ namespace triton {
             case ID_INS_STRH:
             case ID_INS_STTRH:
             case ID_INS_STURH:
+            case ID_INS_STXRH:
               return 2;
             case ID_INS_LDRSW:
             case ID_INS_LDTRSW:
