@@ -154,6 +154,9 @@ STRB (immediate)              | Store Register Byte (immediate)
 STRB (register)               | Store Register Byte (register)
 STRH (immediate)              | Store Register Halfword (immediate)
 STRH (register)               | Store Register Halfword (register)
+STTR                          | Store Register (unprivileged)
+STTRB                         | Store Register Byte (unprivileged)
+STTRH                         | Store Register Halfword (unprivileged)
 STUR                          | Store Register (unscaled)
 STURB                         | Store Register Byte (unscaled)
 STURH                         | Store Register Halfword (unscaled)
@@ -314,6 +317,9 @@ namespace triton {
             case ID_INS_STR:       this->str_s(inst);           break;
             case ID_INS_STRB:      this->strb_s(inst);          break;
             case ID_INS_STRH:      this->strh_s(inst);          break;
+            case ID_INS_STTR:      this->sttr_s(inst);          break;
+            case ID_INS_STTRB:     this->sttrb_s(inst);         break;
+            case ID_INS_STTRH:     this->sttrh_s(inst);         break;
             case ID_INS_STUR:      this->stur_s(inst);          break;
             case ID_INS_STURB:     this->sturb_s(inst);         break;
             case ID_INS_STURH:     this->sturh_s(inst);         break;
@@ -4745,6 +4751,66 @@ namespace triton {
             /* Spread taint */
             expr3->isTainted = this->taintEngine->isTainted(base);
           }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::sttr_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& src = inst.operands[0];
+          triton::arch::OperandWrapper& dst = inst.operands[1];
+
+          /* Create the semantics of the STORE */
+          auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STTR operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::sttrb_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& src = inst.operands[0];
+          triton::arch::OperandWrapper& dst = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->extract(7, 0, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STTRB operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::sttrh_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& src = inst.operands[0];
+          triton::arch::OperandWrapper& dst = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->extract(15, 0, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STTRH operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);

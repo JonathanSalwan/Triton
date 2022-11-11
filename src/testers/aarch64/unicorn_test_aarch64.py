@@ -823,6 +823,11 @@ CODE  = [
     (b"\x29\x00\x00\xf9", "str x9, [x1]"),
     (b"\x2a\x00\x00\x39", "strb w10, [x1]"),
     (b"\x2b\x00\x00\x79", "strh w11, [x1]"),
+    (b"\x25\x08\x00\xf8", "sttr x5, [x1]"),
+    (b"\x26\x88\x00\x38", "sttrb w6, [x1, #8]"),
+    (b"\x27\xc8\x00\x78", "sttrh w7, [x1, #12]"),
+    (b"\x26\x08\x00\x38", "sttrb w6, [x1]"),
+    (b"\x27\x08\x00\x78", "sttrh w7, [x1]"),
 
     (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     (b"\xe5\x24\x81\xd2", "movz x5, #2343"),
@@ -1934,6 +1939,11 @@ CODE  = [
     (b"\x29\xfc\x9f\xc8", "stlr x9, [x1]"),
     (b"\x2a\xfc\x9f\x08", "stlrb w10, [x1]"),
     (b"\x2b\xfc\x9f\x48", "stlrh w11, [x1]"),
+    (b"\x25\x08\x00\xf8", "sttr x5, [x1]"),
+    (b"\x26\x88\x00\x38", "sttrb w6, [x1, #8]"),
+    (b"\x27\xc8\x00\x78", "sttrh w7, [x1, #12]"),
+    (b"\x26\x08\x00\x38", "sttrb w6, [x1]"),
+    (b"\x27\x08\x00\x78", "sttrh w7, [x1]"),
 
     (b"\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
     (b"\x21\x20\x00\x91", "add x1, x1, #8"), # STACK+8

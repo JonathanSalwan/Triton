@@ -2125,31 +2125,33 @@ namespace triton {
             case ID_INS_LDAXRB:
             case ID_INS_LDRB:
             case ID_INS_LDRSB:
-            case ID_INS_LDURB:
-            case ID_INS_LDURSB:
             case ID_INS_LDTRB:
             case ID_INS_LDTRSB:
+            case ID_INS_LDURB:
+            case ID_INS_LDURSB:
             case ID_INS_LDXRB:
             case ID_INS_STLRB:
             case ID_INS_STRB:
+            case ID_INS_STTRB:
             case ID_INS_STURB:
               return 1;
             case ID_INS_LDARH:
             case ID_INS_LDAXRH:
             case ID_INS_LDRH:
             case ID_INS_LDRSH:
-            case ID_INS_LDURH:
-            case ID_INS_LDURSH:
             case ID_INS_LDTRH:
             case ID_INS_LDTRSH:
+            case ID_INS_LDURH:
+            case ID_INS_LDURSH:
             case ID_INS_LDXRH:
             case ID_INS_STLRH:
             case ID_INS_STRH:
+            case ID_INS_STTRH:
             case ID_INS_STURH:
               return 2;
             case ID_INS_LDRSW:
-            case ID_INS_LDURSW:
             case ID_INS_LDTRSW:
+            case ID_INS_LDURSW:
               return 4;
             default:
               return 0;
