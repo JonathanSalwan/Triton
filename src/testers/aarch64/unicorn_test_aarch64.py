@@ -875,6 +875,8 @@ CODE  = [
     (b"\x26\x1c\x02\x29", "stp w6, w7, [x1, #16]"),
     (b"\x25\x18\x00\xa8", "stnp x5, x6, [x1]"),
     (b"\x25\x98\x00\xa8", "stnp x5, x6, [x1, #8]"),
+    (b"\x24\x18\x00\x28", "stnp w4, w6, [x1]"),
+    (b"\x22\x0c\x00\x6c", "stnp d2, d3, [x1]"),
 
     (b"\xc1\xbd\x9b\xd2", "movz x1, #0xddee"),
     (b"\x20\x1c\x40\x93", "sxtb x0, x1"),
