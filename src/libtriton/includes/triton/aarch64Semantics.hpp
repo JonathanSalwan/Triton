@@ -285,6 +285,9 @@ namespace triton {
             //! The LDAXRH semantics.
             void ldaxrh_s(triton::arch::Instruction& inst);
 
+            //! The LDNP semantics.
+            void ldnp_s(triton::arch::Instruction& inst);
+
             //! The LDP semantics.
             void ldp_s(triton::arch::Instruction& inst);
 

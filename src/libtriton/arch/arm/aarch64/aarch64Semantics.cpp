@@ -76,6 +76,7 @@ LDARH                         | Load-Acquire Register Halfword
 LDAXR                         | Load-Acquire Exclusive Register
 LDAXRB                        | Load-Acquire Exclusive Register Byte
 LDAXRH                        | Load-Acquire Exclusive Register Halfword
+LDNP                          | Load Pair of Registers with non-temporal hint
 LDP                           | Load Pair of Registers
 LDPSW                         | Load Pair of Registers Signed Word
 LDR (immediate)               | Load Register (immediate)
@@ -266,6 +267,7 @@ namespace triton {
             case ID_INS_LDAXR:     this->ldaxr_s(inst);         break;
             case ID_INS_LDAXRB:    this->ldaxrb_s(inst);        break;
             case ID_INS_LDAXRH:    this->ldaxrh_s(inst);        break;
+            case ID_INS_LDNP:      this->ldnp_s(inst);          break;
             case ID_INS_LDP:       this->ldp_s(inst);           break;
             case ID_INS_LDPSW:     this->ldpsw_s(inst);         break;
             case ID_INS_LDR:       this->ldr_s(inst);           break;
@@ -2937,6 +2939,34 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldnp_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst1 = inst.operands[0];
+          triton::arch::OperandWrapper& dst2 = inst.operands[1];
+          triton::arch::OperandWrapper& src  = inst.operands[2];
+
+          /* Special behavior: Define that the size of the memory access is dst1.size + dst2.size */
+          src.getMemory().setBits((dst1.getBitSize() + dst2.getBitSize()) - 1, 0);
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->extract((dst1.getBitSize() - 1), 0, op);
+          auto node2 = this->astCtxt->extract((dst1.getBitSize() + dst2.getBitSize()) - 1, dst1.getBitSize(), op);
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "LDNP operation - LOAD access");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "LDNP operation - LOAD access");
+
+          /* Spread taint */
+          expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
+          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
