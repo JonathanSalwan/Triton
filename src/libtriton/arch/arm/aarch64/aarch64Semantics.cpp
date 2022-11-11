@@ -90,6 +90,12 @@ LDRSH (register)              | Load Register Signed Halfword (register)
 LDRSW (immediate)             | Load Register Signed Word (immediate)
 LDRSW (literal)               | Load Register Signed Word (literal)
 LDRSW (register)              | Load Register Signed Word (register)
+LDTR                          | Load Register (unprivileged)
+LDTRB                         | Load Register Byte (unprivileged)
+LDTRH                         | Load Register Halfword (unprivileged)
+LDTRSB                        | Load Register Signed Byte (unprivileged)
+LDTRSH                        | Load Register Signed Halfword (unprivileged)
+LDTRSW                        | Load Register Signed Word (unprivileged)
 LDUR                          | Load Register (unscaled)
 LDURB                         | Load Register Byte (unscaled)
 LDURH                         | Load Register Halfword (unscaled)
@@ -254,6 +260,12 @@ namespace triton {
             case ID_INS_LDRSB:     this->ldrsb_s(inst);         break;
             case ID_INS_LDRSH:     this->ldrsh_s(inst);         break;
             case ID_INS_LDRSW:     this->ldrsw_s(inst);         break;
+            case ID_INS_LDTR:      this->ldtr_s(inst);          break;
+            case ID_INS_LDTRB:     this->ldtrb_s(inst);         break;
+            case ID_INS_LDTRH:     this->ldtrh_s(inst);         break;
+            case ID_INS_LDTRSB:    this->ldtrsb_s(inst);        break;
+            case ID_INS_LDTRSH:    this->ldtrsh_s(inst);        break;
+            case ID_INS_LDTRSW:    this->ldtrsw_s(inst);        break;
             case ID_INS_LDUR:      this->ldur_s(inst);          break;
             case ID_INS_LDURB:     this->ldurb_s(inst);         break;
             case ID_INS_LDURH:     this->ldurh_s(inst);         break;
@@ -3276,6 +3288,129 @@ namespace triton {
             /* Spread taint */
             expr3->isTainted = this->taintEngine->isTainted(base);
           }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldtr_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create the semantics of the LOAD */
+          auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDTR operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldtrb_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->zx(dst.getBitSize() - 8, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDTRB operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldtrh_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->zx(dst.getBitSize() - 16, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDTRH operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldtrsb_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->sx(dst.getBitSize() - 8, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDTRSB operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldtrsh_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->sx(dst.getBitSize() - 16, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDTRSH operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ldtrsw_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst = inst.operands[0];
+          triton::arch::OperandWrapper& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->sx(dst.getBitSize() - 32, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDTRSW operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
