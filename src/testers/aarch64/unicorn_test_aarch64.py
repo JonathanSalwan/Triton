@@ -150,14 +150,23 @@ CODE  = [
 
     (b"\x01\x00\x80\xd2", "movz x1, #0"),
     (b"\x42\x01\x80\xd2", "movz x2, #10"),
+    (b"\x23\x00\x80\xd2", "movz x3, #1"),
     (b"\x21\x04\x00\xd1", "sub x1, x1, #1"),
     (b"\x20\x00\x02\x9a", "adc x0, x1, x2"),
     (b"\x20\x00\x02\x1a", "adc w0, w1, w2"),
+    (b"\x20\x00\x02\xba", "adcs x0, x1, x2"),
+    (b"\x20\x00\x02\x3a", "adcs w0, w1, w2"),
+    (b"\x20\x00\x03\xba", "adcs x0, x1, x3"),
 
     (b"\x61\x00\x80\xd2", "movz x1, #3"),
     (b"\x42\x01\x80\xd2", "movz x2, #10"),
+    (b"\x23\x00\x80\xd2", "movz x3, #1"),
     (b"\x20\x00\x02\xda", "sbc x0, x1, x2"),
     (b"\x20\x00\x02\x5a", "sbc w0, w1, w2"),
+    (b"\x20\x00\x02\xfa", "sbcs x0, x1, x2"),
+    (b"\x20\x00\x02\x7a", "sbcs w0, w1, w2"),
+    (b"\x40\x00\x01\xfa", "sbcs x0, x2, x1"),
+    (b"\x40\x00\x01\x7a", "sbcs w0, w2, w1"),
 
     (b"\x20\x1a\x09\x30", "adr x0, #0x12345"),
     (b"\xe1\xff\x7f\x70", "adr x1, #0xfffff"),

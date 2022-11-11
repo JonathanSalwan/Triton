@@ -21,6 +21,7 @@
 Mnemonic                      | Description
 ------------------------------|------------
 ADC                           | Add with Carry
+ADCS                          | Add with Carry, setting flags
 ADD (extended register)       | Add (extended register)
 ADD (immediate)               | Add (immediate)
 ADD (shifted register)        | Add (shifted register)
@@ -138,6 +139,7 @@ ROR (immediate)               | Rotate right (immediate): an alias of EXTR
 ROR (register)                | Rotate Right (register): an alias of RORV
 RORV                          | Rotate Right Variable
 SBC                           | Subtract with Carry
+SBCS                          | Subtract with Carry, setting flags
 SBFX                          | Signed Bitfield Extract: an alias of SBFM
 SDIV                          | Signed Divide
 SMADDL                        | Signed Multiply-Add Long
@@ -969,10 +971,18 @@ namespace triton {
           auto node = this->astCtxt->bvadd(this->astCtxt->bvadd(op1, op2), this->astCtxt->zx(dst.getBitSize()-1, op3));
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ADC operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ADC(S) operation");
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(cf));
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            this->cfAdd_s(inst, expr, dst, op1, op2);
+            this->nf_s(inst, expr, dst);
+            this->vfAdd_s(inst, expr, dst, op1, op2);
+            this->zf_s(inst, expr, dst);
+          }
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -4292,10 +4302,18 @@ namespace triton {
           auto node = this->astCtxt->bvadd(this->astCtxt->bvadd(op1, this->astCtxt->bvnot(op2)), this->astCtxt->zx(dst.getBitSize()-1, op3));
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SBC operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SBC(S) operation");
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(cf));
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            this->cfSub_s(inst, expr, src1, op1, op2);
+            this->nf_s(inst, expr, src1);
+            this->vfSub_s(inst, expr, src1, op1, op2);
+            this->zf_s(inst, expr, src1);
+          }
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
