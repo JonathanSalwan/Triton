@@ -877,12 +877,16 @@ CODE  = [
     (b"\x25\x98\x00\xa8", "stnp x5, x6, [x1, #8]"),
     (b"\x24\x18\x00\x28", "stnp w4, w6, [x1]"),
     (b"\x22\x0c\x00\x6c", "stnp d2, d3, [x1]"),
+    #(b"\x25\x18\x24\xc8", "stxp w4, x5, x6, [x1]"), # FIXME: Not working with Unicorn (store is not performed)
+    #(b"\x25\x18\x24\x88", "stxp w4, w5, w6, [x1]"), # FIXME: Not working with Unicorn (store is not performed)
 
     (b"\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
     (b"\x25\x18\x40\xa8", "ldnp x5, x6, [x1]"),
     (b"\x25\x98\x40\xa8", "ldnp x5, x6, [x1, #8]"),
     (b"\x24\x18\x40\x28", "ldnp w4, w6, [x1]"),
     (b"\x22\x0c\x40\x6c", "ldnp d2, d3, [x1]"),
+    (b"\x25\x18\x7f\xc8", "ldxp x5, x6, [x1]"),
+    (b"\x25\x18\x7f\x88", "ldxp w5, w6, [x1]"),
 
     (b"\xc1\xbd\x9b\xd2", "movz x1, #0xddee"),
     (b"\x20\x1c\x40\x93", "sxtb x0, x1"),

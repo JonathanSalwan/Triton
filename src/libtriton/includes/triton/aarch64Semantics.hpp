@@ -348,6 +348,9 @@ namespace triton {
             //! The LDURSW semantics.
             void ldursw_s(triton::arch::Instruction& inst);
 
+            //! The LDXP semantics.
+            void ldxp_s(triton::arch::Instruction& inst);
+
             //! The LDXR semantics.
             void ldxr_s(triton::arch::Instruction& inst);
 
@@ -500,6 +503,9 @@ namespace triton {
 
             //! The STURH semantics.
             void sturh_s(triton::arch::Instruction& inst);
+
+            //! The STXP semantics.
+            void stxp_s(triton::arch::Instruction& inst);
 
             //! The STXR semantics.
             void stxr_s(triton::arch::Instruction& inst);

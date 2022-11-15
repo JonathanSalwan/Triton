@@ -1,11 +1,10 @@
 coverage:
-  range: 70..100
+  range: 70..90
   round: nearest
   precision: 2
 
 ignore:
   - "**/examples/cpp" # ignore folders and all its contents
-  - "/src/tracer"     # ignore folders and all its contents
   - "**/*.spec"       # glob accepted
 
 comment: false

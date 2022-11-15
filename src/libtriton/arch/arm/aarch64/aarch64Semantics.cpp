@@ -105,6 +105,7 @@ LDURH                         | Load Register Halfword (unscaled)
 LDURSB                        | Load Register Signed Byte (unscaled)
 LDURSH                        | Load Register Signed Halfword (unscaled)
 LDURSW                        | Load Register Signed Word (unscaled)
+LDXP                          | Load Exclusive Pair of Registers
 LDXR                          | Load Exclusive Register
 LDXRB                         | Load Exclusive Register Byte
 LDXRH                         | Load Exclusive Register Halfword
@@ -168,6 +169,7 @@ STTRH                         | Store Register Halfword (unprivileged)
 STUR                          | Store Register (unscaled)
 STURB                         | Store Register Byte (unscaled)
 STURH                         | Store Register Halfword (unscaled)
+STXP                          | Store Exclusive Pair or Registers
 STXR                          | Store Exclusive Register
 STXRB                         | Store Exclusive Register Byte
 STXRH                         | Store Exclusive Register Halfword
@@ -288,6 +290,7 @@ namespace triton {
             case ID_INS_LDURSB:    this->ldursb_s(inst);        break;
             case ID_INS_LDURSH:    this->ldursh_s(inst);        break;
             case ID_INS_LDURSW:    this->ldursw_s(inst);        break;
+            case ID_INS_LDXP:      this->ldxp_s(inst);          break;
             case ID_INS_LDXR:      this->ldxr_s(inst);          break;
             case ID_INS_LDXRB:     this->ldxrb_s(inst);         break;
             case ID_INS_LDXRH:     this->ldxrh_s(inst);         break;
@@ -340,6 +343,7 @@ namespace triton {
             case ID_INS_STUR:      this->stur_s(inst);          break;
             case ID_INS_STURB:     this->sturb_s(inst);         break;
             case ID_INS_STURH:     this->sturh_s(inst);         break;
+            case ID_INS_STXP:      this->stxp_s(inst);          break;
             case ID_INS_STXR:      this->stxr_s(inst);          break;
             case ID_INS_STXRB:     this->stxrb_s(inst);         break;
             case ID_INS_STXRH:     this->stxrh_s(inst);         break;
@@ -3661,6 +3665,34 @@ namespace triton {
         }
 
 
+        void AArch64Semantics::ldxp_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst1 = inst.operands[0];
+          triton::arch::OperandWrapper& dst2 = inst.operands[1];
+          triton::arch::OperandWrapper& src  = inst.operands[2];
+
+          /* Special behavior: Define that the size of the memory access is dst1.size + dst2.size */
+          src.getMemory().setBits((dst1.getBitSize() + dst2.getBitSize()) - 1, 0);
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->extract((dst1.getBitSize() - 1), 0, op);
+          auto node2 = this->astCtxt->extract((dst1.getBitSize() + dst2.getBitSize()) - 1, dst1.getBitSize(), op);
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "LDXP operation - LOAD access");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "LDXP operation - LOAD access");
+
+          /* Spread taint */
+          expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
+          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
         void AArch64Semantics::ldxr_s(triton::arch::Instruction& inst) {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
@@ -5092,6 +5124,36 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::stxp_s(triton::arch::Instruction& inst) {
+          triton::arch::OperandWrapper& dst1 = inst.operands[0]; /* status */
+          triton::arch::OperandWrapper& src1 = inst.operands[1];
+          triton::arch::OperandWrapper& src2 = inst.operands[2];
+          triton::arch::OperandWrapper& dst2 = inst.operands[3];
+
+          /* Create symbolic operands */
+          auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+          auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->bv(0, dst1.getBitSize());
+          auto node2 = this->astCtxt->concat(op2, op1);
+
+          /* Special behavior: Define that the size of the memory access is src1.size + src2.size */
+          dst2.getMemory().setBits(node2->getBitvectorSize()-1, 0);
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STXP operation - write status");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STXP operation - STORE access");
+
+          /* Spread taint */
+          expr1->isTainted = this->taintEngine->setTaint(dst1, false);
+          expr2->isTainted = this->taintEngine->setTaint(dst2, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
