@@ -2908,8 +2908,8 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(true);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(src.getConstMemory(), true);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -2929,8 +2929,8 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(true);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(src.getConstMemory(), true);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -2950,8 +2950,8 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(true);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(src.getConstMemory(), true);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -3697,8 +3697,8 @@ namespace triton {
           expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
           expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(true);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(src.getConstMemory(), true);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -3718,8 +3718,8 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(true);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(src.getConstMemory(), true);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -3742,8 +3742,8 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(true);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(src.getConstMemory(), true);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -3766,8 +3766,8 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(true);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(src.getConstMemory(), true);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -4717,7 +4717,7 @@ namespace triton {
           triton::arch::OperandWrapper& dst2 = inst.operands[2];
 
           /* Is memory exclusive */
-          bool exclusive = this->architecture->isMemoryExclusiveAccess();
+          bool exclusive = this->architecture->isMemoryExclusive(dst2.getConstMemory());
 
           /* Create the semantics */
           auto node1 = this->astCtxt->bv(exclusive ? 0 : 1, dst1.getBitSize());
@@ -4735,8 +4735,8 @@ namespace triton {
             expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
           }
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(false);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(dst2.getConstMemory(), false);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -4749,7 +4749,7 @@ namespace triton {
           triton::arch::OperandWrapper& dst2 = inst.operands[2];
 
           /* Is memory exclusive */
-          bool exclusive = this->architecture->isMemoryExclusiveAccess();
+          bool exclusive = this->architecture->isMemoryExclusive(dst2.getConstMemory());
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -4770,8 +4770,8 @@ namespace triton {
             expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
           }
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(false);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(dst2.getConstMemory(), false);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -4784,7 +4784,7 @@ namespace triton {
           triton::arch::OperandWrapper& dst2 = inst.operands[2];
 
           /* Is memory exclusive */
-          bool exclusive = this->architecture->isMemoryExclusiveAccess();
+          bool exclusive = this->architecture->isMemoryExclusive(dst2.getConstMemory());
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -4805,8 +4805,8 @@ namespace triton {
             expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
           }
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(false);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(dst2.getConstMemory(), false);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -5187,8 +5187,11 @@ namespace triton {
           triton::arch::OperandWrapper& src2 = inst.operands[2];
           triton::arch::OperandWrapper& dst2 = inst.operands[3];
 
+          /* Special behavior: Define that the size of the memory access is src1.size + src2.size */
+          dst2.getMemory().setBits((src1.getBitSize() + src2.getBitSize()) - 1, 0);
+
           /* Is memory exclusive */
-          bool exclusive = this->architecture->isMemoryExclusiveAccess();
+          bool exclusive = this->architecture->isMemoryExclusive(dst2.getConstMemory());
 
           /* Create symbolic operands */
           auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
@@ -5197,9 +5200,6 @@ namespace triton {
           /* Create the semantics */
           auto node1 = this->astCtxt->bv(exclusive ? 0 : 1, dst1.getBitSize());
           auto node2 = this->astCtxt->concat(op2, op1);
-
-          /* Special behavior: Define that the size of the memory access is src1.size + src2.size */
-          dst2.getMemory().setBits(node2->getBitvectorSize()-1, 0);
 
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STXP operation - write status");
@@ -5213,8 +5213,8 @@ namespace triton {
             expr2->isTainted = this->taintEngine->setTaint(dst2, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
           }
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(false);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(dst2.getConstMemory(), false);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -5227,7 +5227,7 @@ namespace triton {
           triton::arch::OperandWrapper& dst2 = inst.operands[2];
 
           /* Is memory exclusive */
-          bool exclusive = this->architecture->isMemoryExclusiveAccess();
+          bool exclusive = this->architecture->isMemoryExclusive(dst2.getConstMemory());
 
           /* Create the semantics */
           auto node1 = this->astCtxt->bv(exclusive ? 0 : 1, dst1.getBitSize());
@@ -5245,8 +5245,8 @@ namespace triton {
             expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
           }
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(false);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(dst2.getConstMemory(), false);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -5259,7 +5259,7 @@ namespace triton {
           triton::arch::OperandWrapper& dst2 = inst.operands[2];
 
           /* Is memory exclusive */
-          bool exclusive = this->architecture->isMemoryExclusiveAccess();
+          bool exclusive = this->architecture->isMemoryExclusive(dst2.getConstMemory());
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -5280,8 +5280,8 @@ namespace triton {
             expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
           }
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(false);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(dst2.getConstMemory(), false);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -5294,7 +5294,7 @@ namespace triton {
           triton::arch::OperandWrapper& dst2 = inst.operands[2];
 
           /* Is memory exclusive */
-          bool exclusive = this->architecture->isMemoryExclusiveAccess();
+          bool exclusive = this->architecture->isMemoryExclusive(dst2.getConstMemory());
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -5315,8 +5315,8 @@ namespace triton {
             expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
           }
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(false);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(dst2.getConstMemory(), false);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);

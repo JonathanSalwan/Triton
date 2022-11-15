@@ -2420,8 +2420,8 @@ namespace triton {
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(true);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(src.getConstMemory(), true);
 
           /* Update condition flag */
           if (cond->evaluate() == true) {
@@ -4261,12 +4261,12 @@ namespace triton {
           auto op2 = this->symbolicEngine->getOperandAst(inst, dst2);
 
           /* Check whether there is exclusive access */
-          auto status = this->astCtxt->bv(this->architecture->isMemoryExclusiveAccess() ? 0 : 1, dst1.getBitSize());
+          auto status = this->astCtxt->bv(this->architecture->isMemoryExclusive(dst2.getConstMemory()) ? 0 : 1, dst1.getBitSize());
 
           /* Create the semantics */
           auto cond  = this->getCodeConditionAst(inst);
           auto node1 = this->astCtxt->ite(cond, status, this->symbolicEngine->getOperandAst(inst, dst1));
-          auto node2 = this->architecture->isMemoryExclusiveAccess() == true ?
+          auto node2 = this->architecture->isMemoryExclusive(dst2.getConstMemory()) == true ?
                           this->astCtxt->ite(cond, op1, op2) :
                           this->astCtxt->ite(cond, op2, op2);
 
@@ -4277,8 +4277,8 @@ namespace triton {
           /* Spread taint */
           this->spreadTaint(inst, cond, expr2, dst2, this->taintEngine->isTainted(src));
 
-          /* Update exclusive memory access flag */
-          this->architecture->setMemoryExclusiveAccess(false);
+          /* Update exclusive memory access tag */
+          this->architecture->setMemoryExclusiveTag(dst2.getConstMemory(), false);
 
           /* Update condition flag */
           if (cond->evaluate() == true) {

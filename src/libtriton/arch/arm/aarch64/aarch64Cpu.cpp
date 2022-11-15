@@ -25,9 +25,8 @@ namespace triton {
       namespace aarch64 {
 
         AArch64Cpu::AArch64Cpu(triton::callbacks::Callbacks* callbacks) : AArch64Specifications(ARCH_AARCH64) {
-          this->callbacks       = callbacks;
-          this->exclusiveMemory = false;
-          this->handle          = 0;
+          this->callbacks = callbacks;
+          this->handle    = 0;
 
           this->clear();
           this->disassInit();
@@ -60,9 +59,9 @@ namespace triton {
 
 
         void AArch64Cpu::copy(const AArch64Cpu& other) {
-          this->callbacks       = other.callbacks;
-          this->exclusiveMemory = other.exclusiveMemory;
-          this->memory          = other.memory;
+          this->callbacks           = other.callbacks;
+          this->exclusiveMemoryTags = other.exclusiveMemoryTags;
+          this->memory              = other.memory;
 
           std::memcpy(this->x0,   other.x0,   sizeof(this->x0));
           std::memcpy(this->x1,   other.x1,   sizeof(this->x1));
@@ -1243,13 +1242,30 @@ namespace triton {
         }
 
 
-        bool AArch64Cpu::isMemoryExclusiveAccess(void) const {
-          return this->exclusiveMemory;
+        bool AArch64Cpu::isMemoryExclusive(const triton::arch::MemoryAccess& mem) const {
+          triton::uint64 base = mem.getAddress();
+
+          for (triton::usize index = 0; index < mem.getSize(); index++) {
+            if (this->exclusiveMemoryTags.find(base + index) != this->exclusiveMemoryTags.end()) {
+              return true;
+            }
+          }
+
+          return false;
         }
 
 
-        void AArch64Cpu::setMemoryExclusiveAccess(bool state) {
-          this->exclusiveMemory = state;
+        void AArch64Cpu::setMemoryExclusiveTag(const triton::arch::MemoryAccess& mem, bool tag) {
+          triton::uint64 base = mem.getAddress();
+
+          for (triton::usize index = 0; index < mem.getSize(); index++) {
+            if (tag == true) {
+              this->exclusiveMemoryTags.insert(base + index);
+            }
+            else {
+              this->exclusiveMemoryTags.erase(base + index);
+            }
+          }
         }
 
 

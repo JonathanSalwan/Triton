@@ -131,16 +131,16 @@ namespace triton {
     }
 
 
-    bool Architecture::isMemoryExclusiveAccess(void) const {
+    bool Architecture::isMemoryExclusive(const triton::arch::MemoryAccess& mem) const {
       if (!this->cpu)
         return false;
-      return this->cpu->isMemoryExclusiveAccess();
+      return this->cpu->isMemoryExclusive(mem);
     }
 
 
-    void Architecture::setMemoryExclusiveAccess(bool state) {
+    void Architecture::setMemoryExclusiveTag(const triton::arch::MemoryAccess& mem, bool tag) {
       if (this->cpu) {
-        this->cpu->setMemoryExclusiveAccess(state);
+        this->cpu->setMemoryExclusiveTag(mem, tag);
       }
     }
 

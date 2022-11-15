@@ -85,11 +85,11 @@ namespace triton {
         //! Sets CPU state to Thumb mode. Only valid for Arm32.
         TRITON_EXPORT void setThumb(bool state);
 
-        //! Returns true if the exclusive memory access flag is set. Only valid for Arm32.
-        TRITON_EXPORT bool isMemoryExclusiveAccess(void) const;
+        //! Returns true if the memory access is tagged as exclusive. Only valid for Arm32 and AArch64.
+        TRITON_EXPORT bool isMemoryExclusive(const triton::arch::MemoryAccess& mem) const;
 
-        //! Sets exclusive memory access flag. Only valid for Arm32.
-        TRITON_EXPORT void setMemoryExclusiveAccess(bool state);
+        //! Sets exclusive memory access tag. Only valid for Arm32 and AArch64.
+        TRITON_EXPORT void setMemoryExclusiveTag(const triton::arch::MemoryAccess& mem, bool tag);
 
         //! Returns the kind of architecture as triton::arch::architecture_e.
         TRITON_EXPORT triton::arch::architecture_e getArchitecture(void) const;
