@@ -33,7 +33,7 @@ namespace triton {
           this->itInstrIndex    = 0;
           this->itCC            = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
           this->itCCInv         = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
-          this->exclusiveMemAcc = false;
+          this->exclusiveMemory = false;
 
           this->clear();
           this->disassInit();
@@ -83,8 +83,9 @@ namespace triton {
 
 
         void Arm32Cpu::copy(const Arm32Cpu& other) {
-          this->callbacks = other.callbacks;
-          this->memory    = other.memory;
+          this->callbacks       = other.callbacks;
+          this->exclusiveMemory = other.exclusiveMemory;
+          this->memory          = other.memory;
 
           std::memcpy(this->r0,   other.r0,   sizeof(this->r0));
           std::memcpy(this->r1,   other.r1,   sizeof(this->r1));
@@ -776,12 +777,12 @@ namespace triton {
 
 
         bool Arm32Cpu::isMemoryExclusiveAccess(void) const {
-          return this->exclusiveMemAcc;
+          return this->exclusiveMemory;
         }
 
 
         void Arm32Cpu::setMemoryExclusiveAccess(bool state) {
-          this->exclusiveMemAcc = state;
+          this->exclusiveMemory = state;
         }
 
 

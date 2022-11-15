@@ -89,7 +89,7 @@ namespace triton {
             triton::arch::arm::condition_e itCCInv;
 
             //! Local exclusive memory access flag.
-            bool exclusiveMemAcc;
+            bool exclusiveMemory;
 
             //! Copies a Arm32Cpu class.
             void copy(const Arm32Cpu& other);

@@ -2908,6 +2908,9 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(true);
+
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
         }
@@ -2926,6 +2929,9 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(true);
+
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
         }
@@ -2943,6 +2949,9 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(true);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -3688,6 +3697,9 @@ namespace triton {
           expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
           expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
 
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(true);
+
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
         }
@@ -3705,6 +3717,9 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(true);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -3727,6 +3742,9 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(true);
+
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
         }
@@ -3747,6 +3765,9 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(true);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -4695,17 +4716,27 @@ namespace triton {
           triton::arch::OperandWrapper& src  = inst.operands[1];
           triton::arch::OperandWrapper& dst2 = inst.operands[2];
 
+          /* Is memory exclusive */
+          bool exclusive = this->architecture->isMemoryExclusiveAccess();
+
           /* Create the semantics */
-          auto node1 = this->astCtxt->bv(0, dst1.getBitSize());
+          auto node1 = this->astCtxt->bv(exclusive ? 0 : 1, dst1.getBitSize());
           auto node2 = this->symbolicEngine->getOperandAst(inst, src);
 
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STLXR operation - write status");
-          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STLXR operation - STORE access");
 
           /* Spread taint */
           expr1->isTainted = this->taintEngine->setTaint(dst1, false);
-          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Exclusive operation */
+          if (exclusive) {
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STLXR operation - STORE access");
+            expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+          }
+
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(false);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -4717,20 +4748,30 @@ namespace triton {
           triton::arch::OperandWrapper& src  = inst.operands[1];
           triton::arch::OperandWrapper& dst2 = inst.operands[2];
 
+          /* Is memory exclusive */
+          bool exclusive = this->architecture->isMemoryExclusiveAccess();
+
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
 
           /* Create the semantics */
-          auto node1 = this->astCtxt->bv(0, dst1.getBitSize());
+          auto node1 = this->astCtxt->bv(exclusive ? 0 : 1, dst1.getBitSize());
           auto node2 = this->astCtxt->extract(7, 0, op);
 
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STLXRB operation - write status");
-          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STLXRB operation - STORE access");
 
           /* Spread taint */
           expr1->isTainted = this->taintEngine->setTaint(dst1, false);
-          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Exclusive operation */
+          if (exclusive) {
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STLXRB operation - STORE access");
+            expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+          }
+
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(false);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -4742,20 +4783,30 @@ namespace triton {
           triton::arch::OperandWrapper& src  = inst.operands[1];
           triton::arch::OperandWrapper& dst2 = inst.operands[2];
 
+          /* Is memory exclusive */
+          bool exclusive = this->architecture->isMemoryExclusiveAccess();
+
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
 
           /* Create the semantics */
-          auto node1 = this->astCtxt->bv(0, dst1.getBitSize());
+          auto node1 = this->astCtxt->bv(exclusive ? 0 : 1, dst1.getBitSize());
           auto node2 = this->astCtxt->extract(15, 0, op);
 
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STLXRH operation - write status");
-          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STLXRH operation - STORE access");
 
           /* Spread taint */
           expr1->isTainted = this->taintEngine->setTaint(dst1, false);
-          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Exclusive operation */
+          if (exclusive) {
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STLXRH operation - STORE access");
+            expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+          }
+
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(false);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -5136,12 +5187,15 @@ namespace triton {
           triton::arch::OperandWrapper& src2 = inst.operands[2];
           triton::arch::OperandWrapper& dst2 = inst.operands[3];
 
+          /* Is memory exclusive */
+          bool exclusive = this->architecture->isMemoryExclusiveAccess();
+
           /* Create symbolic operands */
           auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
           auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
 
           /* Create the semantics */
-          auto node1 = this->astCtxt->bv(0, dst1.getBitSize());
+          auto node1 = this->astCtxt->bv(exclusive ? 0 : 1, dst1.getBitSize());
           auto node2 = this->astCtxt->concat(op2, op1);
 
           /* Special behavior: Define that the size of the memory access is src1.size + src2.size */
@@ -5149,11 +5203,18 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STXP operation - write status");
-          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STXP operation - STORE access");
 
           /* Spread taint */
           expr1->isTainted = this->taintEngine->setTaint(dst1, false);
-          expr2->isTainted = this->taintEngine->setTaint(dst2, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Exclusive operation */
+          if (exclusive) {
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STXP operation - STORE access");
+            expr2->isTainted = this->taintEngine->setTaint(dst2, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+          }
+
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(false);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -5165,17 +5226,27 @@ namespace triton {
           triton::arch::OperandWrapper& src  = inst.operands[1];
           triton::arch::OperandWrapper& dst2 = inst.operands[2];
 
+          /* Is memory exclusive */
+          bool exclusive = this->architecture->isMemoryExclusiveAccess();
+
           /* Create the semantics */
-          auto node1 = this->astCtxt->bv(0, dst1.getBitSize());
+          auto node1 = this->astCtxt->bv(exclusive ? 0 : 1, dst1.getBitSize());
           auto node2 = this->symbolicEngine->getOperandAst(inst, src);
 
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STXR operation - write status");
-          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STXR operation - STORE access");
 
           /* Spread taint */
           expr1->isTainted = this->taintEngine->setTaint(dst1, false);
-          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Exclusive operation */
+          if (exclusive) {
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STXR operation - STORE access");
+            expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+          }
+
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(false);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -5187,20 +5258,30 @@ namespace triton {
           triton::arch::OperandWrapper& src  = inst.operands[1];
           triton::arch::OperandWrapper& dst2 = inst.operands[2];
 
+          /* Is memory exclusive */
+          bool exclusive = this->architecture->isMemoryExclusiveAccess();
+
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
 
           /* Create the semantics */
-          auto node1 = this->astCtxt->bv(0, dst1.getBitSize());
+          auto node1 = this->astCtxt->bv(exclusive ? 0 : 1, dst1.getBitSize());
           auto node2 = this->astCtxt->extract(7, 0, op);
 
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STXRB operation - write status");
-          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STXRB operation - STORE access");
 
           /* Spread taint */
           expr1->isTainted = this->taintEngine->setTaint(dst1, false);
-          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Exclusive operation */
+          if (exclusive) {
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STXRB operation - STORE access");
+            expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+          }
+
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(false);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -5212,20 +5293,30 @@ namespace triton {
           triton::arch::OperandWrapper& src  = inst.operands[1];
           triton::arch::OperandWrapper& dst2 = inst.operands[2];
 
+          /* Is memory exclusive */
+          bool exclusive = this->architecture->isMemoryExclusiveAccess();
+
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
 
           /* Create the semantics */
-          auto node1 = this->astCtxt->bv(0, dst1.getBitSize());
+          auto node1 = this->astCtxt->bv(exclusive ? 0 : 1, dst1.getBitSize());
           auto node2 = this->astCtxt->extract(15, 0, op);
 
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STXRH operation - write status");
-          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STXRH operation - STORE access");
 
           /* Spread taint */
           expr1->isTainted = this->taintEngine->setTaint(dst1, false);
-          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Exclusive operation */
+          if (exclusive) {
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STXRH operation - STORE access");
+            expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+          }
+
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(false);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);

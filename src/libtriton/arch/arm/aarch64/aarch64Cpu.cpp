@@ -25,8 +25,9 @@ namespace triton {
       namespace aarch64 {
 
         AArch64Cpu::AArch64Cpu(triton::callbacks::Callbacks* callbacks) : AArch64Specifications(ARCH_AARCH64) {
-          this->callbacks = callbacks;
-          this->handle    = 0;
+          this->callbacks       = callbacks;
+          this->exclusiveMemory = false;
+          this->handle          = 0;
 
           this->clear();
           this->disassInit();
@@ -59,8 +60,9 @@ namespace triton {
 
 
         void AArch64Cpu::copy(const AArch64Cpu& other) {
-          this->callbacks = other.callbacks;
-          this->memory    = other.memory;
+          this->callbacks       = other.callbacks;
+          this->exclusiveMemory = other.exclusiveMemory;
+          this->memory          = other.memory;
 
           std::memcpy(this->x0,   other.x0,   sizeof(this->x0));
           std::memcpy(this->x1,   other.x1,   sizeof(this->x1));
@@ -1242,13 +1244,12 @@ namespace triton {
 
 
         bool AArch64Cpu::isMemoryExclusiveAccess(void) const {
-          /* There is no exclusive memory access support in aarch64 */
-          return false;
+          return this->exclusiveMemory;
         }
 
 
         void AArch64Cpu::setMemoryExclusiveAccess(bool state) {
-          /* There is no exclusive memory access support in aarch64 */
+          this->exclusiveMemory = state;
         }
 
 

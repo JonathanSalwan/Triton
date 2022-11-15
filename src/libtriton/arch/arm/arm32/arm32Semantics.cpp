@@ -4261,9 +4261,7 @@ namespace triton {
           auto op2 = this->symbolicEngine->getOperandAst(inst, dst2);
 
           /* Check whether there is exclusive access */
-          auto status = this->architecture->isMemoryExclusiveAccess() == true ?
-                          this->astCtxt->bv(0, dst1.getBitSize()) :     /* the operation updates memory */
-                          this->astCtxt->bv(1, dst1.getBitSize());      /* the operation fails to update memory */
+          auto status = this->astCtxt->bv(this->architecture->isMemoryExclusiveAccess() ? 0 : 1, dst1.getBitSize());
 
           /* Create the semantics */
           auto cond  = this->getCodeConditionAst(inst);
@@ -4273,7 +4271,7 @@ namespace triton {
                           this->astCtxt->ite(cond, op2, op2);
 
           /* Create symbolic expression */
-          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STREX operation - STATUS update");
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STREX operation - write status");
           auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STREX operation - STORE access");
 
           /* Spread taint */

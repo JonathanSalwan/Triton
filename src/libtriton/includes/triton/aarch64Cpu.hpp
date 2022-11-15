@@ -67,6 +67,9 @@ namespace triton {
             //! Callbacks API
             triton::callbacks::Callbacks* callbacks;
 
+            //! Local exclusive memory access flag.
+            bool exclusiveMemory;
+
             //! Capstone context
             std::size_t handle;
 
