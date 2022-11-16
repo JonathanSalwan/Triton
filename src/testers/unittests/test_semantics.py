@@ -417,6 +417,29 @@ class TestCustomIR(unittest.TestCase):
                 found = True
         self.assertTrue(found)
 
+    def test_blr1_aarch64(self):
+        ctx = TritonContext(ARCH.AARCH64)
+        ctx.setConcreteRegisterValue(ctx.registers.pc, 0x1000)
+        ctx.setConcreteRegisterValue(ctx.registers.x1, 0xaaaa)
+        ctx.processing(Instruction(b"\x20\x00\x3f\xd6")) # blr x1p
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.pc), 0xaaaa)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x30), 0x1004)
+
+    def test_brk1_aarch64(self):
+        ctx = TritonContext(ARCH.AARCH64)
+        ret = ctx.processing(Instruction(b"\x20\x00\x20\xd4")) # brk 1
+        self.assertEqual(ret, EXCEPTION.FAULT_BP)
+
+    def test_movn_aarch64(self):
+        ctx = TritonContext(ARCH.AARCH64)
+        ctx.processing(Instruction(b"\x41\x01\x80\x92")) # movn x1, #10
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x1), 0xfffffffffffffff5)
+
+    def test_movz_aarch64(self):
+        ctx = TritonContext(ARCH.AARCH64)
+        ctx.processing(Instruction(b"\x41\x01\x80\xd2")) # movz x1, #10
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x1), 0xa)
+
     def test_ldr2_aarch64(self):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.AARCH64)

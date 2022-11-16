@@ -449,7 +449,6 @@ namespace triton {
                   triton::arch::Immediate disp(op->mem.disp, immsize);
 
                   /* Specify that LEA contains a PC relative */
-                  /* FIXME: Valid in ARM64 ? */
                   if (base.getId() == this->pcId) {
                     mem.setPcRelative(inst.getNextAddress());
                   }
