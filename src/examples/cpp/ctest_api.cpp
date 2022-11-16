@@ -628,6 +628,172 @@ int test_10(void) {
 #endif
 
 
+int test_11(void) {
+  triton::modes::Modes m1;
+  triton::modes::Modes m2;
+
+  if (m1.isModeEnabled(triton::modes::PC_TRACKING_SYMBOLIC) == false) {
+    std::cerr << "test_11: KO" << std::endl;
+    return 1;
+  }
+
+  if (m1.isModeEnabled(triton::modes::ALIGNED_MEMORY) == true) {
+    std::cerr << "test_11: KO" << std::endl;
+    return 1;
+  }
+
+  m2.setMode(triton::modes::ALIGNED_MEMORY, true);
+  m1 = m2;
+
+  if (m1.isModeEnabled(triton::modes::ALIGNED_MEMORY) == false) {
+    std::cerr << "test_11: KO" << std::endl;
+    return 1;
+  }
+
+  triton::modes::Modes m3(m1);
+  if (m3.isModeEnabled(triton::modes::ALIGNED_MEMORY) == false) {
+    std::cerr << "test_11: KO" << std::endl;
+    return 1;
+  }
+
+  std::cout << "test_11: OK" << std::endl;
+  return 0;
+}
+
+
+triton::ast::SharedAbstractNode cb_1(triton::Context&, const triton::ast::SharedAbstractNode& n) {return n;}
+void cb_2(triton::Context&, const triton::arch::Register&, const triton::uint512&) {};
+void cb_3(triton::Context&, const triton::arch::MemoryAccess&, const triton::uint512&) {};
+void cb_4(triton::Context&, const triton::arch::Register&) {};
+void cb_5(triton::Context&, const triton::arch::MemoryAccess&) {};
+
+
+int test_12(void) {
+  triton::Context ctx;
+  triton::callbacks::Callbacks cb(ctx);
+
+  if (cb.isDefined(triton::callbacks::GET_CONCRETE_MEMORY_VALUE) == true) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  if (cb.isDefined(triton::callbacks::GET_CONCRETE_REGISTER_VALUE) == true) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  if (cb.isDefined(triton::callbacks::SET_CONCRETE_MEMORY_VALUE) == true) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  if (cb.isDefined(triton::callbacks::SET_CONCRETE_REGISTER_VALUE) == true) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  if (cb.isDefined(triton::callbacks::SYMBOLIC_SIMPLIFICATION) == true) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  cb.addCallback(triton::callbacks::SYMBOLIC_SIMPLIFICATION, cb_1);
+  cb.addCallback(triton::callbacks::SET_CONCRETE_REGISTER_VALUE, cb_2);
+  cb.addCallback(triton::callbacks::SET_CONCRETE_MEMORY_VALUE, cb_3);
+  cb.addCallback(triton::callbacks::GET_CONCRETE_REGISTER_VALUE, cb_4);
+  cb.addCallback(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, cb_5);
+
+  if (cb.isDefined(triton::callbacks::GET_CONCRETE_MEMORY_VALUE) == false) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  if (cb.isDefined(triton::callbacks::GET_CONCRETE_REGISTER_VALUE) == false) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  if (cb.isDefined(triton::callbacks::SET_CONCRETE_MEMORY_VALUE) == false) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  if (cb.isDefined(triton::callbacks::SET_CONCRETE_REGISTER_VALUE) == false) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  if (cb.isDefined(triton::callbacks::SYMBOLIC_SIMPLIFICATION) == false) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  cb.removeCallback(triton::callbacks::SYMBOLIC_SIMPLIFICATION, cb_1);
+  cb.removeCallback(triton::callbacks::SET_CONCRETE_REGISTER_VALUE, cb_2);
+  cb.removeCallback(triton::callbacks::SET_CONCRETE_MEMORY_VALUE, cb_3);
+  cb.removeCallback(triton::callbacks::GET_CONCRETE_REGISTER_VALUE, cb_4);
+  cb.removeCallback(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, cb_5);
+
+  if (cb.isDefined(triton::callbacks::GET_CONCRETE_MEMORY_VALUE) == true) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  if (cb.isDefined(triton::callbacks::GET_CONCRETE_REGISTER_VALUE) == true) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  if (cb.isDefined(triton::callbacks::SET_CONCRETE_MEMORY_VALUE) == true) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  if (cb.isDefined(triton::callbacks::SET_CONCRETE_REGISTER_VALUE) == true) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  if (cb.isDefined(triton::callbacks::SYMBOLIC_SIMPLIFICATION) == true) {
+    std::cerr << "test_12: KO" << std::endl;
+    return 1;
+  }
+
+  std::cout << "test_12: OK" << std::endl;
+  return 0;
+}
+
+
+int test_13(void) {
+  triton::Context ctx1(triton::arch::ARCH_X86);
+  triton::Context ctx2(triton::arch::ARCH_X86_64);
+  triton::Context ctx3(triton::arch::ARCH_ARM32);
+  triton::Context ctx4(triton::arch::ARCH_AARCH64);
+
+  if (ctx1.getEndianness() != triton::arch::LE_ENDIANNESS) {
+    std::cerr << "test_13: KO" << std::endl;
+    return 1;
+  }
+
+  if (ctx2.getEndianness() != triton::arch::LE_ENDIANNESS) {
+    std::cerr << "test_13: KO" << std::endl;
+    return 1;
+  }
+
+  if (ctx3.getEndianness() != triton::arch::LE_ENDIANNESS) {
+    std::cerr << "test_13: KO" << std::endl;
+    return 1;
+  }
+
+  if (ctx4.getEndianness() != triton::arch::LE_ENDIANNESS) {
+    std::cerr << "test_13: KO" << std::endl;
+    return 1;
+  }
+
+  std::cout << "test_13: OK" << std::endl;
+  return 0;
+}
+
 int main(int ac, const char **av) {
   if (test_1())
     return 1;
@@ -660,6 +826,15 @@ int main(int ac, const char **av) {
   if (test_10())
     return 1;
   #endif
+
+  if (test_11())
+    return 1;
+
+  if (test_12())
+    return 1;
+
+  if (test_13())
+    return 1;
 
   return 0;
 }
