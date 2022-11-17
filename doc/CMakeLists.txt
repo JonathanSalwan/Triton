@@ -38,10 +38,12 @@ if(PYTHON_BINDINGS_AUTOCOMPLETE)
         DEPENDS gen_aarch64_doc_from_spec
         DEPENDS gen_arm32_doc_from_spec
     )
-    # replace backlsash with forwardslash to not generate an error on windows
-    execute_process(
-        COMMAND ${PYTHON_EXECUTABLE} -c [[from __future__ import print_function; from distutils.sysconfig import get_python_lib; lib = get_python_lib(); print(lib.replace("\\", "/"))]]
-        OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE
+    if (NOT DEFINED PYTHON_SITE_PACKAGES)
+        # replace backlsash with forwardslash to not generate an error on windows
+        execute_process(
+            COMMAND ${PYTHON_EXECUTABLE} -c [[from __future__ import print_function; from distutils.sysconfig import get_python_lib; lib = get_python_lib(); print(lib.replace("\\", "/"))]]
+            OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE
+    endif()
     )
     install(
         DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/triton_autocomplete
