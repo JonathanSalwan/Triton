@@ -8,3 +8,4 @@ ignore:
   - "**/*.spec"       # glob accepted
 
 comment: false
+informational: true
