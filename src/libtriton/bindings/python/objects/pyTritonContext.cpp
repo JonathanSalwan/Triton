@@ -146,11 +146,11 @@ Returns the AST corresponding to the \ref py_Immediate_page.
 - <b>\ref py_AstNode_page getMemoryAst(\ref py_MemoryAccess_page mem)</b><br>
 Returns the AST corresponding to the \ref py_MemoryAccess_page with the SSA form.
 
-- <b>dict getModel(\ref py_AstNode_page node, status=False, timeout=0)</b><br>
+- <b>dict getModel(\ref py_AstNode_page node, bool status=False, integer timeout=0)</b><br>
 Computes and returns a model as a dictionary of {integer symVarId : \ref py_SolverModel_page model} from a symbolic constraint.
 If status is True, returns a tuple of (dict model, \ref py_SOLVER_STATE_page status, integer solvingTime).
 
-- <b>[dict, ...] getModels(\ref py_AstNode_page node, integer limit, status=False, timeout=0)</b><br>
+- <b>[dict, ...] getModels(\ref py_AstNode_page node, integer limit, bool status=False, integer timeout=0)</b><br>
 Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
 If status is True, returns a tuple of ([dict model, ...], \ref py_SOLVER_STATE_page status, integer solvingTime).
 
@@ -1510,7 +1510,7 @@ namespace triton {
 
         /* Extract Keywords */
         if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OOOO", keywords, &node, &limit, &wb, &timeout) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Invalid keyword argument.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Invalid keyword argument.");
         }
 
         if (node == nullptr || !PyAstNode_Check(node)) {
@@ -1522,11 +1522,11 @@ namespace triton {
         }
 
         if (wb != nullptr && !PyBool_Check(wb)) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a boolean as status keyword.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Expects a boolean as status keyword.");
         }
 
         if (timeout != nullptr && (!PyLong_Check(timeout) && !PyInt_Check(timeout))) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a integer as timeout keyword.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Expects a integer as timeout keyword.");
         }
 
         if (timeout != nullptr) {
