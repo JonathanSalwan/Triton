@@ -473,3 +473,15 @@ class TestDeadStoreElimination(unittest.TestCase):
         self.assertEqual(str(sblock), '0x0: mov rsi, 0\n'
                                       '0x7: mov qword ptr [rsi], rdx\n'
                                       '0xa: pop rsi')
+
+    def test_inst10(self):
+        self.ctx.setArchitecture(ARCH.X86_64)
+        block = BasicBlock([
+            Instruction(b"\x89\x2c\x24"), # mov dword ptr [rsp], ebp
+            Instruction(b"\x89\x1c\x24"), # mov dword ptr [rsp], ebx
+            Instruction(b"\x89\x04\x24"), # mov dword ptr [rsp], eax
+        ])
+        self.ctx.disassembly(block)
+        sblock = self.ctx.simplify(block)
+        self.ctx.disassembly(sblock)
+        self.assertEqual(str(sblock), '0x0: mov dword ptr [rsp], eax')
