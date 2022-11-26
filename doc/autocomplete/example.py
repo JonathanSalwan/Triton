@@ -15,6 +15,6 @@ ctx.setArchitecture(ARCH.X86)
 
 inst = Instruction()
 inst.setAddress(0x40000)
-inst.setOpcode("\x89\xd0")    # mov eax, edx
+inst.setOpcode(b"\x89\xd0")    # mov eax, edx
 ctx.processing(inst)
 print(inst)
