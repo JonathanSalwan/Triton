@@ -3,7 +3,7 @@ name: Build Python Package
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  package-version: '1.0.0rc1'
+  package-version: '1.0.0rc2'
 
 jobs:
   build-linux:
@@ -41,6 +41,13 @@ jobs:
         with:
           name: triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_24_x86_64.whl
           path: wheel-final/triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_24_x86_64.whl
+          if-no-files-found: warn
+          
+      - name: Upload Wheel packages (Python 3.11)
+        uses: actions/upload-artifact@v3
+        with:
+          name: triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_24_x86_64.whl
+          path: wheel-final/triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_24_x86_64.whl
           if-no-files-found: warn
 
 

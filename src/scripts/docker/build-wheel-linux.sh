@@ -2,7 +2,7 @@
 
 # This file is meant to be used inside the docker image build by the
 # `build-docker-image.sh` script. This file build triton-library for Python 3.8,
-# 3.9 and 3.10. It is used by the Build Python Package Github workflow but can
+# 3.9, 3.10 and 3.11. It is used by the Build Python Package Github workflow but can
 # also be used locally by running:
 #
 # $ docker pull quay.io/pypa/manylinux_2_24_x86_64
@@ -85,6 +85,13 @@ $PYTHON_BINARY setup.py bdist_wheel --dist-dir wheel-temp
 
 # Build Triton Python wheel package for Python 3.10.
 export PYTHON_BINARY=/opt/python/cp310-cp310/bin/python
+export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+
+$PYTHON_BINARY setup.py bdist_wheel --dist-dir wheel-temp
+
+# Build Triton Python wheel package for Python 3.11.
+export PYTHON_BINARY=/opt/python/cp311-cp311/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
