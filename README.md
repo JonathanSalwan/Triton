@@ -23,11 +23,11 @@ As **Triton** is a kind of a part-time project, please, **don't blame us** if it
 
 <p align="center">
   <a href="https://github.com/JonathanSalwan/Triton/actions/workflows/linux.yml/">
-    <img src="https://img.shields.io/github/workflow/status/JonathanSalwan/Triton/Tests%20on%20Linux/master?label=Linux&logo=linux&logoColor=white">
+    <img src="https://img.shields.io/github/actions/workflow/status/JonathanSalwan/Triton/linux.yml?branch=master&label=Linux&logo=linux&logoColor=white">
   </a>
   &nbsp;
   <a href="https://github.com/JonathanSalwan/Triton/actions/workflows/osx.yml/">
-    <img src="https://img.shields.io/github/workflow/status/JonathanSalwan/Triton/Tests%20on%20OSX/master?label=OSX&logo=apple">
+    <img src="https://img.shields.io/github/actions/workflow/status/JonathanSalwan/Triton/osx.yml?branch=master&label=OSX&logo=apple">
   </a>
   &nbsp;
   <a href="https://ci.appveyor.com/project/JonathanSalwan/triton">
