@@ -42,6 +42,13 @@ jobs:
           name: triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_24_x86_64.whl
           path: wheel-final/triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_24_x86_64.whl
           if-no-files-found: warn
+          
+      - name: Upload Wheel packages (Python 3.11)
+        uses: actions/upload-artifact@v3
+        with:
+          name: triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_24_x86_64.whl
+          path: wheel-final/triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_24_x86_64.whl
+          if-no-files-found: warn
 
 
   # FIXME
