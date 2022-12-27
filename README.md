@@ -220,6 +220,28 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 
 <ul dir="auto">
 <li>
+<b>Sydr-Fuzz: Continuous Hybrid Fuzzing and Dynamic Analysis for Security Development Lifecycle</b><br />
+ <b>Talk at</b>: Ivannikov ISP RAS Open Conference, Moscow, Russia, 2022. [<a href="publications/ISPOPEN2022-sydr-fuzz.pdf">paper</a>] [<a href="publications/ISPOPEN2022-slide-sydr-fuzz-vishnyakov.pdf">slide</a>]<br />
+ <b>Authors</b>: Vishnyakov A., Kuts D., Logunova V., Parygina D., Kobrin E., Savidov G., Fedotov A.<br />
+ <b>Abstract</b>: <em>Nowadays automated dynamic analysis frameworks for
+ continuous testing are in high demand to ensure software safety and satisfy the
+ security development lifecycle (SDL) requirements. The security bug hunting
+ efficiency of cutting-edge hybrid fuzzing techniques outperforms widely
+ utilized coverage-guided fuzzing. We propose an enhanced dynamic analysis
+ pipeline to leverage productivity of automated bug detection based on hybrid
+ fuzzing. We implement the proposed pipeline in the continuous fuzzing toolset
+ Sydr-Fuzz which is powered by hybrid fuzzing orchestrator, integrating our DSE
+ tool Sydr with libFuzzer and AFL++. Sydr-Fuzz also incorporates security
+ predicate checkers, crash triaging tool Casr, and utilities for corpus
+ minimization and coverage gathering. The benchmarking of our hybrid fuzzer
+ against alternative state-of-the-art solutions demonstrates its superiority
+ over coverage-guided fuzzers while remaining on the same level with advanced
+ hybrid fuzzers. Furthermore, we approve the relevance of our approach by
+ discovering 85 new real-world software flaws within the OSS-Sydr-Fuzz project.
+ Finally, we open Casr source code to the community to facilitate examination of
+ the existing crashes.</em>
+</li><br/>
+<li>
 <b>Strong Optimistic Solving for Dynamic Symbolic Execution</b><br />
  <b>Talk at</b>: Ivannikov Memorial Workshop, Kazan, Russia, 2022. [<a href="publications/IVMEM2022-strong-optimistic-parygina.pdf">paper</a>] [<a href="publications/IVMEM2022-slide-strong-optimistic-parygina.pdf">slide</a>]<br />
  <b>Authors</b>: Parygina D., Vishnyakov A., Fedotov A.<br />
