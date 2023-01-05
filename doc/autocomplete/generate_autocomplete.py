@@ -14,7 +14,7 @@ OBJECT_PREFIX = 'o'
 NAMESPACE_PREFIX = 'n'
 
 list_pattern      = r'\[(.*?)(?:,(?: ?...)?)?\]'
-type_pattern      = r'(?P<type>List\[.*?\]|\w+)'
+type_pattern      = r'(?P<type>List\[.*?\]|[\w\.]+)'
 obj_doc_re        = re.compile(r'-\s<b>(?P<sig>.*?)<\/b><br>\r?\n(?P<desc>.*?)\r?\n\r?\n', flags=re.DOTALL)
 name_doc_pattern  = r'- \*\*{namespace}\.(?P<member>.*?)\*\*'
 ref_re            = re.compile(r'\\ref\spy_(.*?)_page')
@@ -151,7 +151,7 @@ def gen_module_for_namespace(classname, input_str):
         for x in submod:
             submodules.add('    class %s: pass' % (x.lstrip()))
 
-    print(submodules)
+    #print(submodules)
     if not members:
         print("warning: empty namespace {}".format(classname))
         members.append('    pass')
@@ -269,6 +269,10 @@ def gen_init_file(modules):
     mod_str = """
 from typing import List, Union, Callable, Tuple
 import triton
+try:
+    import z3
+except:
+    pass
 
 {modules}
 
