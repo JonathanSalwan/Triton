@@ -98,7 +98,7 @@ Disassembles the instruction and sets up operands.
 - <b>void disassembly(\ref py_BasicBlock_page block, integer addr=0)</b><br>
 Disassembles a basic block with a potential given base address.
 
-- <b>[\ref py_Instruction_page inst, ...] disassembly(integer addr, integer count)</b><br>
+- <b>[\ref py_Instruction_page, ...] disassembly(integer addr, integer count)</b><br>
 Disassembles a concrete memory area from `addr` and returns a list of at most `count` disassembled instructions.
 
 - <b>\ref py_BasicBlock_page disassembly(integer addr)</b><br>
