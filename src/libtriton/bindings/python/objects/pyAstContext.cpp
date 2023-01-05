@@ -286,13 +286,13 @@ Duplicates the node and returns a new instance as \ref py_AstNode_page.
 - <b>[\ref py_AstNode_page, ...] search(\ref py_AstNode_page node, \ref py_AST_NODE_page match)</b><br>
 Returns a list of collected matched nodes via a depth-first pre order traversal.
 
-- <b>z3::expr tritonToZ3(\ref py_AstNode_page node)</b><br>
+- <b>z3.ExprRef tritonToZ3(\ref py_AstNode_page node)</b><br>
 Convert a Triton AST to a Z3 AST.
 
 - <b>\ref py_AstNode_page unroll(\ref py_AstNode_page node)</b><br>
 Unrolls the SSA form of a given AST.
 
-- <b>\ref py_AstNode_page z3ToTriton(z3::expr expr)</b><br>
+- <b>\ref py_AstNode_page z3ToTriton(z3.ExprRef expr)</b><br>
 Convert a Z3 AST to a Triton AST.
 
 
