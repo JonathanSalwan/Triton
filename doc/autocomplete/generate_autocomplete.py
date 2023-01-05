@@ -3,6 +3,7 @@ try:
 except ImportError:
     pass
 
+import argparse
 import re
 import os
 
@@ -134,6 +135,8 @@ class {classname}:
 
 def gen_module_for_namespace(classname, input_str):
     # type: (str, str) -> str
+    global args
+
     input_str = ref_re.sub(sub_ref, input_str)
 
     # find functions
@@ -146,6 +149,12 @@ def gen_module_for_namespace(classname, input_str):
     submodules = set()
     for match in matches:
         member = '    {member} = triton.{namespace}.{member}'.format(member = match.group('member'), namespace=classname)
+
+        if(member == '    Z3 = triton.SOLVER.Z3' and not args.z3_enabled):
+            continue
+        elif(member == '    BITWUZLA = triton.SOLVER.BITWUZLA' and not args.bitwuzla_enabled):
+            continue
+
         members.append(member)
         submod = member.split('=')[0].split('.')[:-1]
         for x in submod:
@@ -266,20 +275,19 @@ def get_namespaces(namespace_dir):
 
 def gen_init_file(modules):
     # type: (List[str]) -> str
+    global args
     mod_str = """
 from typing import List, Union, Callable, Tuple
 import triton
-try:
-    import z3
-except:
-    pass
+{z3}
 
 {modules}
 
 raise ImportError
-""".format(modules='\n\n'.join(modules))
+""".format(z3='import z3' if args.z3_enabled else '', modules='\n\n'.join(modules))
     return mod_str
 
+args = None
 
 def main():
     this_dir = os.path.dirname(__file__)
@@ -287,7 +295,21 @@ def main():
     namespace_dir = os.path.join(src_dir, 'libtriton/bindings/python/namespaces')
     object_dir = os.path.join(src_dir, 'libtriton/bindings/python/objects')
 
-    out_dir = os.path.join(this_dir if len(os.sys.argv) < 2 else os.sys.argv[1], 'triton_autocomplete')
+    argp = argparse.ArgumentParser(prog='generate_autocomplete.py',
+                                   description='Generates an autocomplete module for IDEs to use.')
+    argp.add_argument('--basedir', default=this_dir, help='In what directory the submodule should be generated')
+    argp.add_argument('--bitwuzla', action='store_true', dest='bitwuzla_enabled', help='Enable bitwuzla support')
+    argp.add_argument('--z3', action='store_true', dest='z3_enabled', help='Enable Z3 support')
+
+    global args
+    args = argp.parse_args()
+
+    if(not args.bitwuzla_enabled):
+        print("Generating without bitwuzla")
+    if(not args.z3_enabled):
+        print("Generating without Z3")
+
+    out_dir = os.path.join(args.basedir, 'triton_autocomplete')
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
 
