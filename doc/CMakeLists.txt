@@ -31,7 +31,7 @@ add_custom_target(doc
     DEPENDS gen_arm32_doc_from_spec
 )
 
-if(PYTHON_BINDINGS)
+if(PYTHON_BINDINGS_AUTOCOMPLETE)
     add_custom_target(python_autocomplete
         COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/autocomplete/generate_autocomplete.py "--basedir" "${CMAKE_CURRENT_BINARY_DIR}" "$<$<BOOL:${BITWUZLA_INTERFACE}>:--bitwuzla>" "$<$<BOOL:${Z3_INTERFACE}>:--z3>"
         DEPENDS gen_x86_doc_from_spec
