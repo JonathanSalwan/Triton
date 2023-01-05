@@ -22,14 +22,15 @@ project(triton VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
 # Define cmake options
 include(CMakeDependentOption)
 
-option(ASAN                 "Enable the ASAN linking"                   OFF)
-option(BITWUZLA_INTERFACE   "Use Bitwuzla as SMT solver"                OFF)
-option(BUILD_SHARED_LIBS    "Build a shared library"                    ON)
-option(GCOV                 "Enable code coverage"                      OFF)
-option(LLVM_INTERFACE       "Use LLVM for lifting"                      OFF)
-option(MSVC_STATIC          "Use statically-linked runtime library"     OFF)
-option(Z3_INTERFACE         "Use Z3 as SMT solver"                      ON)
-option(BOOST_INTERFACE      "Use Boost as multiprecision library"       ON)
+option(ASAN                              "Enable the ASAN linking"                         OFF)
+option(BITWUZLA_INTERFACE                "Use Bitwuzla as SMT solver"                      OFF)
+option(BUILD_SHARED_LIBS                 "Build a shared library"                          ON)
+option(GCOV                              "Enable code coverage"                            OFF)
+option(LLVM_INTERFACE                    "Use LLVM for lifting"                            OFF)
+option(MSVC_STATIC                       "Use statically-linked runtime library"           OFF)
+option(Z3_INTERFACE                      "Use Z3 as SMT solver"                            ON)
+option(BOOST_INTERFACE                   "Use Boost as multiprecision library"             ON)
+option(PYTHON_BINDINGS_AUTOCOMPLETE      "Generate a package for IDE autocompletion"       OFF)
 
 # Define cmake dependent options
 cmake_dependent_option(BUILD_EXAMPLES   "Build the examples"            ON  BUILD_SHARED_LIBS OFF)
