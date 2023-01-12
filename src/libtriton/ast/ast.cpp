@@ -2671,7 +2671,12 @@ namespace triton {
 
 
     void IntegerNode::initHash(void) {
-      this->hash = static_cast<triton::uint64>(this->type) ^ this->value;
+      static const triton::uint512 even_flag = (triton::uint512(1) << 64) | 1;
+      if ((this->value & 1) == 0) {
+        this->hash = static_cast<triton::uint64>(this->type) ^ this->value;
+      } else {
+        this->hash = static_cast<triton::uint64>(this->type) ^ this->value ^ (even_flag);
+      }
     }
 
 
@@ -3473,7 +3478,7 @@ namespace triton {
     triton::uint512 rotl(const triton::uint512& value, triton::uint32 shift) {
       if ((shift &= 511) == 0)
         return value;
-      return ((value << shift) | (value >> (512 - shift)));
+      return ((value << shift) | (value >> (512 - shift))) | 1;
     }
 
 
