@@ -347,7 +347,7 @@ def main():
 
     # generate and create final __init__ file
     init_str = gen_init_file(modules)
-    with open(os.path.join(out_dir, '__init__.py'), 'w') as f:
+    with open(os.path.join(out_dir, 'triton.pyi'), 'w') as f:
         f.write(init_str)
 
     print('autocomplete generation done')

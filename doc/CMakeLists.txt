@@ -42,7 +42,7 @@ if(PYTHON_BINDINGS_AUTOCOMPLETE)
         execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "from sysconfig import get_path; print(get_path('platlib'))" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
     endif()
     install(
-        DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/triton_autocomplete
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/triton_autocomplete/triton.pyi
         DESTINATION ${PYTHON_SITE_PACKAGES}
     )
 endif()
