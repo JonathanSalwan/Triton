@@ -30,7 +30,7 @@ option(LLVM_INTERFACE                    "Use LLVM for lifting"                 
 option(MSVC_STATIC                       "Use statically-linked runtime library"           OFF)
 option(Z3_INTERFACE                      "Use Z3 as SMT solver"                            ON)
 option(BOOST_INTERFACE                   "Use Boost as multiprecision library"             ON)
-option(PYTHON_BINDINGS_AUTOCOMPLETE      "Generate a package for IDE autocompletion"       OFF)
+option(PYTHON_BINDINGS_AUTOCOMPLETE      "Generate an autocomplete stub file"              OFF)
 
 # Define cmake dependent options
 cmake_dependent_option(BUILD_EXAMPLES   "Build the examples"            ON  BUILD_SHARED_LIBS OFF)
