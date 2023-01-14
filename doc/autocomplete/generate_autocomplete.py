@@ -276,15 +276,13 @@ def get_namespaces(namespace_dir):
 def gen_init_file(modules):
     # type: (List[str]) -> str
     global args
-    mod_str = """
-from typing import List, Union, Callable, Tuple
+    mod_str = """from typing import List, Union, Callable, Tuple
 import triton
 {z3}
-
 {modules}
 
 raise ImportError
-""".format(z3='import z3' if args.z3_enabled else '', modules='\n\n'.join(modules))
+""".format(z3='import z3\n' if args.z3_enabled else '', modules='\n\n'.join(modules))
     return mod_str
 
 args = None
