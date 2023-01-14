@@ -180,5 +180,9 @@ else()
   set(TRITON_BOOST_INTERFACE OFF)
 endif()
 
+if(PYTHON_BINDINGS_AUTOCOMPLETE)
+    message(STATUS "Compiling with Python autocomplete stub")
+endif()
+
 add_subdirectory(src)
 add_subdirectory(doc)
