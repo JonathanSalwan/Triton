@@ -39,6 +39,7 @@ class CMakeBuild(build_ext):
         ext = self.extensions[0]
         self.build_extension(ext)
         self.copy_extension_to_source(ext)
+        self.copy_autocomplete()
 
 
     def build_extension(self, ext):
@@ -139,6 +140,10 @@ class CMakeBuild(build_ext):
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         subprocess.check_call(['cmake', '--build', '.', '--config', 'Release', '--target', 'python-triton'] + build_args, cwd=self.build_temp)
 
+        # The autocomplete stub is built automatically, unless it's disabled with an environment variable.
+        if (os.getenv('PYTHON_BINDINGS_AUTOCOMPLETE', default='ON').upper() in ['1', 'ON', 'YES', 'TRUE', 'Y']):
+            subprocess.check_call(['cmake', '--build', '.', '--config', 'Release', '--target', 'python_autocomplete'], cwd=self.build_temp)
+
     def copy_extension_to_source(self, ext):
         fullname = self.get_ext_fullname(ext.name)
         filename = self.get_ext_filename(fullname)
@@ -157,6 +162,10 @@ class CMakeBuild(build_ext):
 
         copy_file(src_filename, dst_filename, verbose=self.verbose, dry_run=self.dry_run)
 
+    def copy_autocomplete(self):
+        src_filename = os.path.join(self.build_temp + '/doc/triton_autocomplete', 'triton.pyi')
+        if(os.path.exists(src_filename)):
+            copy_file(src_filename, self.build_lib, verbose=self.verbose, dry_run=self.dry_run)
 
 with open("README.md", "r") as f:
     long_description = f.read()
