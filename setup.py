@@ -26,6 +26,18 @@ RELEASE_CANDIDATE = 2
 VERSION = f'{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}' + \
             f'rc{RELEASE_CANDIDATE}' if RELEASE_CANDIDATE else ''
 
+def is_cmake_true(value):
+    """Check if CMake would parse the value as True or False. Might not be completely accurate.
+    Based on https://cmake.org/cmake/help/latest/command/if.html#basic-expressions"""
+    if(value in ['ON', 'YES', 'TRUE', 'Y']):
+        return True
+    try:
+        float(value)
+        if(int(value) == 0):
+            return False
+        return True
+    except:
+        return False
 
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
@@ -130,6 +142,11 @@ class CMakeBuild(build_ext):
         if os.getenv('CMAKE_PREFIX_PATH'):
             cmake_args += ['-DCMAKE_PREFIX_PATH=' + os.getenv('CMAKE_PREFIX_PATH')]
 
+        # Autocomplete stub generation. Enabled by default.
+        python_autocomplete_value = os.getenv('PYTHON_BINDINGS_AUTOCOMPLETE', default='ON').upper()
+        if python_autocomplete_value:
+            cmake_args += ['-DPYTHON_BINDINGS_AUTOCOMPLETE=' + python_autocomplete_value]
+
         # Create temp and lib folders.
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
@@ -140,8 +157,8 @@ class CMakeBuild(build_ext):
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         subprocess.check_call(['cmake', '--build', '.', '--config', 'Release', '--target', 'python-triton'] + build_args, cwd=self.build_temp)
 
-        # The autocomplete stub is built automatically, unless it's disabled with an environment variable.
-        if (os.getenv('PYTHON_BINDINGS_AUTOCOMPLETE', default='ON').upper() in ['1', 'ON', 'YES', 'TRUE', 'Y']):
+        # The autocomplete file has to be built separately.
+        if (is_cmake_true(python_autocomplete_value)):
             subprocess.check_call(['cmake', '--build', '.', '--config', 'Release', '--target', 'python_autocomplete'], cwd=self.build_temp)
 
     def copy_extension_to_source(self, ext):
