@@ -32,7 +32,7 @@ namespace triton {
       ASSERT_NODE = 3,                /*!< (assert x) */
       BSWAP_NODE = 5,                 /*!< (bswap x) */
       BVADD_NODE = 7,                 /*!< (bvadd x y) */
-      BVAND_NODE = 12,                /*!< (bvand x y) */
+      BVAND_NODE = 13,                /*!< (bvand x y) */
       BVASHR_NODE = 17,               /*!< (bvashr x y) */
       BVLSHR_NODE = 19,               /*!< (bvlshr x y) */
       BVMUL_NODE = 23,                /*!< (bvmul x y) */
@@ -42,7 +42,7 @@ namespace triton {
       BVNOT_NODE = 41,                /*!< (bvnot x) */
       BVOR_NODE = 43,                 /*!< (bvor x y) */
       BVROL_NODE = 47,                /*!< ((_ rotate_left x) y) */
-      BVROR_NODE = 52,                /*!< ((_ rotate_right x) y) */
+      BVROR_NODE = 53,                /*!< ((_ rotate_right x) y) */
       BVSDIV_NODE = 59,               /*!< (bvsdiv x y) */
       BVSGE_NODE = 61,                /*!< (bvsge x y) */
       BVSGT_NODE = 67,                /*!< (bvsgt x y) */
