@@ -327,6 +327,14 @@ namespace triton {
 
               inst.setCodeCondition(cc);
 
+              /* From the reference manual: "16-bit instructions in the IT
+                 block, other than CMP, CMN and TST, do not set the condition
+                 flags". */
+              if (inst.getSize() == 2 && inst.getType() != ID_INS_CMP && \
+                  inst.getType() != ID_INS_CMN && inst.getType() != ID_INS_TST) {
+                inst.setUpdateFlag(false);
+              }
+
               this->itInstrsCount--;
               this->itInstrIndex++;
             }

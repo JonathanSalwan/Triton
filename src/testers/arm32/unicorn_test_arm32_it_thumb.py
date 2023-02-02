@@ -288,12 +288,28 @@ IT_INSTRS = [
     (0x00, b"\xd1\xbf", "iteee le"),
 ]
 
-CODE = [
+CODE1 = [
     (0x02, b"\x4f\xf0\x01\x00", "mov   r0, 1"),
     (0x06, b"\x4f\xf0\x02\x01", "mov   r1, 2"),
     (0x0a, b"\x4f\xf0\x03\x02", "mov   r2, 3"),
     (0x0e, b"\x4f\xf0\x04\x03", "mov   r3, 4"),
     (0x12, b"\x4f\xf0\x05\x04", "mov   r4, 5"),
+]
+
+CODE2 = [
+    (0x02, b"\x01\x20", "movs   r0, 1"),
+    (0x04, b"\x02\x21", "movs   r1, 2"),
+    (0x06, b"\x03\x22", "movs   r2, 3"),
+    (0x08, b"\x04\x23", "movs   r3, 4"),
+    (0x0a, b"\x05\x24", "movs   r4, 5"),
+]
+
+CODE3 = [
+    (0x02, b"\x5f\xf0\xff\x30", "movs   r0, #-1"),
+    (0x06, b"\x5f\xf0\xff\x31", "movs   r1, #-1"),
+    (0x0a, b"\x5f\xf0\xff\x32", "movs   r2, #-1"),
+    (0x0e, b"\x5f\xf0\xff\x33", "movs   r3, #-1"),
+    (0x12, b"\x5f\xf0\xff\x34", "movs   r4, #-1"),
 ]
 
 
@@ -480,7 +496,6 @@ def print_state(istate, uc_ostate, tt_ostate):
 
 if __name__ == '__main__':
     start = 0x00 | 1    # Address of the first instruction.
-    stop  = 0x12 + 0x4  # Address of the last instruction + size.
 
     # Initial state.
     state = {
@@ -509,25 +524,30 @@ if __name__ == '__main__':
     }
 
     for it_inst in IT_INSTRS:
-        test_block = [it_inst] + CODE
+        for code_block in [CODE1, CODE2, CODE3]:
+            stop  = code_block[-1][0] + len(code_block[-1][1])  # Address of the last instruction + size.
 
-        disassembly = it_inst[2]
+            test_block = [it_inst] + code_block
 
-        try:
-            uc_state = emu_with_unicorn(test_block, start, stop, state)
-            tt_state = emu_with_triton(test_block, start, stop, state)
-            uc_state["pc"] = tt_state["pc"]
-        except Exception as e:
-            print('[KO] %s' %(disassembly))
-            print('\t%s' %(e))
-            sys.exit(-1)
+            disassembly = it_inst[2]
 
-        if uc_state != tt_state:
-            print('[KO] %s' %(disassembly))
-            diff_state(uc_state, tt_state)
-            print_state(state, uc_state, tt_state)
-            sys.exit(-1)
+            try:
+                uc_state = emu_with_unicorn(test_block, start, stop, state)
+                tt_state = emu_with_triton(test_block, start, stop, state)
+                uc_state["pc"] = tt_state["pc"]
+            except Exception as e:
+                print('[KO] %s' %(disassembly))
+                print('%s' %('\n'.join(['\t' + d for _, _, d in test_block])))
+                print('\t%s' %(e))
+                sys.exit(-1)
 
-        print('[OK] %s' %(disassembly))
+            if uc_state != tt_state:
+                print('[KO] %s' %(disassembly))
+                print('%s' %('\n'.join(['\t' + d for _, _, d in test_block])))
+                diff_state(uc_state, tt_state)
+                print_state(state, uc_state, tt_state)
+                sys.exit(-1)
+
+            print('[OK] %s' %(disassembly))
 
     sys.exit(0)
