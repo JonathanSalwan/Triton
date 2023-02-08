@@ -46,18 +46,56 @@ add_custom_target(check
 
 if(PYTHON_BINDINGS)
     message(STATUS "Compiling with Python bindings")
+
+    if(NOT PYTHON_VERSION AND NOT PYTHON_EXECUTABLE)
+        # Find the python version the user has in the PATH
+        # This prevents an issue where an unexpected python version is used
+        # (eg the system/homebrew python in a virtual environment)
+        find_program(PYTHON_EXECUTABLE
+            NAMES python3 python
+            NO_PACKAGE_ROOT_PATH
+            NO_CMAKE_PATH
+            NO_CMAKE_ENVIRONMENT_PATH
+            NO_CMAKE_SYSTEM_PATH
+            NO_CMAKE_INSTALL_PREFIX
+            REQUIRED
+        )
+    endif()
+
+    if(PYTHON_EXECUTABLE)
+        # Make sure the specified python is not fully broken
+        execute_process(COMMAND ${PYTHON_EXECUTABLE} --version
+            RESULT_VARIABLE PYTHON_RESULT
+            OUTPUT_QUIET
+        )
+        if(NOT PYTHON_RESULT EQUAL 0)
+            message(FATAL_ERROR "Broken python: ${PYTHON_EXECUTABLE}")
+        endif()
+    endif()
+
+    # Set the hints for the Python3 package
+    # Reference: https://cmake.org/cmake/help/latest/module/FindPython3.html#hints
+    # The PYTHON_XXX variables are not used by FindPython3, but they are translated
+    # for backwards compatibility with previous Triton versions
+    set(Python3_EXECUTABLE "${PYTHON_EXECUTABLE}")
+    if(PYTHON_LIBRARY)
+        set(Python3_LIBRARY "${PYTHON_LIBRARY}")
+    elseif(PYTHON_LIBRARIES)
+        set(Python3_LIBRARY "${PYTHON_LIBRARIES}")
+    endif()
+    if(PYTHON_INCLUDE_DIRS)
+        set(Python3_INCLUDE_DIR "${PYTHON_INCLUDE_DIRS}")
+    endif()
+    set(Python3_FIND_VIRTUALENV "FIRST")
+
+    find_package(Python3 ${PYTHON_VERSION} COMPONENTS Interpreter Development REQUIRED)
+    message(STATUS "Python3 includes: ${Python3_INCLUDE_DIRS}")
+    message(STATUS "Python3 libraries: ${Python3_LIBRARIES}")
+
+    # For backwards compatibility with existing CMake
+    set(PYTHON_EXECUTABLE "${Python3_EXECUTABLE}")
+    
     set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=$<TARGET_FILE_DIR:triton>/)
-    if(NOT PYTHON_VERSION)
-        set(PYTHON_VERSION 3.6)
-    endif()
-    if(NOT PYTHON_EXECUTABLE)
-        find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
-    endif()
-    if(NOT PYTHON_LIBRARIES AND NOT PYTHON_INCLUDE_DIRS)
-        find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
-    endif()
-    include_directories(${PYTHON_INCLUDE_DIRS})
-    add_definitions("-DPYTHON_LIBRARIES=\"${PYTHON_LIBRARIES}\"")
     add_custom_target(test-python
         COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${TRITON_ROOT}/src/testers/unittests
         DEPENDS python-triton
