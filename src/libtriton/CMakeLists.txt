@@ -272,13 +272,16 @@ target_include_directories(triton BEFORE PUBLIC
 
 # Link Triton's dependencies
 target_link_libraries(triton PUBLIC
-    ${PYTHON_LIBRARIES}
     ${Boost_LIBRARIES}
     ${Z3_LIBRARIES}
     ${LLVM_LIBRARIES}
     ${BITWUZLA_LIBRARIES}
     ${CAPSTONE_LIBRARIES}
 )
+
+if(PYTHON_BINDINGS)
+    target_link_libraries(triton PRIVATE Python3::Module)
+endif()
 
 # Workaround to allow building 'namespace linux' (defined by -std=gnu++11)
 if(NOT MSVC AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
