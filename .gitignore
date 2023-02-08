@@ -19,3 +19,5 @@ private/*
 *.so
 .cache
 .vscode
+dist/
+*.egg-info/
