@@ -47,7 +47,7 @@ As **Triton** is a kind of a part-time project, please, **don't blame us** if it
   </a>
   &nbsp;
   <a href="https://twitter.com/qb_triton">
-   <img src="https://img.shields.io/twitter/follow/qb_triton?color=1da1f2&label=Follow&logo=twitter&logoColor=white&style=square">
+   <img src="https://img.shields.io/static/v1?color=1da1f2&label=Follow&message=@qb_triton&logo=twitter&logoColor=white&style=square">
   </a>
 </p>
 
