@@ -511,7 +511,6 @@ SYS_REG_SPEC(ERXPFGCDN_EL1,         erxpfgcdn_el1,      triton::bitsize::qword-1
 SYS_REG_SPEC(ERXPFGCTL_EL1,         erxpfgctl_el1,      triton::bitsize::qword-1, 0, ERXPFGCTL_EL1,     TT_MUTABLE_REG) // erxpfgctl_el1
 SYS_REG_SPEC(ERXPFGF_EL1,           erxpfgf_el1,        triton::bitsize::qword-1, 0, ERXPFGF_EL1,       TT_MUTABLE_REG) // erxpfgf_el1
 SYS_REG_SPEC(ERXSTATUS_EL1,         erxstatus_el1,      triton::bitsize::qword-1, 0, ERXSTATUS_EL1,     TT_MUTABLE_REG) // erxstatus_el1
-SYS_REG_SPEC(ERXTS_EL1,             erxts_el1,          triton::bitsize::qword-1, 0, ERXTS_EL1,         TT_MUTABLE_REG) // erxts_el1
 SYS_REG_SPEC(ESR_EL1,               esr_el1,            triton::bitsize::qword-1, 0, ESR_EL1,           TT_MUTABLE_REG) // esr_el1
 SYS_REG_SPEC(ESR_EL12,              esr_el12,           triton::bitsize::qword-1, 0, ESR_EL12,          TT_MUTABLE_REG) // esr_el12
 SYS_REG_SPEC(ESR_EL2,               esr_el2,            triton::bitsize::qword-1, 0, ESR_EL2,           TT_MUTABLE_REG) // esr_el2
@@ -552,7 +551,6 @@ SYS_REG_SPEC(ICC_IGRPEN1_EL1,       icc_igrpen1_el1,    triton::bitsize::qword-1
 SYS_REG_SPEC(ICC_IGRPEN1_EL3,       icc_igrpen1_el3,    triton::bitsize::qword-1, 0, ICC_IGRPEN1_EL3,   TT_MUTABLE_REG) // icc_igrpen1_el3
 SYS_REG_SPEC(ICC_PMR_EL1,           icc_pmr_el1,        triton::bitsize::qword-1, 0, ICC_PMR_EL1,       TT_MUTABLE_REG) // icc_pmr_el1
 SYS_REG_SPEC(ICC_RPR_EL1,           icc_rpr_el1,        triton::bitsize::qword-1, 0, ICC_RPR_EL1,       TT_MUTABLE_REG) // icc_rpr_el1
-SYS_REG_SPEC(ICC_SEIEN_EL1,         icc_seien_el1,      triton::bitsize::qword-1, 0, ICC_SEIEN_EL1,     TT_MUTABLE_REG) // icc_seien_el1
 SYS_REG_SPEC(ICC_SGI0R_EL1,         icc_sgi0r_el1,      triton::bitsize::qword-1, 0, ICC_SGI0R_EL1,     TT_MUTABLE_REG) // icc_sgi0r_el1
 SYS_REG_SPEC(ICC_SGI1R_EL1,         icc_sgi1r_el1,      triton::bitsize::qword-1, 0, ICC_SGI1R_EL1,     TT_MUTABLE_REG) // icc_sgi1r_el1
 SYS_REG_SPEC(ICC_SRE_EL1,           icc_sre_el1,        triton::bitsize::qword-1, 0, ICC_SRE_EL1,       TT_MUTABLE_REG) // icc_sre_el1
@@ -587,7 +585,6 @@ SYS_REG_SPEC(ICH_LR8_EL2,           ich_lr8_el2,        triton::bitsize::qword-1
 SYS_REG_SPEC(ICH_LR9_EL2,           ich_lr9_el2,        triton::bitsize::qword-1, 0, ICH_LR9_EL2,       TT_MUTABLE_REG) // ich_lr9_el2
 SYS_REG_SPEC(ICH_MISR_EL2,          ich_misr_el2,       triton::bitsize::qword-1, 0, ICH_MISR_EL2,      TT_MUTABLE_REG) // ich_misr_el2
 SYS_REG_SPEC(ICH_VMCR_EL2,          ich_vmcr_el2,       triton::bitsize::qword-1, 0, ICH_VMCR_EL2,      TT_MUTABLE_REG) // ich_vmcr_el2
-SYS_REG_SPEC(ICH_VSEIR_EL2,         ich_vseir_el2,      triton::bitsize::qword-1, 0, ICH_VSEIR_EL2,     TT_MUTABLE_REG) // ich_vseir_el2
 SYS_REG_SPEC(ICH_VTR_EL2,           ich_vtr_el2,        triton::bitsize::qword-1, 0, ICH_VTR_EL2,       TT_MUTABLE_REG) // ich_vtr_el2
 SYS_REG_SPEC(ID_AA64AFR0_EL1,       id_aa64afr0_el1,    triton::bitsize::qword-1, 0, ID_AA64AFR0_EL1,   TT_MUTABLE_REG) // id_aa64afr0_el1
 SYS_REG_SPEC(ID_AA64AFR1_EL1,       id_aa64afr1_el1,    triton::bitsize::qword-1, 0, ID_AA64AFR1_EL1,   TT_MUTABLE_REG) // id_aa64afr1_el1
