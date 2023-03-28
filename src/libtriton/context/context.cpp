@@ -349,6 +349,11 @@ namespace triton {
     return this->arch.getAllRegisters();
   }
 
+  const std::unordered_map<triton::uint64, triton::uint8, IdentityHash<triton::uint64>>& Context::getAllMemory(void) const {
+    this->checkArchitecture();
+    return this->arch.getAllMemory();
+  }
+
 
   std::set<const triton::arch::Register*> Context::getParentRegisters(void) const {
     this->checkArchitecture();

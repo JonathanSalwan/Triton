@@ -118,6 +118,9 @@ namespace triton {
         //! Returns all registers.
         TRITON_EXPORT const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& getAllRegisters(void) const;
 
+        //! Return all memory.
+        TRITON_EXPORT const std::unordered_map<triton::uint64, triton::uint8, IdentityHash<triton::uint64>>& getAllMemory(void) const;
+
         //! Returns all parent registers.
         TRITON_EXPORT std::set<const triton::arch::Register*> getParentRegisters(void) const;
 
