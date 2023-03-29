@@ -1720,6 +1720,11 @@ CODE  = [
     (b"\x20\x00\x41\xd3", "ubfiz x0, x1, #63, #1"),
 
     (b"\x00\x00\x80\xd2", "movz x0, #0"),
+    (b"\xf7\x03\x00\xaa", "mov x23, x0"),
+    (b"\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    (b"\x17\x18\x7b\xd3", "ubfiz x23, x0, #5, #7"),
+
+    (b"\x00\x00\x80\xd2", "movz x0, #0"),
     (b"\x00\x04\x00\xd1", "sub x0, x0, #1"),
     (b"\x20\x00\x18\x53", "ubfiz w0, w1, #8, #1"),
 
