@@ -5552,7 +5552,7 @@ namespace triton {
             bits.push_back(this->astCtxt->bv(0, dst.getBitSize() - (lsb + width)));
           }
 
-          bits.push_back(this->astCtxt->extract(width, 0, op));
+          bits.push_back(this->astCtxt->extract(width - 1, 0, op));
 
           if (lsb) {
             bits.push_back(this->astCtxt->bv(0, lsb));
