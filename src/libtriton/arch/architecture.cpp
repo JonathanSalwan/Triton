@@ -172,10 +172,10 @@ namespace triton {
       return this->cpu->getAllRegisters();
     }
 
-    const std::unordered_map<triton::uint64, triton::uint8, IdentityHash<triton::uint64>>& Architecture::getAllMemory(void) const {
+    const std::unordered_map<triton::uint64, triton::uint8, IdentityHash<triton::uint64>>& Architecture::getConcreteMemory(void) const {
       if (!this->cpu)
-        throw triton::exceptions::Architecture("Architecture::getAllMemory(): You must define an architecture.");
-      return this->cpu->getAllMemory();
+        throw triton::exceptions::Architecture("Architecture::getConcreteMemory(): You must define an architecture.");
+      return this->cpu->getConcreteMemory();
     }
 
 
