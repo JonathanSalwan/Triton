@@ -323,6 +323,10 @@ namespace triton {
         return this->id2reg;
       }
 
+      const std::unordered_map<triton::uint64, triton::uint8, IdentityHash<triton::uint64>>& x86Cpu::getConcreteMemory(void) const {
+        return this->memory;
+      }
+
 
       std::set<const triton::arch::Register*> x86Cpu::getParentRegisters(void) const {
         std::set<const triton::arch::Register*> ret;

@@ -331,6 +331,7 @@ namespace triton {
           TRITON_EXPORT bool isThumb(void) const;
           TRITON_EXPORT bool isMemoryExclusive(const triton::arch::MemoryAccess& mem) const;
           TRITON_EXPORT const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& getAllRegisters(void) const;
+          TRITON_EXPORT const std::unordered_map<triton::uint64, triton::uint8, IdentityHash<triton::uint64>>& getConcreteMemory(void) const;
           TRITON_EXPORT const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
           TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::register_e id) const;
           TRITON_EXPORT const triton::arch::Register& getProgramCounter(void) const;
