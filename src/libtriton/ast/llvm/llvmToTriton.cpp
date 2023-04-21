@@ -36,6 +36,14 @@ namespace triton {
           if (call->getCalledFunction()->getName().find("llvm.bswap.i") != std::string::npos) {
             return this->actx->bswap(this->do_convert(call->getOperand(0)));
           }
+          else if (call->getCalledFunction()->getName().find("llvm.ctpop.i") != std::string::npos) {
+            auto oprnd = this->do_convert(call->getOperand(0));
+            auto node  = this->actx->bv(0, oprnd->getBitvectorSize());
+            for (triton::uint32 i = 0; i < oprnd->getBitvectorSize(); ++i) {
+              node = this->actx->bvadd(node, this->actx->zx(oprnd->getBitvectorSize() - 1, this->actx->extract(i, i, oprnd)));
+            }
+            return node;
+          }
           /* We symbolize the return of call */
           return this->var(instruction->getName().str(), instruction->getType()->getScalarSizeInBits());
         }
