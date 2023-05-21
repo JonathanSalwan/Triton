@@ -242,7 +242,7 @@ class TestAstRepresentation(unittest.TestCase):
             (self.v1 >= self.v2),
             (self.v1 < self.v2),
             (self.v1 > self.v2),
-            self.ast.bswap(self.v1),
+            self.ast.bswap(self.ast.bv(0x1122, 16)),
             self.ast.bv(2, 8),
             self.ast.bvashr(self.v1, self.v2),
             self.ast.bvnand(self.v1, self.v2),
