@@ -343,6 +343,8 @@ UNPCKHPD                     | sse2       | Unpack and Interleave High Packed Do
 UNPCKHPS                     | sse1       | Unpack and Interleave High Packed Single-Precision Floating-Point Values
 UNPCKLPD                     | sse2       | Unpack and Interleave Low Packed Double-Precision Floating-Point Values
 UNPCKLPS                     | sse1       | Unpack and Interleave Low Packed Single-Precision Floating-Point Values
+VERR                         |            | Set ZF=1 if segment specified with r/m16 can be read
+VERW                         |            | Set ZF=1 if segment specified with r/m16 can be written
 VEXTRACTI128                 | avx2       | VEX Extract Packed Integer Values
 VMOVD                        | avx        | VEX Move Doubleword
 VMOVDQA                      | avx        | VEX Move aligned packed integer values
@@ -758,6 +760,8 @@ namespace triton {
           case ID_INS_UNPCKHPS:       this->unpckhps_s(inst);     break;
           case ID_INS_UNPCKLPD:       this->unpcklpd_s(inst);     break;
           case ID_INS_UNPCKLPS:       this->unpcklps_s(inst);     break;
+          case ID_INS_VERR:           this->verr_s(inst);         break;
+          case ID_INS_VERW:           this->verw_s(inst);         break;
           case ID_INS_VEXTRACTI128:   this->vextracti128_s(inst); break;
           case ID_INS_VMOVD:          this->vmovd_s(inst);        break;
           case ID_INS_VMOVDQA:        this->vmovdqa_s(inst);      break;
@@ -16456,6 +16460,48 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::verr_s(triton::arch::Instruction& inst) {
+        auto& src = inst.operands[0];
+        auto  dst = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ZF));
+
+        /* Link the source to the instruction */
+        this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = this->astCtxt->bvtrue();
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VERR operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::verw_s(triton::arch::Instruction& inst) {
+        auto& src = inst.operands[0];
+        auto  dst = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ZF));
+
+        /* Link the source to the instruction */
+        this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = this->astCtxt->bvtrue();
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VERW operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);

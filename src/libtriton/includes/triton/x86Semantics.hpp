@@ -1367,6 +1367,12 @@ namespace triton {
           //! The UNPCKLPS semantics.
           void unpcklps_s(triton::arch::Instruction& inst);
 
+          //! The VERR semantics.
+          void verr_s(triton::arch::Instruction& inst);
+
+          //! The VERW semantics.
+          void verw_s(triton::arch::Instruction& inst);
+
           //! The VEXTRACTI128 semantics.
           void vextracti128_s(triton::arch::Instruction& inst);
 
