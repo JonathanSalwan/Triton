@@ -131,6 +131,12 @@ namespace triton {
             /* Final size */
             auto size = instruction->getType()->getIntegerBitWidth();
             auto node = this->do_convert(instruction->getOperand(0));
+
+            /* Handle the case where node is logical */
+            if (node->isLogical()) {
+              node = this->actx->ite(node, this->actx->bvtrue(), this->actx->bvfalse());
+            }
+
             /* Size of the child */
             auto csze = instruction->getOperand(0)->getType()->getIntegerBitWidth();
             return this->actx->sx(size - csze, node);
@@ -203,6 +209,12 @@ namespace triton {
             /* Final size */
             auto size = instruction->getType()->getIntegerBitWidth();
             auto node = this->do_convert(instruction->getOperand(0));
+
+            /* Handle the case where node is logical */
+            if (node->isLogical()) {
+              node = this->actx->ite(node, this->actx->bvtrue(), this->actx->bvfalse());
+            }
+
             /* Size of the child */
             auto csze = instruction->getOperand(0)->getType()->getIntegerBitWidth();
             return this->actx->zx(size - csze, node);
