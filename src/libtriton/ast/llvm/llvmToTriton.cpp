@@ -70,16 +70,16 @@ namespace triton {
             auto RHS = this->do_convert(instruction->getOperand(1));
             if (icmp != nullptr) {
               switch (icmp->getPredicate()) {
-                case llvm::ICmpInst::ICMP_EQ:   return this->actx->equal(LHS, RHS);
-                case llvm::ICmpInst::ICMP_NE:   return this->actx->distinct(LHS, RHS);
-                case llvm::ICmpInst::ICMP_UGE:  return this->actx->bvuge(LHS, RHS);
-                case llvm::ICmpInst::ICMP_UGT:  return this->actx->bvugt(LHS, RHS);
-                case llvm::ICmpInst::ICMP_ULE:  return this->actx->bvule(LHS, RHS);
-                case llvm::ICmpInst::ICMP_ULT:  return this->actx->bvult(LHS, RHS);
-                case llvm::ICmpInst::ICMP_SGE:  return this->actx->bvsge(LHS, RHS);
-                case llvm::ICmpInst::ICMP_SGT:  return this->actx->bvsgt(LHS, RHS);
-                case llvm::ICmpInst::ICMP_SLE:  return this->actx->bvsle(LHS, RHS);
-                case llvm::ICmpInst::ICMP_SLT:  return this->actx->bvslt(LHS, RHS);
+                case llvm::ICmpInst::ICMP_EQ:   return this->actx->ite(this->actx->equal(LHS, RHS), this->actx->bvtrue(), this->actx->bvfalse());
+                case llvm::ICmpInst::ICMP_NE:   return this->actx->ite(this->actx->distinct(LHS, RHS), this->actx->bvtrue(), this->actx->bvfalse());
+                case llvm::ICmpInst::ICMP_UGE:  return this->actx->ite(this->actx->bvuge(LHS, RHS), this->actx->bvtrue(), this->actx->bvfalse());
+                case llvm::ICmpInst::ICMP_UGT:  return this->actx->ite(this->actx->bvugt(LHS, RHS), this->actx->bvtrue(), this->actx->bvfalse());
+                case llvm::ICmpInst::ICMP_ULE:  return this->actx->ite(this->actx->bvule(LHS, RHS), this->actx->bvtrue(), this->actx->bvfalse());
+                case llvm::ICmpInst::ICMP_ULT:  return this->actx->ite(this->actx->bvult(LHS, RHS), this->actx->bvtrue(), this->actx->bvfalse());
+                case llvm::ICmpInst::ICMP_SGE:  return this->actx->ite(this->actx->bvsge(LHS, RHS), this->actx->bvtrue(), this->actx->bvfalse());
+                case llvm::ICmpInst::ICMP_SGT:  return this->actx->ite(this->actx->bvsgt(LHS, RHS), this->actx->bvtrue(), this->actx->bvfalse());
+                case llvm::ICmpInst::ICMP_SLE:  return this->actx->ite(this->actx->bvsle(LHS, RHS), this->actx->bvtrue(), this->actx->bvfalse());
+                case llvm::ICmpInst::ICMP_SLT:  return this->actx->ite(this->actx->bvslt(LHS, RHS), this->actx->bvtrue(), this->actx->bvfalse());
                 default:
                   break;
               }
