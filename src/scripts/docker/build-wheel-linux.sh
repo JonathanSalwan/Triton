@@ -19,7 +19,7 @@ mkdir -p deps
 cd deps
 
 # Download and build GMP.
-wget https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
+wget https://ftp.gnu.org/gnu/gmp/gmp-6.2.1.tar.xz
 tar xvf gmp-6.2.1.tar.xz
 cd gmp-6.2.1/
 ./configure --enable-cxx
@@ -28,9 +28,13 @@ make check
 make install
 cd ..
 
+# NOTE Temporarily use an old Bitwuzla version. On Jun 30th Bitwuzla changed
+# its code and building system to a new one. The new version does not compile
+# in this image (manylinux_2_24_x86_64).
 # Download and build Bitwuzla.
 git clone https://github.com/bitwuzla/bitwuzla.git
 cd bitwuzla
+git checkout -b 19dd987a6e246990619751cca07996fac505fd0b 19dd987a6e246990619751cca07996fac505fd0b
 ./contrib/setup-cadical.sh
 ./contrib/setup-btor2tools.sh
 ./contrib/setup-symfpu.sh

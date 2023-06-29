@@ -12,44 +12,43 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # FIXME
-      #- name: Create Docker image
-      #  run: bash ./src/scripts/docker/build-docker-image.sh
+      - name: Create Docker image
+        run: bash ./src/scripts/docker/build-docker-image.sh
 
-      #- name: Build Wheel packages
-      #  run: |
-      #    docker run \
-      #           --rm \
-      #           -v $GITHUB_WORKSPACE:/src \
-      #           build-triton-linux-x86_64 bash /src/src/scripts/docker/build-wheel-linux.sh
+      - name: Build Wheel packages
+        run: |
+         docker run \
+                --rm \
+                -v $GITHUB_WORKSPACE:/src \
+                build-triton-linux-x86_64 bash /src/src/scripts/docker/build-wheel-linux.sh
 
-      #- name: Upload Wheel packages (Python 3.8)
-      #  uses: actions/upload-artifact@v3
-      #  with:
-      #    name: triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_24_x86_64.whl
-      #    path: wheel-final/triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_24_x86_64.whl
-      #    if-no-files-found: warn
+      - name: Upload Wheel packages (Python 3.8)
+        uses: actions/upload-artifact@v3
+        with:
+          name: triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_24_x86_64.whl
+          path: wheel-final/triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_24_x86_64.whl
+          if-no-files-found: warn
 
-      #- name: Upload Wheel packages (Python 3.9)
-      #  uses: actions/upload-artifact@v3
-      #  with:
-      #    name: triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_24_x86_64.whl
-      #    path: wheel-final/triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_24_x86_64.whl
-      #    if-no-files-found: warn
+      - name: Upload Wheel packages (Python 3.9)
+        uses: actions/upload-artifact@v3
+        with:
+          name: triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_24_x86_64.whl
+          path: wheel-final/triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_24_x86_64.whl
+          if-no-files-found: warn
 
-      #- name: Upload Wheel packages (Python 3.10)
-      #  uses: actions/upload-artifact@v3
-      #  with:
-      #    name: triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_24_x86_64.whl
-      #    path: wheel-final/triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_24_x86_64.whl
-      #    if-no-files-found: warn
+      - name: Upload Wheel packages (Python 3.10)
+        uses: actions/upload-artifact@v3
+        with:
+          name: triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_24_x86_64.whl
+          path: wheel-final/triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_24_x86_64.whl
+          if-no-files-found: warn
 
-      #- name: Upload Wheel packages (Python 3.11)
-      #  uses: actions/upload-artifact@v3
-      #  with:
-      #    name: triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_24_x86_64.whl
-      #    path: wheel-final/triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_24_x86_64.whl
-      #    if-no-files-found: warn
+      - name: Upload Wheel packages (Python 3.11)
+        uses: actions/upload-artifact@v3
+        with:
+          name: triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_24_x86_64.whl
+          path: wheel-final/triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_24_x86_64.whl
+          if-no-files-found: warn
 
 
   # FIXME
