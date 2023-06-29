@@ -2,6 +2,11 @@ ARG BASE_IMG
 
 FROM $BASE_IMG
 
+# Update sources.list (as Debian Stretch is now archived). 
+RUN echo "deb http://archive.debian.org/debian/ stretch main contrib non-free" > /etc/apt/sources.list
+RUN echo "deb http://archive.debian.org/debian/ stretch-proposed-updates main contrib non-free" >> /etc/apt/sources.list
+RUN echo "deb http://archive.debian.org/debian-security stretch/updates main contrib non-free" >> /etc/apt/sources.list
+
 # Download and install basic dependencies.
 RUN apt-get update
 
