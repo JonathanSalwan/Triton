@@ -35,7 +35,7 @@ jobs:
 
       - name: Download and build GMP
         run: |
-          wget https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
+          wget https://ftp.gnu.org/gnu/gmp/gmp-6.2.1.tar.xz
           tar xvf gmp-6.2.1.tar.xz
           cd gmp-6.2.1/
           ./configure --with-pic
@@ -46,6 +46,7 @@ jobs:
         run: |
           git clone https://github.com/bitwuzla/bitwuzla.git
           cd bitwuzla
+          git checkout -b 19dd987a6e246990619751cca07996fac505fd0b 19dd987a6e246990619751cca07996fac505fd0b
           ./contrib/setup-cadical.sh
           ./contrib/setup-btor2tools.sh
           ./contrib/setup-symfpu.sh
