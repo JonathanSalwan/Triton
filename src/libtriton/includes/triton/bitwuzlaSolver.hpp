@@ -13,7 +13,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include <bitwuzla/bitwuzla.h>
+extern "C" {
+#include <bitwuzla/c/bitwuzla.h>
+}
 
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>

@@ -286,7 +286,7 @@ endif()
 
 # Workaround to allow building 'namespace linux' (defined by -std=gnu++11)
 if(NOT MSVC AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
-    target_compile_options(triton PRIVATE -std=c++14)
+    target_compile_options(triton PRIVATE -std=c++17)
 endif()
 
 # Enable static msvc runtime.
