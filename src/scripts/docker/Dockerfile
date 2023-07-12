@@ -2,28 +2,10 @@ ARG BASE_IMG
 
 FROM $BASE_IMG
 
-# Update sources.list (as Debian Stretch is now archived). 
-RUN echo "deb http://archive.debian.org/debian/ stretch main contrib non-free" > /etc/apt/sources.list
-RUN echo "deb http://archive.debian.org/debian/ stretch-proposed-updates main contrib non-free" >> /etc/apt/sources.list
-RUN echo "deb http://archive.debian.org/debian-security stretch/updates main contrib non-free" >> /etc/apt/sources.list
-
-# Download and install basic dependencies.
-RUN apt-get update
-
-RUN DEBIAN_FRONTEND="noninteractive" \
-    apt-get install -y  --no-install-suggests --no-install-recommends \
-        build-essential \
-        ca-certificates \
-        clang-11 \
+RUN yum install -y \
         cmake \
-        git-core \
+        clang \
+        git \
         less \
         sudo \
         wget
-
-# Add new user.
-RUN adduser --uid 1000 --disabled-password --gecos '' docker
-RUN adduser docker sudo
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-# USER docker
