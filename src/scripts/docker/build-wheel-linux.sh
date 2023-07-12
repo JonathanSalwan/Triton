@@ -6,7 +6,7 @@
 # also be used locally by running:
 #
 # $ docker pull quay.io/pypa/manylinux_2_24_x86_64
-# $ ./build-docker-image.sh
+# $ ./src/scripts/docker/build-docker-image.sh
 # $ docker run --rm -v $(pwd):/src build-triton-linux-x86_64 bash /src/src/scripts/docker/build-wheel-linux.sh
 #
 # You'll find the .whl packages in the wheel-final folder.
@@ -38,7 +38,7 @@ git checkout -b 1230d80a 1230d80a
 ./contrib/setup-cadical.sh
 ./contrib/setup-btor2tools.sh
 ./contrib/setup-symfpu.sh
-CC=clang-11 CXX=clang++-11 ./configure.sh --shared --prefix $(pwd)/install
+CC=clang CXX=clang++ ./configure.sh --shared --prefix $(pwd)/install
 cd build
 make
 make install
@@ -74,28 +74,28 @@ export CMAKE_PREFIX_PATH=$($(pwd)/clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-/bin
 cd ..
 
 # Build Triton Python wheel package for Python 3.8.
-export PYTHON_BINARY=/opt/python/cp38-cp38/bin/python
+export PYTHON_BINARY=/opt/_internal/cpython-3.8.17/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
 $PYTHON_BINARY setup.py bdist_wheel --dist-dir wheel-temp
 
 # Build Triton Python wheel package for Python 3.9.
-export PYTHON_BINARY=/opt/python/cp39-cp39/bin/python
+export PYTHON_BINARY=/opt/_internal/cpython-3.9.17/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
 $PYTHON_BINARY setup.py bdist_wheel --dist-dir wheel-temp
 
 # Build Triton Python wheel package for Python 3.10.
-export PYTHON_BINARY=/opt/python/cp310-cp310/bin/python
+export PYTHON_BINARY=/opt/_internal/cpython-3.10.12/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
 $PYTHON_BINARY setup.py bdist_wheel --dist-dir wheel-temp
 
 # Build Triton Python wheel package for Python 3.11.
-export PYTHON_BINARY=/opt/python/cp311-cp311/bin/python
+export PYTHON_BINARY=/opt/_internal/cpython-3.11.4/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
