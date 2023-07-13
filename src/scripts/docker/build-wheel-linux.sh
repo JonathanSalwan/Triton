@@ -34,7 +34,7 @@ cd ..
 # Download and build Bitwuzla.
 git clone https://github.com/bitwuzla/bitwuzla.git
 cd bitwuzla
-git checkout -b 19dd987a6e246990619751cca07996fac505fd0b 19dd987a6e246990619751cca07996fac505fd0b
+git checkout -b 1230d80a 1230d80a
 ./contrib/setup-cadical.sh
 ./contrib/setup-btor2tools.sh
 ./contrib/setup-symfpu.sh
