@@ -7,5 +7,8 @@ RUN yum install -y \
         clang \
         git \
         less \
+        ninja-build \
         sudo \
         wget
+
+RUN python3.10 -m pip install meson
