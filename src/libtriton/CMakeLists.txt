@@ -290,6 +290,11 @@ if(MSVC AND MSVC_STATIC)
     set_property(TARGET triton PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
+# Enable parallel building for msvc.
+if(MSVC)
+    target_compile_options(triton PRIVATE /MP)
+endif()
+
 if(WIN32 AND BUILD_SHARED_LIBS)
     target_compile_definitions(triton PRIVATE BUILDING_DLL)
 endif()
