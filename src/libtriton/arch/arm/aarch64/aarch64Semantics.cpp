@@ -1128,10 +1128,14 @@ namespace triton {
           auto& dst  = inst.operands[0];
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
+          auto  size = src2.getBitSize();
 
           /* Create symbolic operands */
           auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
-          auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+          auto op2 = this->astCtxt->bvand(
+                       this->symbolicEngine->getOperandAst(inst, src2),
+                       this->astCtxt->bv(size - 1,  size)
+                     );
 
           /* Create the semantics */
           auto node = this->astCtxt->bvashr(op1, op2);

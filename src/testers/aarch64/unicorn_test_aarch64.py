@@ -213,6 +213,10 @@ CODE  = [
     (b"\x42\x00\x80\xd2", "movz x2, #0x2"),
     (b"\x20\x28\xc2\x9a", "asr x0, x1, x2"),
 
+    (b"\x20\x28\x88\xd2", "movz x0, #0x4141"),
+    (b"\x20\x28\xa8\xf2", "movk x0, #0x4141, lsl #16"),
+    (b"\x01\x28\xc0\x1a", "asr w1, w0, w0"),
+
     (b"\x82\x46\x82\xd2", "movz x2, #0x1234"),
     (b"\x01\xcf\x8a\xd2", "movz x1, #0x5678"),
     (b"\x20\x80\x22\xcb", "sub x0, x1, w2, sxtb"),
