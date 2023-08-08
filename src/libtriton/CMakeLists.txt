@@ -280,6 +280,7 @@ target_link_libraries(triton PUBLIC
 )
 
 if(PYTHON_BINDINGS)
+    target_link_libraries(triton PRIVATE ${Python3_LIBRARIES})
     target_link_libraries(triton PRIVATE Python3::Module)
 endif()
 
