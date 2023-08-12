@@ -24,24 +24,16 @@ tar xvf gmp-6.2.1.tar.xz
 cd gmp-6.2.1/
 ./configure --enable-cxx
 make
-make check
 make install
 cd ..
 
-# NOTE Temporarily use an old Bitwuzla version. On Jun 30th Bitwuzla changed
-# its code and building system to a new one. The new version does not compile
-# in this image (manylinux_2_24_x86_64).
 # Download and build Bitwuzla.
 git clone https://github.com/bitwuzla/bitwuzla.git
 cd bitwuzla
-git checkout -b 1230d80a 1230d80a
-./contrib/setup-cadical.sh
-./contrib/setup-btor2tools.sh
-./contrib/setup-symfpu.sh
-CC=clang CXX=clang++ ./configure.sh --shared --prefix $(pwd)/install
+git checkout -b 0.1.0 0.1.0
+CC=clang CXX=clang++ PATH=$PATH:/opt/_internal/cpython-3.10.12/bin python3.10 ./configure.py --shared --prefix $(pwd)/install
 cd build
-make
-make install
+PATH=$PATH:/opt/_internal/cpython-3.10.12/bin ninja install
 cd ../..
 
 # Download Z3.
@@ -67,7 +59,7 @@ export CAPSTONE_INCLUDE_DIRS=/usr/include
 export CAPSTONE_LIBRARIES=/usr/lib/libcapstone.a
 export BITWUZLA_INTERFACE=On
 export BITWUZLA_INCLUDE_DIRS=$(pwd)/bitwuzla/install/include
-export BITWUZLA_LIBRARIES=$(pwd)/bitwuzla/install/lib/libbitwuzla.so
+export BITWUZLA_LIBRARIES=$(pwd)/bitwuzla/install/lib64/libbitwuzla.so
 export LLVM_INTERFACE=ON
 export CMAKE_PREFIX_PATH=$($(pwd)/clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-/bin/llvm-config --prefix)
 

@@ -42,22 +42,23 @@ jobs:
           make
           make check
 
-      - name: Download and build Bitwuzla
+      - name: Install Ninja
+        run: |
+          brew install ninja
+
+      - name: Install Meson
+        run: |
+          python -m pip install meson
+
+      - name: Install Bitwuzla
         run: |
           git clone https://github.com/bitwuzla/bitwuzla.git
           cd bitwuzla
-          git checkout -b 1230d80a 1230d80a
-          ./contrib/setup-cadical.sh
-          ./contrib/setup-btor2tools.sh
-          ./contrib/setup-symfpu.sh
-          CMAKE_OPTS="-DCMAKE_POSITION_INDEPENDENT_CODE=ON" ./configure.sh --prefix $(pwd)/install
+          git checkout -b 0.1.0 0.1.0
+          python ./configure.py --shared --prefix $(pwd)/install
           cd build
-          make
-          cd lib
-          libtool -static -o libbitwuzlam.a libbitwuzla.a ../../deps/install/lib/libbtor2parser.a ../../deps/cadical/build/libcadical.a ../../../gmp-6.2.1/.libs/libgmp.a
-          mv libbitwuzlam.a libbitwuzla.a
+          sudo ninja install
           cd ..
-          make install
 
       - name: Install Capstone
         run: |
@@ -86,7 +87,7 @@ jobs:
                 -DZ3_LIBRARIES=${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/bin/libz3.a \
                 -DBITWUZLA_INTERFACE=ON \
                 -DBITWUZLA_INCLUDE_DIRS=${{ github.workspace }}/bitwuzla/install/include \
-                -DBITWUZLA_LIBRARIES=${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.a \
+                -DBITWUZLA_LIBRARIES=${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.dylib \
                 -DLLVM_INTERFACE=ON \
                 -DCMAKE_PREFIX_PATH=${{env.LLVM_PATH}} \
                 -DBOOST_INTERFACE=OFF ..

@@ -99,11 +99,9 @@ namespace triton {
           throw triton::exceptions::SolverEngine("BitwuzlaSolver::getModels(): Must be a logical node.");
 
         // Create solver.
-        auto bzla = bitwuzla_new();
-        bitwuzla_set_option(bzla, BITWUZLA_OPT_PRODUCE_MODELS, 1);
-        if (limit > 1) {
-          bitwuzla_set_option(bzla, BITWUZLA_OPT_INCREMENTAL, 1);
-        }
+        auto bzlaOptions = bitwuzla_options_new();
+        bitwuzla_set_option(bzlaOptions, BITWUZLA_OPT_PRODUCE_MODELS, 1);
+        auto bzla = bitwuzla_new(bzlaOptions);
 
         // Convert Triton' AST to solver terms.
         auto bzlaAst = triton::ast::TritonToBitwuzla();
@@ -138,22 +136,22 @@ namespace triton {
 
         std::vector<std::unordered_map<triton::usize, SolverModel>> ret;
         while(res == BITWUZLA_SAT && limit >= 1) {
-          std::vector<const BitwuzlaTerm*> solution;
+          std::vector<BitwuzlaTerm> solution;
           solution.reserve(bzlaAst.getVariables().size());
 
           // Parse model.
           std::unordered_map<triton::usize, SolverModel> model;
           for (const auto& it : bzlaAst.getVariables()) {
-            const char* svalue = bitwuzla_get_bv_value(bzla, it.first);
+            const char* svalue = bitwuzla_term_value_get_str(bitwuzla_get_value(bzla, it.first), 2);
             auto value = this->fromBvalueToUint512(svalue);
             auto m = SolverModel(it.second, value);
             model[m.getId()] = m;
 
             // Negate current model to escape duplication in the next solution.
             const auto& symvar_sort = bzlaAst.getBitvectorSorts().at(it.second->getSize());
-            auto cur_val = bitwuzla_mk_bv_value(bzla, symvar_sort, svalue, BITWUZLA_BV_BASE_BIN);
-            auto n = bitwuzla_mk_term2(bzla, BITWUZLA_KIND_EQUAL, it.first, cur_val);
-            solution.push_back(bitwuzla_mk_term1(bzla, BITWUZLA_KIND_NOT, n));
+            auto cur_val = bitwuzla_mk_bv_value(symvar_sort, svalue, 2);
+            auto n = bitwuzla_mk_term2(BITWUZLA_KIND_EQUAL, it.first, cur_val);
+            solution.push_back(bitwuzla_mk_term1(BITWUZLA_KIND_NOT, n));
           }
 
           // Check that model is available.
@@ -167,7 +165,7 @@ namespace triton {
           if (--limit) {
             // Escape last model.
             if (solution.size() > 1) {
-              bitwuzla_assert(bzla, bitwuzla_mk_term(bzla, BITWUZLA_KIND_OR, solution.size(), solution.data()));
+              bitwuzla_assert(bzla, bitwuzla_mk_term(BITWUZLA_KIND_OR, solution.size(), solution.data()));
             }
             else {
               bitwuzla_assert(bzla, solution.front());
@@ -185,6 +183,7 @@ namespace triton {
           *solvingTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
         bitwuzla_delete(bzla);
+        bitwuzla_options_delete(bzlaOptions);
 
         return ret;
       }
@@ -213,21 +212,31 @@ namespace triton {
           throw triton::exceptions::AstLifting("BitwuzlaSolver::evaluate(): node cannot be null.");
         }
 
-        auto bzla = bitwuzla_new();
-        bitwuzla_set_option(bzla, BITWUZLA_OPT_PRODUCE_MODELS, 1);
+        auto bzlaOptions = bitwuzla_options_new();
+        bitwuzla_set_option(bzlaOptions, BITWUZLA_OPT_PRODUCE_MODELS, 1);
+        auto bzla = bitwuzla_new(bzlaOptions);
 
         // Query check-sat on empty solver to put Bitwuzla in SAT-state. Thus, it should be able to evaluate concrete formulas.
         if (bitwuzla_check_sat(bzla) != BITWUZLA_SAT) {
           bitwuzla_delete(bzla);
+          bitwuzla_options_delete(bzlaOptions);
           throw triton::exceptions::SolverEngine("BitwuzlaSolver::evaluate(): empty solver didn't return SAT.");
         }
 
         // Evaluate concrete AST in solver.
         auto bzlaAst = triton::ast::TritonToBitwuzla(true);
-        auto bv_value = bitwuzla_get_bv_value(bzla, bitwuzla_get_value(bzla, bzlaAst.convert(node, bzla)));
-        auto res = this->fromBvalueToUint512(bv_value);
+        auto term_value = bitwuzla_get_value(bzla, bzlaAst.convert(node, bzla));
+
+        triton::uint512 res = 0;
+        if (bitwuzla_term_is_bool(term_value)) {
+          res = bitwuzla_term_value_get_bool(term_value);
+        } else {
+          res = triton::uint512{bitwuzla_term_value_get_str(term_value, 10)};
+        }
 
         bitwuzla_delete(bzla);
+        bitwuzla_options_delete(bzlaOptions);
+
         return res;
       }
 
@@ -245,7 +254,6 @@ namespace triton {
       void BitwuzlaSolver::setMemoryLimit(triton::uint32 limit) {
         this->memoryLimit = limit;
       }
-
 
       triton::uint512 BitwuzlaSolver::fromBvalueToUint512(const char* value) const {
         triton::usize   len = strlen(value);

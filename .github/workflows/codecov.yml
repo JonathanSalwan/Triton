@@ -36,16 +36,23 @@ jobs:
           sudo apt-get install libz3-dev
           python -m pip install z3-solver
 
+      - name: Install Ninja
+        run: |
+          sudo apt-get install ninja-build
+
+      - name: Install Meson
+        run: |
+          python -m pip install meson
+
       - name: Install Bitwuzla
         run: |
-          git clone https://github.com/bitwuzla/bitwuzla
+          git clone https://github.com/bitwuzla/bitwuzla.git
           cd bitwuzla
-          git checkout -b 1230d80a 1230d80a
-          ./contrib/setup-cadical.sh
-          ./contrib/setup-btor2tools.sh
-          ./contrib/setup-symfpu.sh
-          ./configure.sh --shared
-          sudo make -C build install
+          git checkout -b 0.1.0 0.1.0
+          python ./configure.py --shared
+          cd build
+          sudo ninja install
+          sudo ldconfig
           cd ..
 
       - name: Install Capstone
@@ -69,7 +76,7 @@ jobs:
         run: |
           mkdir ./build
           cd ./build
-          cmake -DGCOV=on -DZ3_INTERFACE=on -DBITWUZLA_INTERFACE=on -DLLVM_INTERFACE=on -DCMAKE_PREFIX_PATH=${{env.LLVM_PATH}} ..
+          cmake -DGCOV=on -DZ3_INTERFACE=on -DBITWUZLA_INTERFACE=on -DBITWUZLA_INCLUDE_DIRS=/usr/local/include -DBITWUZLA_LIBRARIES=/usr/local/lib/x86_64-linux-gnu/libbitwuzla.so -DLLVM_INTERFACE=on -DCMAKE_PREFIX_PATH=${{env.LLVM_PATH}} ..
           sudo make -j3 install
 
       - name: Unittests
