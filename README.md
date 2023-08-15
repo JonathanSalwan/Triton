@@ -101,7 +101,7 @@ Triton relies on the following dependencies:
 * libboost      (optional)   >= 1.68
 * libpython     (optional)   >= 3.6
 * libz3         (optional)   >= 4.6.0   https://github.com/Z3Prover/z3
-* libbitwuzla   (optional)   n/a        https://github.com/bitwuzla/bitwuzla
+* libbitwuzla   (optional)   >= 1.x     https://github.com/bitwuzla/bitwuzla
 * llvm          (optional)   >= 12
 ```
 
@@ -192,8 +192,6 @@ If the version is out of date, please [create an issue or pull request](https://
 
 # Contributors
 
-Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but also by several contributors:
-
 * [**Alberto Garcia Illera**](https://twitter.com/algillera) - Cruise Automation
 * [**Alexey Vishnyakov**](https://vishnya.xyz/) - ISP RAS
 * [**Black Binary**](https://github.com/black-binary) - n/a
@@ -211,10 +209,11 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 
 ### Tools
 
+* [Exrop](https://github.com/d4em0n/exrop): Automatic ROPChain Generation.
+* [Pimp](https://github.com/kamou/pimp): Triton based R2 plugin for concolic execution and total control.
 * [Ponce](https://github.com/illera88/Ponce): IDA 2016 plugin contest winner! Symbolic Execution just one-click away!
 * [QSynthesis](https://github.com/quarkslab/qsynthesis): Greybox Synthesizer geared for deobfuscation of assembly instructions.
-* [Pimp](https://github.com/kamou/pimp): Triton based R2 plugin for concolic execution and total control.
-* [Exrop](https://github.com/d4em0n/exrop): Automatic ROPChain Generation.
+* [TritonDSE](https://github.com/quarkslab/tritondse): Triton-based DSE library with loading and exploration capabilities.
 
 ### Papers and conference
 
