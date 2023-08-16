@@ -5,7 +5,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # libpython >= 3.6
 # llvm >= 12
 # cmake >= 3.20
-RUN apt update && apt upgrade -y && apt install -y build-essential clang curl git libboost-all-dev libgmp-dev libpython3-dev libpython3-stdlib llvm-12 llvm-12-dev python3-pip tar && apt-get clean && pip install --upgrade pip && pip3 install Cython lief cmake
+RUN apt update && apt upgrade -y && apt install -y build-essential clang curl git libboost-all-dev libgmp-dev libpython3-dev libpython3-stdlib llvm-12 llvm-12-dev python3-pip tar ninja-build pkg-config && apt-get clean && pip install --upgrade pip && pip3 install Cython lief cmake meson
 
 # libcapstone >= 4.0.x
 RUN cd /tmp && \
@@ -13,17 +13,15 @@ RUN cd /tmp && \
     tar xvf cap.tgz && cd capstone-4.0.2/ && ./make.sh && make install && rm -rf /tmp/cap* \
     && ln -s /usr/lib/libcapstone.so.4 /usr/lib/x86_64-linux-gnu/libcapstone.so
 
-# libbitwuzla
+# libbitwuzla >= 0.1.0
 RUN cd /tmp && \
-    git clone https://github.com/bitwuzla/bitwuzla && \
+    git clone https://github.com/bitwuzla/bitwuzla.git && \
     cd bitwuzla && \
-    git checkout -b 1230d80a 1230d80a && \
-    ./contrib/setup-cadical.sh && \
-    ./contrib/setup-btor2tools.sh && \
-    ./contrib/setup-symfpu.sh && \
-    ./configure.sh --shared && \
-    make -C build install && \
-    rm -rf /tmp/bitwuzla
+    git checkout -b 0.1.0 0.1.0 && \
+    python3 ./configure.py --shared && \
+    cd build && \
+    ninja install && \
+    ldconfig
 
 # libz3 >= 4.6.0
 RUN cd /tmp && \
@@ -33,7 +31,7 @@ RUN cd /tmp && \
     pip3 install z3-solver && rm -rf /tmp/z3*
 
 # Triton (LLVM for lifting; z3 or bitwuzla as SMT solver)
-RUN git clone https://github.com/JonathanSalwan/Triton && cd Triton && mkdir build && cd build && cmake -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=$(/usr/lib/llvm-12/bin/llvm-config --prefix) -DZ3_INTERFACE=ON -DBITWUZLA_INTERFACE=ON .. && make -j4 && make install
+RUN git clone https://github.com/JonathanSalwan/Triton && cd Triton && mkdir build && cd build && cmake -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=$(/usr/lib/llvm-12/bin/llvm-config --prefix) -DZ3_INTERFACE=ON -DBITWUZLA_INTERFACE=ON  -DBITWUZLA_INCLUDE_DIRS=/usr/local/include -DBITWUZLA_LIBRARIES=/usr/local/lib/x86_64-linux-gnu/libbitwuzla.so .. && make -j4 && make install
 
 RUN PYV=`python3 -c "import platform;print(platform.python_version()[:3])"` && \
     PYP="/usr/lib/python$PYV/site-packages" && \
