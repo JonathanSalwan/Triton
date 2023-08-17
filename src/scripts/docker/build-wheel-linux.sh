@@ -11,95 +11,71 @@
 #
 # You'll find the .whl packages in the wheel-final folder.
 
-set -ex
+set -e
+# set -x  # Debugging
 
-# Create deps folder.
-cd /src
-mkdir -p deps
-cd deps
-
-# Download and build GMP.
-wget https://ftp.gnu.org/gnu/gmp/gmp-6.2.1.tar.xz
-tar xvf gmp-6.2.1.tar.xz
-cd gmp-6.2.1/
-./configure --enable-cxx
-make
-make install
-cd ..
-
-# Download and build Bitwuzla.
-git clone https://github.com/bitwuzla/bitwuzla.git
-cd bitwuzla
-git checkout -b 0.1.0 0.1.0
-CC=clang CXX=clang++ PATH=$PATH:/opt/_internal/cpython-3.10.12/bin python3.10 ./configure.py --shared --prefix $(pwd)/install
-cd build
-PATH=$PATH:/opt/_internal/cpython-3.10.12/bin ninja install
-cd ../..
-
-# Download Z3.
-wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-glibc-2.31.zip
-unzip z3-4.8.17-x64-glibc-2.31.zip
-
-# Install Capstone.
-wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
-tar -xf ./4.0.2.tar.gz
-cd ./capstone-4.0.2
-bash ./make.sh
-sudo make install
-cd ..
-
-# Download LLVM.
-wget https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.1/clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz
-tar -xf clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+DEPENDENCIES_DIR=/tmp/triton-dependencies
+SOURCE_DIR=/src
+WHEEL_DIR=$SOURCE_DIR/wheelhouse
 
 # Set environment variables for building Triton.
-export Z3_INCLUDE_DIRS=$(pwd)/z3-4.8.17-x64-glibc-2.31/include
-export Z3_LIBRARIES=$(pwd)/z3-4.8.17-x64-glibc-2.31/bin/libz3.a
+echo "[+] Setup environment variables"
+export Z3_INCLUDE_DIRS=$DEPENDENCIES_DIR/z3-4.8.17-x64-glibc-2.31/include
+export Z3_LIBRARIES=$DEPENDENCIES_DIR/z3-4.8.17-x64-glibc-2.31/bin/libz3.a
 export CAPSTONE_INCLUDE_DIRS=/usr/include
 export CAPSTONE_LIBRARIES=/usr/lib/libcapstone.a
 export BITWUZLA_INTERFACE=On
-export BITWUZLA_INCLUDE_DIRS=$(pwd)/bitwuzla/install/include
-export BITWUZLA_LIBRARIES=$(pwd)/bitwuzla/install/lib64/libbitwuzla.so
+export BITWUZLA_INCLUDE_DIRS=$DEPENDENCIES_DIR/bitwuzla/install/include
+export BITWUZLA_LIBRARIES=$DEPENDENCIES_DIR/bitwuzla/install/lib64/libbitwuzla.so
 export LLVM_INTERFACE=ON
-export CMAKE_PREFIX_PATH=$($(pwd)/clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-/bin/llvm-config --prefix)
-
-cd ..
+export CMAKE_PREFIX_PATH=$($DEPENDENCIES_DIR/clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-/bin/llvm-config --prefix)
 
 # Build Triton Python wheel package for Python 3.8.
+echo "[+] Build Triton wheel package for Python 3.8"
+cd $SOURCE_DIR
 export PYTHON_BINARY=/opt/_internal/cpython-3.8.17/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
-$PYTHON_BINARY setup.py bdist_wheel --dist-dir wheel-temp
+$PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 
 # Build Triton Python wheel package for Python 3.9.
+echo "[+] Build Triton wheel package for Python 3.9"
+cd $SOURCE_DIR
 export PYTHON_BINARY=/opt/_internal/cpython-3.9.17/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
-$PYTHON_BINARY setup.py bdist_wheel --dist-dir wheel-temp
+$PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 
 # Build Triton Python wheel package for Python 3.10.
+echo "[+] Build Triton wheel package for Python 3.10"
+cd $SOURCE_DIR
 export PYTHON_BINARY=/opt/_internal/cpython-3.10.12/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
-$PYTHON_BINARY setup.py bdist_wheel --dist-dir wheel-temp
+$PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 
 # Build Triton Python wheel package for Python 3.11.
+echo "[+] Build Triton wheel package for Python 3.11"
+cd $SOURCE_DIR
 export PYTHON_BINARY=/opt/_internal/cpython-3.11.4/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
-$PYTHON_BINARY setup.py bdist_wheel --dist-dir wheel-temp
+$PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 
 # Repair wheels.
-for whl in wheel-temp/*.whl; do
-    auditwheel repair "$whl" -w wheel-final
+echo "[+] Repair wheel packages"
+cd $SOURCE_DIR
+for whl in $WHEEL_DIR/linux_x86_64/*.whl; do
+    auditwheel repair "$whl" --wheel-dir $WHEEL_DIR/manylinux_2_28_x86_64
 done
 
-chown -R 1000:1000 build
-chown -R 1000:1000 deps
-chown -R 1000:1000 triton_library.egg-info
-chown -R 1000:1000 wheel-final
-chown -R 1000:1000 wheel-temp
+echo "[+] Remove build directory"
+rm -rf $SOURCE_DIR/build
+rm -rf $SOURCE_DIR/triton_library.egg-info
+
+echo "[+] Change permissions for directories"
+chown -R 1000:1000 $WHEEL_DIR
