@@ -3115,6 +3115,11 @@ namespace triton {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
 
+          /* LDR (literal) */
+          if (inst.operands.size() == 2 && src.getType() == triton::arch::OP_IMM) {
+            src = triton::arch::MemoryAccess(src.getConstImmediate().getValue(), dst.getSize());
+          }
+
           /* Create the semantics of the LOAD */
           auto node1 = this->symbolicEngine->getOperandAst(inst, src);
 
@@ -3143,7 +3148,6 @@ namespace triton {
             /* Spread taint */
             expr2->isTainted = this->taintEngine->isTainted(base);
           }
-
           /* LDR <Xt>, [<Xn|SP>, #<simm>]! */
           else if (inst.operands.size() == 2 && inst.isWriteBack() == true) {
             triton::arch::Register& base = src.getMemory().getBaseRegister();
