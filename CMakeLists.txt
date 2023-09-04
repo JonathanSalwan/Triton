@@ -42,11 +42,11 @@ option(ASAN                              "Enable the ASAN linking"              
 option(BITWUZLA_INTERFACE                "Use Bitwuzla as SMT solver"                      OFF)
 option(BUILD_SHARED_LIBS                 "Build a shared library"                          ON)
 option(GCOV                              "Enable code coverage"                            OFF)
-option(LLVM_INTERFACE                    "Use LLVM for lifting"                            ON)
+option(LLVM_INTERFACE                    "Use LLVM for lifting"                            OFF)
 option(MSVC_STATIC                       "Use statically-linked runtime library"           OFF)
 option(Z3_INTERFACE                      "Use Z3 as SMT solver"                            ON)
-option(BOOST_INTERFACE                   "Use Boost as multiprecision library"             OFF)
-option(PYTHON_BINDINGS_AUTOCOMPLETE      "Generate an autocomplete stub file"              ON)
+option(BOOST_INTERFACE                   "Use Boost as multiprecision library"             ON)
+option(PYTHON_BINDINGS_AUTOCOMPLETE      "Generate an autocomplete stub file"              OFF)
 
 
 
