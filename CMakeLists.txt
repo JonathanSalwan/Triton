@@ -7,7 +7,6 @@
 ##################################################################################### CMake libtriton
 
 cmake_minimum_required(VERSION 3.20)
-set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
 
 set(TRITON_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 
@@ -23,7 +22,8 @@ project(triton VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
 
 if(CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
     if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_GENERATOR_TOOLSET STREQUAL "ClangCL")
-        SET(CMAKE_CXX_FLAGS "/EHsc")
+        set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+        set(CMAKE_CXX_FLAGS "/EHsc")
     endif()
 endif ()
 
