@@ -11,11 +11,6 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
 
 set(TRITON_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 
-#C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/Llvm
-
-
-
-
 # Read the build version
 file(READ ${TRITON_ROOT}/.build_number BUILD_NUMBER)
 set(VERSION_MAJOR 1)
@@ -26,11 +21,11 @@ set(VERSION_BUILD ${BUILD_NUMBER})
 project(triton VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
 
 
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_GENERATOR_TOOLSET STREQUAL "ClangCL")
-    SET(CMAKE_CXX_FLAGS "/EHsc")
-endif()
-
+if(CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_GENERATOR_TOOLSET STREQUAL "ClangCL")
+        SET(CMAKE_CXX_FLAGS "/EHsc")
+    endif()
+endif ()
 
 
 # Define cmake options
