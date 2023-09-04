@@ -1,0 +1,92 @@
+
+Building llvm on windows
+
+
+1、Cloning LLVM latest stable repo.
+git clone -b release/16.x --depth 1 https://github.com/llvm/llvm-project.git llvm
+
+2、Use clion to open cmakelist.txt in the llvm directory in the cloned llvm project and wait a moment.
+3、clion settting ——> add release ——> toolchain choose visual studio——> generator choose ninja——> The following is cmake option
+
+-G Ninja -DBENCHMARK_ENABLE_EXCEPTIONS:BOOL=OFF -DCMAKE_CXX_STANDARD:STRING=20 -DLLVM_ENABLE_Z3_SOLVER:BOOL=OFF -DLLVM_ENABLE_PROJECTS:STRING=clang;lld -DBUILD_SHARED_LIBS:BOOL=OFF -DLLVM_INCLUDE_BENCHMARKS:BOOL=ON -DLLVM_HOST_TRIPLE:STRING=x86_64 -DBENCHMARK_DOWNLOAD_DEPENDENCIES:BOOL=OFF -DBENCHMARK_ENABLE_ASSEMBLY_TESTS:BOOL=OFF -DBENCHMARK_ENABLE_DOXYGEN:BOOL=OFF -DBENCHMARK_ENABLE_GTEST_TESTS:BOOL=OFF -DBENCHMARK_ENABLE_INSTALL:BOOL=OFF -DBENCHMARK_ENABLE_LIBPFM:BOOL=OFF -DBENCHMARK_ENABLE_LTO:BOOL=OFF -DBENCHMARK_ENABLE_TESTING:BOOL=OFF -DBENCHMARK_ENABLE_WERROR:BOOL=OFF -DBENCHMARK_FORCE_WERROR:BOOL=OFF -DLLVM_BUILD_BENCHMARKS:BOOL=ON -DLLVM_ENABLE_EH:BOOL=ON -DLLVM_ENABLE_RTTI:BOOL=ON
+
+Then click Apply and Save ,clion then performs the analysis automatically until it is complete.
+
+Next, select build to build everything  & install.
+
+
+
+The following is the way Windows compiled tirton project.(The following environment variables need to be set accurately before compilation.)
+
+!!!On windows, it is recommended to use clang-cl.exe instead of the MSVC compiler.
+!!!All about the native compilation triton is recommended when conda or miniconda.
+
+
+$env:BuildDir = "C:/dev"
+$env:Z3_INCLUDE_DIRS_TEMP   = "$env:BuildDir/z3/include"
+$env:Z3_LIBRARIES_TEMP      = "$env:BuildDir/z3/bin/libz3.lib"
+$env:CAPSTONE_INCLUDE_DIRS = "$env:BuildDir/capstone/include" 
+$env:CAPSTONE_LIBRARIES    = "$env:BuildDir/capstone/bin/capstone.lib"
+$env:LLVM_PREFIX = "$env:BuildDir/llvma"
+$env:LLVM_DIR = "$env:LLVM_PREFIX/lib/cmake/llvm" 
+$env:CLANG_CL="$env:LLVM_PREFIX/bin/clang-cl.exe" 
+
+Vs2022 build,This method will generate a vs project sln related file that can be successfully compiled.
+
+Before the cmake input command: conda activate triton
+
+cmake  -DIS_CLANG_CL="ON" -DCMAKE_BUILD_TYPE=Release  `
+	-DCMAKE_C_FLAGS=-m64 -DCMAKE_CXX_FLAGS=-m64 `
+	-G"Visual Studio 17 2022" -T ClangCL `
+	-DCMAKE_C_COMPILER="$CLANG_CL" `
+ 	-DCMAKE_CXX_COMPILER="$CLANG_CL" `
+	-DLLVM_INTERFACE=ON -DZ3_INTERFACE=ON `
+	-DCMAKE_PREFIX_PATH="$LLVM_PREFIX" `
+	-DLLVM_DIR="$LLVM_DIR"  `
+	-DCAPSTONE_INCLUDE_DIRS="$CAPSTONE_INCLUDE_DIRS" `
+	-DCAPSTONE_LIBRARIES="$CAPSTONE_LIBRARIES" `
+	-DZ3_INCLUDE_DIRS="$Z3_INCLUDE_DIRS" `
+	-DZ3_LIBRARIES="$Z3_LIBRARIES"    `
+	-DCMAKE_CXX_STANDARD="20" .. `
+	-DCMAKE_AR="$env:LLVM_PREFIX/bin/llvm-lib.exe" `
+	-DCMAKE_NM= "$env:LLVM_PREFIX/bin/llvm-nm.exe" `
+	-DCMAKE_C_COMPILER_AR="$env:LLVM_PREFIX /bin/llvm-ar.exe" `
+	-DCMAKE_C_COMPILER_CLANG_SCAN_DEPS="$env:LLVM_PREFIX/bin/clang-scan-deps.exe" `
+	-DCMAKE_C_COMPILER_RANLIB="$env:LLVM_PREFIX/bin/llvm-ranlib.exe" `
+	-DCMAKE_CXX_COMPILER_CLANG_SCAN_DEPS="$env:LLVM_PREFIX/bin/clang-scan-deps.exe" `
+	-DCMAKE_CXX_COMPILER_AR="$env:LLVM_PREFIX/bin/llvm-ar.exe" `
+	-DCMAKE_CXX_COMPILER_RANLIB="$env:LLVM_PREFIX/bin/llvm-ranlib.exe" `
+	-DCMAKE_LINKER="$env:LLVM_PREFIX/bin/lld-link.exe" `
+	-DCMAKE_INSTALL_PREFIX="$env:BuildDir/triton_install"
+
+
+
+
+
+python setup.py install ,With this method, you can install triton directly into your python environment.
+
+$env:IS_CLANG_CL="ON"
+$env:CMAKE_BUILD_TYPE="Release"
+$env:CMAKE_C_FLAGS="-m64" 
+$env:CMAKE_CXX_FLAGS="-m64"
+$env:CMAKE_C_COMPILER="$env:CLANG_CL" 
+$env:CMAKE_CXX_COMPILER="$env:CLANG_CL" 
+$env:LLVM_INTERFACE="ON" 
+$env:Z3_INTERFACE="ON" 
+$env:CMAKE_PREFIX_PATH="$env:LLVM_PREFIX" 
+$env:LLVM_DIR="$env:LLVM_DIR"  
+$env:CAPSTONE_INCLUDE_DIRS="$env:CAPSTONE_INCLUDE_DIRS" 
+$env:CAPSTONE_LIBRARIES="$env:CAPSTONE_LIBRARIES" 
+$env:Z3_INCLUDE_DIRS="$env:Z3_INCLUDE_DIRS_TEMP" 
+$env:Z3_LIBRARIES="$env:Z3_LIBRARIES_TEMP"    
+$env:CMAKE_CXX_STANDARD="C++20"
+$env:CMAKE_AR="$env:LLVM_PREFIX/bin/llvm-lib.exe" 
+$env:CMAKE_NM= "$env:LLVM_PREFIX/bin/llvm-nm.exe" 
+$env:CMAKE_C_COMPILER_AR="$env:LLVM_PREFIX /bin/llvm-ar.exe" 
+$env:CMAKE_C_COMPILER_CLANG_SCAN_DEPS="$env:LLVM_PREFIX/bin/clang-scan-deps.exe" 
+$env:CMAKE_C_COMPILER_RANLIB="$env:LLVM_PREFIX/bin/llvm-ranlib.exe" 
+$env:CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS="$env:LLVM_PREFIX/bin/clang-scan-deps.exe" 
+$env:CMAKE_CXX_COMPILER_AR="$env:LLVM_PREFIX/bin/llvm-ar.exe" 
+$env:CMAKE_CXX_COMPILER_RANLIB="$env:LLVM_PREFIX/bin/llvm-ranlib.exe" 
+$env:CMAKE_LINKER="$env:LLVM_PREFIX/bin/lld-link.exe" 
+$env:CMAKE_INSTALL_PREFIX="$env:BuildDir/triton_install"

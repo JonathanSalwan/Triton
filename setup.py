@@ -90,10 +90,13 @@ class CMakeBuild(build_ext):
 
         elif platform.system() == "Windows":
             cmake_args += [
-                '-G Visual Studio 17 2022',
+                '-G Visual Studio 17 2022',"-DCMAKE_CXX_STANDARD=20"
             ]
+            if os.getenv("IS_CLANG_CL"):
+                cmake_args += [
+                    "-T ClangCL", "-DCMAKE_CXX_STANDARD=20"
+                ]
             build_args += ['--', '/m:4']
-
         else:
             raise Exception(f'Platform not supported: {platform.system()}')
 

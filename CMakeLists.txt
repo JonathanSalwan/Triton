@@ -7,8 +7,14 @@
 ##################################################################################### CMake libtriton
 
 cmake_minimum_required(VERSION 3.20)
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
 
 set(TRITON_ROOT "${CMAKE_CURRENT_LIST_DIR}")
+
+#C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/Llvm
+
+
+
 
 # Read the build version
 file(READ ${TRITON_ROOT}/.build_number BUILD_NUMBER)
@@ -19,18 +25,30 @@ set(VERSION_BUILD ${BUILD_NUMBER})
 # Used for write_basic_package_version_file()
 project(triton VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
 
+
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_GENERATOR_TOOLSET STREQUAL "ClangCL")
+    SET(CMAKE_CXX_FLAGS "/EHsc")
+endif()
+
+
+
 # Define cmake options
 include(CMakeDependentOption)
+
+
 
 option(ASAN                              "Enable the ASAN linking"                         OFF)
 option(BITWUZLA_INTERFACE                "Use Bitwuzla as SMT solver"                      OFF)
 option(BUILD_SHARED_LIBS                 "Build a shared library"                          ON)
 option(GCOV                              "Enable code coverage"                            OFF)
-option(LLVM_INTERFACE                    "Use LLVM for lifting"                            OFF)
+option(LLVM_INTERFACE                    "Use LLVM for lifting"                            ON)
 option(MSVC_STATIC                       "Use statically-linked runtime library"           OFF)
 option(Z3_INTERFACE                      "Use Z3 as SMT solver"                            ON)
-option(BOOST_INTERFACE                   "Use Boost as multiprecision library"             ON)
-option(PYTHON_BINDINGS_AUTOCOMPLETE      "Generate an autocomplete stub file"              OFF)
+option(BOOST_INTERFACE                   "Use Boost as multiprecision library"             OFF)
+option(PYTHON_BINDINGS_AUTOCOMPLETE      "Generate an autocomplete stub file"              ON)
+
+
 
 # Define cmake dependent options
 cmake_dependent_option(BUILD_EXAMPLES   "Build the examples"            ON  BUILD_SHARED_LIBS OFF)
