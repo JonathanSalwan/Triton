@@ -40,8 +40,11 @@ wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.
 bash ~/miniconda.sh -b -p /opt/conda && \
 bash rm ~/miniconda.sh
 
+
 export PATH="/opt/conda/bin:$PATH"
 /opt/conda/bin/conda init bash
+source activate
+conda deactivate
 conda create -n py38 python=3.8
 conda create -n py39 python=3.9
 conda create -n py310 python=3.10
