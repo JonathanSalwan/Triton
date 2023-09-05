@@ -5,7 +5,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # libpython >= 3.6
 # llvm >= 12
 # cmake >= 3.20
-RUN apt update && apt upgrade -y && apt install -y build-essential clang curl git libboost-all-dev libgmp-dev libpython3-dev libpython3-stdlib llvm-12 llvm-12-dev python3-pip tar ninja-build pkg-config && apt-get clean && pip install --upgrade pip && pip3 install Cython lief cmake meson
+RUN apt update && apt upgrade -y && apt install -y build-essential clang curl git libboost-all-dev libgmp-dev libpython3-dev libpython3-stdlib llvm-12 llvm-12-dev python3-pip tar ninja-build pkg-config && apt-get clean && pip install --upgrade pip && pip3 install Cython lief cmake && python -m pip install meson
 
 # libcapstone >= 4.0.x
 RUN cd /tmp && \

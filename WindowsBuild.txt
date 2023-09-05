@@ -35,22 +35,25 @@ Vs2022 build,This method will generate a vs project sln related file that can be
 
 Before the cmake input command: conda activate triton
 
-cmake  -DIS_CLANG_CL="ON" -DCMAKE_BUILD_TYPE=Release  `
+#IS_CLANG_CL
+IS_CLANG_CL Enable this option if you want to use clang-cl on windows.
+
+cmake  -DIS_CLANG_CL="ON" -DIS_CLANG_CL="ON" -DCMAKE_BUILD_TYPE=Release  `
 	-DCMAKE_C_FLAGS=-m64 -DCMAKE_CXX_FLAGS=-m64 `
 	-G"Visual Studio 17 2022" -T ClangCL `
 	-DCMAKE_C_COMPILER="$CLANG_CL" `
  	-DCMAKE_CXX_COMPILER="$CLANG_CL" `
 	-DLLVM_INTERFACE=ON -DZ3_INTERFACE=ON `
-	-DCMAKE_PREFIX_PATH="$LLVM_PREFIX" `
-	-DLLVM_DIR="$LLVM_DIR"  `
-	-DCAPSTONE_INCLUDE_DIRS="$CAPSTONE_INCLUDE_DIRS" `
-	-DCAPSTONE_LIBRARIES="$CAPSTONE_LIBRARIES" `
-	-DZ3_INCLUDE_DIRS="$Z3_INCLUDE_DIRS_TEMP" `
-	-DZ3_LIBRARIES="$Z3_LIBRARIES_TEMP"    `
+	-DCMAKE_PREFIX_PATH="$env:LLVM_PREFIX" `
+	-DLLVM_DIR="$env:LLVM_DIR"  `
+	-DCAPSTONE_INCLUDE_DIRS="$env:CAPSTONE_INCLUDE_DIRS" `
+	-DCAPSTONE_LIBRARIES="$env:CAPSTONE_LIBRARIES" `
+	-DZ3_INCLUDE_DIRS="$env:Z3_INCLUDE_DIRS_TEMP" `
+	-DZ3_LIBRARIES="$env:Z3_LIBRARIES_TEMP"    `
 	-DCMAKE_CXX_STANDARD="20" .. `
 	-DCMAKE_AR="$env:LLVM_PREFIX/bin/llvm-lib.exe" `
 	-DCMAKE_NM= "$env:LLVM_PREFIX/bin/llvm-nm.exe" `
-	-DCMAKE_C_COMPILER_AR="$env:LLVM_PREFIX /bin/llvm-ar.exe" `
+	-DCMAKE_C_COMPILER_AR="$env:LLVM_PREFIX/bin/llvm-ar.exe" `
 	-DCMAKE_C_COMPILER_CLANG_SCAN_DEPS="$env:LLVM_PREFIX/bin/clang-scan-deps.exe" `
 	-DCMAKE_C_COMPILER_RANLIB="$env:LLVM_PREFIX/bin/llvm-ranlib.exe" `
 	-DCMAKE_CXX_COMPILER_CLANG_SCAN_DEPS="$env:LLVM_PREFIX/bin/clang-scan-deps.exe" `
