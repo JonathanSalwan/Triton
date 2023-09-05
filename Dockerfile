@@ -9,7 +9,7 @@ RUN apt-get update && apt upgrade -y && apt install -y build-essential clang cur
 # libpython3-dev libpython3-stdlib
 RUN apt-get install python3 python3-pip python3-setuptools python3-wheel ninja-build && \ 
     pip install --upgrade pip && \ 
-    pip3 install --user meson Cython lief 
+    sudo pip install --user meson Cython lief 
     
 
 # libcapstone >= 4.0.x
