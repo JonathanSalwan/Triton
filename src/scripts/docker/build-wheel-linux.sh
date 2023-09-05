@@ -14,9 +14,6 @@
 set -e
 # set -x  # Debugging
 
-
-
-
 DEPENDENCIES_DIR=/tmp/triton-dependencies
 SOURCE_DIR=/src
 WHEEL_DIR=$SOURCE_DIR/wheelhouse
