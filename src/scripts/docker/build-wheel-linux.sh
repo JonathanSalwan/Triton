@@ -14,6 +14,9 @@
 set -e
 # set -x  # Debugging
 
+
+
+
 DEPENDENCIES_DIR=/tmp/triton-dependencies
 SOURCE_DIR=/src
 WHEEL_DIR=$SOURCE_DIR/wheelhouse
@@ -30,41 +33,59 @@ export BITWUZLA_LIBRARIES=$DEPENDENCIES_DIR/bitwuzla/install/lib64/libbitwuzla.s
 export LLVM_INTERFACE=ON
 export CMAKE_PREFIX_PATH=$($DEPENDENCIES_DIR/clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-/bin/llvm-config --prefix)
 
+
+
+#miniconda
+wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
+~/miniconda.sh -b -p /opt/conda && \
+rm ~/miniconda.sh && /opt/conda/bin/conda clean -tipsy 
+
+export PATH="/opt/conda/bin:$PATH"
+conda create -n py38 python=3.8
+conda create -n py39 python=3.9
+conda create -n py310 python=3.10
+conda create -n py311 python=3.11
+
+
 # Build Triton Python wheel package for Python 3.8.
 echo "[+] Build Triton wheel package for Python 3.8"
 cd $SOURCE_DIR
-export PYTHON_BINARY=/opt/_internal/cpython-3.8.17/bin/python
-export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
-export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
-
-$PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
+#export PYTHON_BINARY=/opt/_internal/cpython-3.8.17/bin/python
+#export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+#export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+conda activate py38
+python --version
+python -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 
 # Build Triton Python wheel package for Python 3.9.
 echo "[+] Build Triton wheel package for Python 3.9"
 cd $SOURCE_DIR
-export PYTHON_BINARY=/opt/_internal/cpython-3.9.17/bin/python
-export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
-export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
-
-$PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
+#export PYTHON_BINARY=/opt/_internal/cpython-3.9.17/bin/python
+#export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+#export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+conda activate py39
+python --version
+python -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 
 # Build Triton Python wheel package for Python 3.10.
 echo "[+] Build Triton wheel package for Python 3.10"
 cd $SOURCE_DIR
-export PYTHON_BINARY=/opt/_internal/cpython-3.10.12/bin/python
-export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
-export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
-
-$PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
+#export PYTHON_BINARY=/opt/_internal/cpython-3.10.12/bin/python
+#export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+#export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+conda activate py310
+python --version
+python -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 
 # Build Triton Python wheel package for Python 3.11.
 echo "[+] Build Triton wheel package for Python 3.11"
 cd $SOURCE_DIR
-export PYTHON_BINARY=/opt/_internal/cpython-3.11.4/bin/python
-export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
-export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
-
-$PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
+#export PYTHON_BINARY=/opt/_internal/cpython-3.11.4/bin/python
+#export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+#export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+conda activate py311
+python --version
+python -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 
 # Repair wheels.
 echo "[+] Repair wheel packages"
