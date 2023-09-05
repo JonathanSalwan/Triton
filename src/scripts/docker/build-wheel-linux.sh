@@ -38,7 +38,7 @@ export CMAKE_PREFIX_PATH=$($DEPENDENCIES_DIR/clang+llvm-12.0.1-x86_64-linux-gnu-
 #miniconda
 wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
 bash ~/miniconda.sh -b -p /opt/conda && \
-bash rm ~/miniconda.sh && bash /opt/conda/bin/conda clean -tipsy 
+bash rm ~/miniconda.sh
 
 export PATH="/opt/conda/bin:$PATH"
 conda create -n py38 python=3.8
