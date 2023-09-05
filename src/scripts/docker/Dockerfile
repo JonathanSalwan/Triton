@@ -12,7 +12,7 @@ RUN yum install -y \
         wget
 
 RUN python3.10 -m pip install meson
-
+ENV PATH=/opt/_internal/cpython-3.10.13/bin:$PATH
 ENV DEPENDENCIES_DIR=/tmp/triton-dependencies
 ENV SOURCE_DIR=/src
 
