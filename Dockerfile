@@ -1,18 +1,31 @@
-FROM --platform=linux/amd64 ubuntu:20.04
+FROM --platform=linux/amd64 ubuntu:22.04
 ARG DEBIAN_FRONTEND=noninteractive
-RUN useradd -m myuser
-USER myuser
+
 # libboost >= 1.68
 # libpython >= 3.6
 # llvm >= 12
 # cmake >= 3.20
-RUN apt-get update && apt upgrade -y && apt install -y build-essential clang curl git cmake libboost-all-dev libgmp-dev llvm-12 llvm-12-dev tar pkg-config && apt-get clean
-# libpython3-dev libpython3-stdlib
-RUN apt-get install python3 python3-pip python3-setuptools python3-wheel ninja-build && \ 
-    pip install --upgrade pip && \ 
+RUN apt update && apt upgrade -y && apt install -y && \
+build-essential clang curl git cmake libboost-all-dev libgmp-dev llvm-12 llvm-12-dev tar pkg-config
+    
+
+RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
+    /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh && \
+    /opt/conda/bin/conda clean -tipsy && \
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate triton" >> ~/.bashrc
+
+ENV PATH /opt/conda/bin:$PATH
+RUN conda create -n triton python=3.11 -y && \
+    . /root/.bashrc && \
+    /opt/conda/bin/conda init bash && \
+    conda activate triton && conda info --envs
+    
+RUN pip install --upgrade pip && \ 
     pip install meson Cython lief 
 
-ENV PATH="/opt/_internal/cpython-3.10.13/bin:${PATH}"
 # libcapstone >= 4.0.x
 RUN cd /tmp && \
     curl -o cap.tgz -L https://github.com/aquynh/capstone/archive/4.0.2.tar.gz && \
