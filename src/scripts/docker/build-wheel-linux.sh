@@ -58,6 +58,7 @@ cd $SOURCE_DIR
 #export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 #export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 conda activate py38
+python -m pip install build
 python --version
 python -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 
@@ -68,6 +69,7 @@ cd $SOURCE_DIR
 #export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 #export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 conda activate py39
+python -m pip install build
 python --version
 python -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 
@@ -78,6 +80,7 @@ cd $SOURCE_DIR
 #export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 #export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 conda activate py310
+python -m pip install build
 python --version
 python -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 
@@ -88,9 +91,11 @@ cd $SOURCE_DIR
 #export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 #export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 conda activate py311
+python -m pip install build
 python --version
 python -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 
+python -m pip install auditwheel
 # Repair wheels.
 echo "[+] Repair wheel packages"
 cd $SOURCE_DIR
