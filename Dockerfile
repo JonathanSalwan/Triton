@@ -1,6 +1,7 @@
 FROM --platform=linux/amd64 ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
-
+RUN useradd -m myuser
+USER myuser
 # libboost >= 1.68
 # libpython >= 3.6
 # llvm >= 12
@@ -9,7 +10,7 @@ RUN apt-get update && apt upgrade -y && apt install -y build-essential clang cur
 # libpython3-dev libpython3-stdlib
 RUN apt-get install python3 python3-pip python3-setuptools python3-wheel ninja-build && \ 
     pip install --upgrade pip && \ 
-    sudo pip install --user meson Cython lief 
+    pip install meson Cython lief 
     
 
 # libcapstone >= 4.0.x
