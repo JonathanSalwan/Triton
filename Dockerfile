@@ -1,30 +1,11 @@
-FROM --platform=linux/amd64 ubuntu:22.04
+FROM --platform=linux/amd64 ubuntu:20.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 # libboost >= 1.68
 # libpython >= 3.6
 # llvm >= 12
 # cmake >= 3.20
-RUN apt update && apt upgrade -y && apt install -y && \
-build-essential clang curl git cmake libboost-all-dev libgmp-dev llvm-12 llvm-12-dev tar pkg-config
-    
-
-RUN wget --quiet https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
-    /bin/bash ~/miniconda.sh -b -p /opt/conda && \
-    rm ~/miniconda.sh && \
-    /opt/conda/bin/conda clean -tipsy && \
-    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate triton" >> ~/.bashrc
-
-ENV PATH /opt/conda/bin:$PATH
-RUN conda create -n triton python=3.11 -y && \
-    . /root/.bashrc && \
-    /opt/conda/bin/conda init bash && \
-    conda activate triton && conda info --envs
-    
-RUN pip install --upgrade pip && \ 
-    pip install meson Cython lief 
+RUN apt update && apt upgrade -y && apt install -y build-essential clang curl git libboost-all-dev libgmp-dev libpython3-dev libpython3-stdlib llvm-12 llvm-12-dev python3-pip tar ninja-build pkg-config && apt-get clean && pip install --upgrade pip && pip3 install Cython lief cmake meson
 
 # libcapstone >= 4.0.x
 RUN cd /tmp && \
