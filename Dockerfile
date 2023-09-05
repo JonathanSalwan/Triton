@@ -11,8 +11,8 @@ RUN apt-get update && apt upgrade -y && apt install -y build-essential clang cur
 RUN apt-get install python3 python3-pip python3-setuptools python3-wheel ninja-build && \ 
     pip install --upgrade pip && \ 
     pip install meson Cython lief 
-    
 
+ENV PATH="/opt/_internal/cpython-3.10.13/bin:${PATH}"
 # libcapstone >= 4.0.x
 RUN cd /tmp && \
     curl -o cap.tgz -L https://github.com/aquynh/capstone/archive/4.0.2.tar.gz && \
