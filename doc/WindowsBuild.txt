@@ -20,6 +20,7 @@ The following is the way Windows compiled tirton project.(The following environm
 
 !!!On windows, it is recommended to use clang-cl.exe instead of the MSVC compiler.
 !!!All about the native compilation triton is recommended when conda or miniconda.
+!!!If the llvm(clang-cl) suboption is enabled on windows platforms, it is recommended that llvm and triton compile with the same c++ compiler version to avoid errors when compiling triton.
 
 
 $env:BuildDir = "C:/dev"

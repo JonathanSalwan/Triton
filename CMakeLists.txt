@@ -19,15 +19,6 @@ set(VERSION_BUILD ${BUILD_NUMBER})
 # Used for write_basic_package_version_file()
 project(triton VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
 
-
-if(CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_GENERATOR_TOOLSET STREQUAL "ClangCL")
-        set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
-        set(CMAKE_CXX_FLAGS "/EHsc")
-    endif()
-endif ()
-
-
 # Define cmake options
 include(CMakeDependentOption)
 
@@ -45,6 +36,14 @@ option(PYTHON_BINDINGS_AUTOCOMPLETE      "Generate an autocomplete stub file"   
 cmake_dependent_option(BUILD_EXAMPLES   "Build the examples"            ON  BUILD_SHARED_LIBS OFF)
 cmake_dependent_option(ENABLE_TEST      "Do testing"                    ON  BUILD_SHARED_LIBS OFF)
 cmake_dependent_option(PYTHON_BINDINGS  "Enable Python bindings"        ON  BUILD_SHARED_LIBS OFF)
+
+#Windows platform llvm
+if(CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
+    if (LLVM_INTERFACE AND CMAKE_GENERATOR_TOOLSET STREQUAL "ClangCL")
+        set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+        set(CMAKE_CXX_FLAGS "/EHsc")
+    endif()
+endif ()
 
 #Enable ctest
 include(CTest)
