@@ -37,13 +37,7 @@ cmake_dependent_option(BUILD_EXAMPLES   "Build the examples"            ON  BUIL
 cmake_dependent_option(ENABLE_TEST      "Do testing"                    ON  BUILD_SHARED_LIBS OFF)
 cmake_dependent_option(PYTHON_BINDINGS  "Enable Python bindings"        ON  BUILD_SHARED_LIBS OFF)
 
-#Windows platform llvm
-if(CMAKE_HOST_SYSTEM_NAME MATCHES "Windows")
-    if (LLVM_INTERFACE AND CMAKE_GENERATOR_TOOLSET STREQUAL "ClangCL")
-        set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
-        set(CMAKE_CXX_FLAGS "/EHsc")
-    endif()
-endif ()
+
 
 #Enable ctest
 include(CTest)
