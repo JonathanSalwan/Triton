@@ -35,9 +35,9 @@ RUN echo "[+] Download, build and install Bitwuzla" && \
     git clone https://github.com/bitwuzla/bitwuzla.git && \
     cd bitwuzla && \
     git checkout -b 0.1.0 0.1.0 && \
-    CC=clang CXX=clang++ PATH=$PATH:/opt/_internal/cpython-3.10.12/bin python3.10 ./configure.py --shared --prefix $(pwd)/install && \
+    CC=clang CXX=clang++ PATH=$PATH:/opt/_internal/cpython-3.10.13/bin python3.10 ./configure.py --shared --prefix $(pwd)/install && \
     cd build && \
-    PATH=$PATH:/opt/_internal/cpython-3.10.12/bin ninja install
+    PATH=$PATH:/opt/_internal/cpython-3.10.13/bin ninja install
 
 # Download Z3.
 RUN echo "[+] Download Z3" && \
