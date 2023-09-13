@@ -34,7 +34,7 @@ RUN echo "[+] Download, build and install Bitwuzla" && \
     cd $DEPENDENCIES_DIR && \
     git clone https://github.com/bitwuzla/bitwuzla.git && \
     cd bitwuzla && \
-    git checkout -b 0.1.0 0.1.0 && \
+    git checkout -b 0.2.0 0.2.0 && \
     CC=clang CXX=clang++ PATH=$PATH:/opt/_internal/cpython-3.10.13/bin python3.10 ./configure.py --shared --prefix $(pwd)/install && \
     cd build && \
     PATH=$PATH:/opt/_internal/cpython-3.10.13/bin ninja install
