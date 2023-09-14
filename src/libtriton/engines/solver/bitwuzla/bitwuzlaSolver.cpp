@@ -142,7 +142,7 @@ namespace triton {
           // Parse model.
           std::unordered_map<triton::usize, SolverModel> model;
           for (const auto& it : bzlaAst.getVariables()) {
-            const char* svalue = bitwuzla_term_value_get_str(bitwuzla_get_value(bzla, it.first), 2);
+            const char* svalue = bitwuzla_term_value_get_str_fmt(bitwuzla_get_value(bzla, it.first), 2);
             auto value = this->fromBvalueToUint512(svalue);
             auto m = SolverModel(it.second, value);
             model[m.getId()] = m;
@@ -231,7 +231,7 @@ namespace triton {
         if (bitwuzla_term_is_bool(term_value)) {
           res = bitwuzla_term_value_get_bool(term_value);
         } else {
-          res = triton::uint512{bitwuzla_term_value_get_str(term_value, 10)};
+          res = triton::uint512{bitwuzla_term_value_get_str_fmt(term_value, 10)};
         }
 
         bitwuzla_delete(bzla);
