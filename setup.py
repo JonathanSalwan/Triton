@@ -186,6 +186,7 @@ class CMakeBuild(build_ext):
         src_filename = os.path.join(self.build_temp + '/doc/triton_autocomplete', 'triton.pyi')
         if(os.path.exists(src_filename)):
             copy_file(src_filename, self.build_lib, verbose=self.verbose, dry_run=self.dry_run)
+
 with open("README.md", "r") as f:
     long_description = f.read()
 
