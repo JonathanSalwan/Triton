@@ -168,9 +168,9 @@ class CMakeBuild(build_ext):
         if platform.system() == "Linux":
             src_filename = os.path.join(self.build_temp + '/src/libtriton', 'triton.so')
             dst_filename = os.path.join(self.build_lib, os.path.basename(filename))
-            if os.getenv('Z3_LIBRARIES'):
+            if os.getenv('Z3_INTERFACE') and 'libz3.so' in os.getenv('Z3_LIBRARIES'):
                 z3_lib_dir = subprocess.check_output(['pkg-config', '--variable=libdir', 'z3']).decode().strip()
-                copy_file(z3_lib_dir.join('/libz3.so'), self.build_lib, verbose=self.verbose, dry_run=self.dry_run)
+                copy_file(z3_lib_dir + '/libz3.so', self.build_lib, verbose=self.verbose, dry_run=self.dry_run)
         elif platform.system() == "Darwin":
             src_filename = os.path.join(self.build_temp + '/src/libtriton', 'libtriton.dylib')
             dst_filename = os.path.join(self.build_lib, os.path.basename(filename))
