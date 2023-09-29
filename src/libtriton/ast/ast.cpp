@@ -2716,8 +2716,14 @@ namespace triton {
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
-        this->symbolized |= this->children[index]->isSymbolized();
         this->level = std::max(this->children[index]->getLevel() + 1, this->level);
+      }
+
+      /* Spread symbolic information */
+      if (!this->children[0]->isSymbolized()) {
+        this->symbolized = this->children[0]->evaluate() ? this->children[1]->isSymbolized() : this->children[2]->isSymbolized();
+      } else {
+        this->symbolized = true;
       }
 
       /* Init parents if needed */
