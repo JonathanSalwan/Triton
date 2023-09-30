@@ -289,8 +289,20 @@ namespace triton {
             return bitwuzla_mk_bv_value(sort->second, triton::utils::toString(value).c_str(), 10);
           }
 
-          auto n = bitwuzla_mk_const(sort->second, symVar->getName().c_str());
-          variables[n] = symVar;
+          auto n = (BitwuzlaTerm) 0;
+          /* If we already translated the node, return that. */
+          for (auto it = variables.begin(); it != variables.end(); ++it) {
+            if (it->second == symVar) {
+              n = it->first;
+              break;
+            }
+          }
+
+          if (n == 0) {
+            n = bitwuzla_mk_const(sort->second, symVar->getName().c_str());
+            variables[n] = symVar;
+          }
+
           return n;
         }
 
