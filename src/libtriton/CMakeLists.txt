@@ -286,7 +286,7 @@ endif()
 
 # Workaround to allow building 'namespace linux' (defined by -std=gnu++11)
 if(NOT MSVC AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
-    target_compile_options(triton PRIVATE -std=c++17)
+    set_property(TARGET triton PROPERTY CXX_STANDARD 17)
 endif()
 
 # Enable static msvc runtime.
@@ -297,6 +297,7 @@ endif()
 # Enable parallel building for msvc.
 if(MSVC)
     target_compile_options(triton PRIVATE /MP)
+    set_property(TARGET triton PROPERTY CXX_STANDARD 17)
 endif()
 
 if(WIN32 AND BUILD_SHARED_LIBS)
