@@ -19,6 +19,7 @@ set -e
 # set -x  # Debugging
 
 DEPENDENCIES_DIR=/tmp/triton-dependencies
+LLVM_DIR=/llvm
 SOURCE_DIR=/src
 WHEEL_DIR=$SOURCE_DIR/wheelhouse
 
@@ -32,7 +33,7 @@ export BITWUZLA_INTERFACE=On
 export BITWUZLA_INCLUDE_DIRS=$DEPENDENCIES_DIR/bitwuzla/install/include
 export BITWUZLA_LIBRARIES=$DEPENDENCIES_DIR/bitwuzla/install/lib64/libbitwuzla.so
 export LLVM_INTERFACE=ON
-export CMAKE_PREFIX_PATH=$($DEPENDENCIES_DIR/clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-/bin/llvm-config --prefix)
+export CMAKE_PREFIX_PATH=$LLVM_DIR
 
 # Build Triton Python wheel package for Python 3.8.
 echo "[+] Build Triton wheel package for Python 3.8"

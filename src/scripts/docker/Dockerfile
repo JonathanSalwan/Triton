@@ -11,6 +11,12 @@ RUN yum install -y \
         sudo \
         wget
 
+# LLVM dependencies.
+RUN yum install -y \
+        libxml2-devel \
+        libzstd-devel \
+        ncurses-devel
+
 RUN python3.10 -m pip install meson
 
 ENV DEPENDENCIES_DIR=/tmp/triton-dependencies
