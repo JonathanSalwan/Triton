@@ -33,7 +33,7 @@ export CMAKE_PREFIX_PATH=$($DEPENDENCIES_DIR/clang+llvm-12.0.1-x86_64-linux-gnu-
 # Build Triton Python wheel package for Python 3.8.
 echo "[+] Build Triton wheel package for Python 3.8"
 cd $SOURCE_DIR
-export PYTHON_BINARY=/opt/_internal/cpython-3.8.18/bin/python
+export PYTHON_BINARY=/opt/_internal/cpython-3.8.*/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
@@ -42,7 +42,7 @@ $PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 # Build Triton Python wheel package for Python 3.9.
 echo "[+] Build Triton wheel package for Python 3.9"
 cd $SOURCE_DIR
-export PYTHON_BINARY=/opt/_internal/cpython-3.9.18/bin/python
+export PYTHON_BINARY=/opt/_internal/cpython-3.9.*/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
@@ -51,7 +51,7 @@ $PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 # Build Triton Python wheel package for Python 3.10.
 echo "[+] Build Triton wheel package for Python 3.10"
 cd $SOURCE_DIR
-export PYTHON_BINARY=/opt/_internal/cpython-3.10.13/bin/python
+export PYTHON_BINARY=/opt/_internal/cpython-3.10.*/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
@@ -60,7 +60,7 @@ $PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 # Build Triton Python wheel package for Python 3.11.
 echo "[+] Build Triton wheel package for Python 3.11"
 cd $SOURCE_DIR
-export PYTHON_BINARY=/opt/_internal/cpython-3.11.5/bin/python
+export PYTHON_BINARY=/opt/_internal/cpython-3.11.*/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
