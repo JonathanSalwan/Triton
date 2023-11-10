@@ -214,6 +214,7 @@ If the version is out of date, please [create an issue or pull request](https://
 * [Ponce](https://github.com/illera88/Ponce): IDA 2016 plugin contest winner! Symbolic Execution just one-click away!
 * [QSynthesis](https://github.com/quarkslab/qsynthesis): Greybox Synthesizer geared for deobfuscation of assembly instructions.
 * [TritonDSE](https://github.com/quarkslab/tritondse): Triton-based DSE library with loading and exploration capabilities.
+* [Titan](https://github.com/archercreat/titan): Titan is a VMProtect devirtualizer using Triton.
 
 ### Papers and conference
 
