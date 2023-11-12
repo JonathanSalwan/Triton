@@ -101,7 +101,7 @@ Triton relies on the following dependencies:
 * libboost      (optional)   >= 1.68
 * libpython     (optional)   >= 3.6
 * libz3         (optional)   >= 4.6.0   https://github.com/Z3Prover/z3
-* libbitwuzla   (optional)   >= 0.1.x   https://github.com/bitwuzla/bitwuzla
+* libbitwuzla   (optional)   >= 0.2.x   https://github.com/bitwuzla/bitwuzla
 * llvm          (optional)   >= 12
 ```
 
