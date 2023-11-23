@@ -777,7 +777,6 @@ CODE  = [
     (None, [], b"\x48\x89\x44\x24\x10",                       "mov qword ptr ss:[rsp+10], rax"),
     (None, [], b"\x48\xB8\x20\x56\xE0\xA9\x0D\x06\x8B\xC6",   "mov rax, C68B060DA9E05620"),
     (None, [], b"\x48\x89\x44\x24\x18",                       "mov qword ptr ss:[rsp+18], rax"),
-    (None, [], b"\xC5\xFD\xEF\xC1",                           "vpxor ymm0, ymm0, ymm1"),
 
     (None, [],              b"\xbb\xd5\x71\x36\x00",          "mov ebx, 0x3671d5"),
     (None, [],              b"\xd1\xc3",                      "rol ebx, 1"),
