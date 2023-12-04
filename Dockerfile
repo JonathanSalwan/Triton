@@ -27,7 +27,7 @@ RUN cd /tmp && \
 
 # To test pre-releases 'pip install' the corresponding .whl from https://github.com/Z3Prover/z3/releases/tag/Nightly
 # libz3 >= 4.6.0
-RUN pip3 install z3-solver==4.12.2
+RUN pip3 install z3-solver==4.8.14
 
 RUN PYV=`python3 -c "import platform;print(platform.python_version()[:3])"` && \
     # Triton (LLVM for lifting; z3 or bitwuzla as SMT solver)
