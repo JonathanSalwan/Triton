@@ -4,12 +4,6 @@
 ##  Jonathan Salwan - 2018-11-02
 ##
 ##  This code solve the angry-reverser from the HackCon 2016 CTF.
-##  The particularity of this sample is that we use an external solver to solve
-##  queries instead of using the internal Triton's solver (even if in both cases
-##  it uses z3). The point here is to show that Triton can provide generic smt2
-##  outputs and theses outputs can be send to external solvers and get back
-##  model which then are sent to Triton (see the myExternalSolver function of
-##  this example).
 ##
 ##  Output:
 ##
@@ -325,34 +319,6 @@ def getSSA(ctx, expr):
     return s
 
 
-def myExternalSolver(ctx, node, addr=None):
-    """
-    The particularity of this sample is that we use an external solver to solve
-    queries instead of using the internal Triton's solver (even if in both cases
-    it uses z3). The point here is to show that Triton can provide generic smt2
-    outputs and theses outputs can be send to external solvers and get back model
-    which then are sent to Triton.
-    """
-    import z3
-    expr = ctx.newSymbolicExpression(node, "Custom for Solver")
-    smtFormat = '(set-logic QF_BV) %s %s (check-sat) (get-model)' %(getVarSyntax(ctx), getSSA(ctx, expr))
-    c = z3.Context()
-    s = z3.Solver(ctx=c)
-    s.add(z3.parse_smt2_string(smtFormat, ctx=c))
-    if addr:
-        debug('[+] Solving condition at %#x' %(addr))
-    if s.check() == z3.sat:
-        ret = dict()
-        model = s.model()
-        for x in model:
-            ret.update({int(str(x).split('_')[1], 10): int(str(model[x]), 10)})
-        return ret
-    else:
-        debug('[-] unsat :(')
-        sys.exit(-1)
-    return
-
-
 # Emulate the binary.
 def emulate(ctx, pc):
     global SERIAL
@@ -387,16 +353,16 @@ def emulate(ctx, pc):
             zf  = ctx.getSymbolicRegister(ctx.registers.zf).getAst()
             ast = ctx.getAstContext()
             pco = ctx.getPathPredicate()
-            mod = myExternalSolver(ctx, zf == 1, pc)
+            mod = ctx.getModel(zf == 1)
             for k, v in list(mod.items()):
-                ctx.setConcreteVariableValue(ctx.getSymbolicVariable(k), v)
+                ctx.setConcreteVariableValue(ctx.getSymbolicVariable(k), v.getValue())
 
         # End of the execution
         if pc == 0x405B00:
             debug('[+] Solving the last query to get the good serial...')
             ast = ctx.getAstContext()
             pco = ctx.getPathPredicate()
-            mod = myExternalSolver(ctx, ast.land(
+            mod = ctx.getModel(ast.land(
                     [pco] +
                     [ast.variable(ctx.getSymbolicVariable(x)) >= 0x20 for x in range(0, 11)] +
                     [ast.variable(ctx.getSymbolicVariable(x)) <= 0x7e for x in range(0, 11)] +
@@ -404,7 +370,7 @@ def emulate(ctx, pc):
                   ))
             serial = str()
             for k, v in sorted(mod.items()):
-                serial += chr(v)
+                serial += chr(v.getValue())
             SERIAL = "HACKCON{%s}" %(serial)
             print('Serial is: %s' %(SERIAL))
 
