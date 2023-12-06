@@ -35,6 +35,7 @@ jobs:
         run: |
           sudo apt-get install libz3-dev
           python -m pip install z3-solver
+          python -m pip install importlib-resources
 
       - name: Install Ninja
         run: |
