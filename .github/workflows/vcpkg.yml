@@ -49,6 +49,12 @@ jobs:
     - uses: lukka/get-cmake@latest
       name: Get CMake
 
+    - name: Set up Python 3.11
+      if: ${{ matrix.platform == 'macos' }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
     - uses: ilammy/msvc-dev-cmd@v1
       name: Setup Windows dev environment
       with:
@@ -69,6 +75,7 @@ jobs:
     - name: Configure (UNIX)
       if: ${{ matrix.platform != 'windows' }}
       run: |
+        python -m pip install importlib-resources
         cmake --preset=${{ matrix.cmake-preset }} -DBUILD_SHARED_LIBS:BOOL=ON -DVCPKG_OVERLAY_TRIPLETS:PATH=${{ github.workspace }}/vcpkg/triplets -DVCPKG_TARGET_TRIPLET:STRING=${{ matrix.vcpkg-triplet }}
       env:
         # capstone 4.0.2 does not produce a CMake Config, hence the need to point directly to include directories and libraries
@@ -82,8 +89,8 @@ jobs:
         cmake --build --preset build-${{ matrix.cmake-preset }} --config Release
 
     - name: Test
-      # Test disabled on Windows `pip install lief` fails as there is no ready to use .whl and compilation fails 
-      # Test disabled on macOS `pip install lief` fails as there is no ready to use .whl and compilation fails 
+      # Test disabled on Windows `pip install lief` fails as there is no ready to use .whl and compilation fails
+      # Test disabled on macOS `pip install lief` fails as there is no ready to use .whl and compilation fails
       if: ${{ (matrix.platform != 'windows') && (matrix.platform != 'macos') }}
       run: |
         ${{ matrix.python-executable }} -m pip install lief==0.10.1 unicorn==2.0.0 z3-solver
