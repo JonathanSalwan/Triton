@@ -7,7 +7,11 @@
 #
 # $ docker pull quay.io/pypa/manylinux_2_28_x86_64
 # $ ./src/scripts/docker/build-docker-image.sh
-# $ docker run --rm -v $(pwd):/src build-triton-linux-x86_64 bash /src/src/scripts/docker/build-wheel-linux.sh
+# $ docker run \
+#       --rm \
+#       -v $(pwd):/src \
+#       -v /tmp/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04:/llvm \
+#       build-triton-linux-x86_64 bash /src/src/scripts/docker/build-wheel-linux.sh
 #
 # You'll find the .whl packages in the wheel-final folder.
 
@@ -15,20 +19,21 @@ set -e
 # set -x  # Debugging
 
 DEPENDENCIES_DIR=/tmp/triton-dependencies
+LLVM_DIR=/llvm
 SOURCE_DIR=/src
 WHEEL_DIR=$SOURCE_DIR/wheelhouse
 
 # Set environment variables for building Triton.
 echo "[+] Setup environment variables"
-export Z3_INCLUDE_DIRS=$DEPENDENCIES_DIR/z3-4.8.17-x64-glibc-2.31/include
-export Z3_LIBRARIES=$DEPENDENCIES_DIR/z3-4.8.17-x64-glibc-2.31/bin/libz3.a
+export Z3_INCLUDE_DIRS=$DEPENDENCIES_DIR/z3-4.12.2-x64-glibc-2.31/include
+export Z3_LIBRARIES=$DEPENDENCIES_DIR/z3-4.12.2-x64-glibc-2.31/bin/libz3.so
 export CAPSTONE_INCLUDE_DIRS=/usr/include
-export CAPSTONE_LIBRARIES=/usr/lib/libcapstone.a
+export CAPSTONE_LIBRARIES=/usr/lib/libcapstone.so
 export BITWUZLA_INTERFACE=On
 export BITWUZLA_INCLUDE_DIRS=$DEPENDENCIES_DIR/bitwuzla/install/include
 export BITWUZLA_LIBRARIES=$DEPENDENCIES_DIR/bitwuzla/install/lib64/libbitwuzla.so
 export LLVM_INTERFACE=ON
-export CMAKE_PREFIX_PATH=$($DEPENDENCIES_DIR/clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-/bin/llvm-config --prefix)
+export CMAKE_PREFIX_PATH=$LLVM_DIR
 
 # Build Triton Python wheel package for Python 3.8.
 echo "[+] Build Triton wheel package for Python 3.8"
@@ -70,7 +75,7 @@ $PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 echo "[+] Repair wheel packages"
 cd $SOURCE_DIR
 for whl in $WHEEL_DIR/linux_x86_64/*.whl; do
-    auditwheel repair "$whl" --wheel-dir $WHEEL_DIR/manylinux_2_28_x86_64
+    auditwheel repair --plat manylinux_2_31_x86_64 "$whl" --wheel-dir $WHEEL_DIR/manylinux_2_31_x86_64
 done
 
 echo "[+] Remove build directory"
