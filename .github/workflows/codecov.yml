@@ -58,9 +58,9 @@ jobs:
 
       - name: Install Capstone
         run: |
-          wget https://github.com/aquynh/capstone/archive/5.0-rc2.tar.gz
-          tar -xf ./5.0-rc2.tar.gz
-          cd ./capstone-5.0-rc2
+          wget https://github.com/aquynh/capstone/archive/5.0.1.tar.gz
+          tar -xf ./5.0.1.tar.gz
+          cd ./capstone-5.0.1
           bash ./make.sh
           sudo make install
           cd ../

@@ -9,7 +9,7 @@ jobs:
       matrix:
         python-version: ['3.7', '3.8', '3.9', '3.10']
         boost-interface: ['ON', 'OFF']
-        capstone-version: ['5.0-rc2', '4.0.2']
+        capstone-version: ['5.0.1', '4.0.2']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
