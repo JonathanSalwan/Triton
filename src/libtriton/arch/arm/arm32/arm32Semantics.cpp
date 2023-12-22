@@ -1085,11 +1085,17 @@ namespace triton {
           auto  pc  = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_ARM32_PC));
 
           /*
-           * Note: Capstone already encodes the result into the source operand. We don't have
-           * to compute the add operation but do we lose the symbolic?
+           * Note: Here we deal only with the Thumb version of ADR. For the ARM
+           * version, Capstone decodes it as an ADD and adds pc as an explicit
+           * operand.
            */
-          /* Create symbolic semantics */
-          auto node1 = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src);
+          auto op2 = this->getArm32SourceOperandAst(inst, pc);
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->bvadd(op1, op2);
           auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Create symbolic expression */
