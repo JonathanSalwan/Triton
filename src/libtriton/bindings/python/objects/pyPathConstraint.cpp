@@ -83,6 +83,9 @@ instruction address.
 - <b>string getComment(void)</b><br>
 Returns the comment (if exists) of the path constraint.
 
+- <b>integer getSourceAddress(void)</b><br>
+Returns the source address of the branch.
+
 - <b>integer getTakenAddress(void)</b><br>
 Returns the address of the taken branch.
 
@@ -140,6 +143,16 @@ namespace triton {
       static PyObject* PathConstraint_getComment(PyObject* self, PyObject* noarg) {
         try {
           return Py_BuildValue("s", PyPathConstraint_AsPathConstraint(self)->getComment().c_str());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* PathConstraint_getSourceAddress(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint64(PyPathConstraint_AsPathConstraint(self)->getSourceAddress());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -207,6 +220,7 @@ namespace triton {
       PyMethodDef PathConstraint_callbacks[] = {
         {"getBranchConstraints",        PathConstraint_getBranchConstraints,      METH_NOARGS,    ""},
         {"getComment",                  PathConstraint_getComment,                METH_NOARGS,    ""},
+        {"getSourceAddress",            PathConstraint_getSourceAddress,          METH_NOARGS,    ""},
         {"getTakenAddress",             PathConstraint_getTakenAddress,           METH_NOARGS,    ""},
         {"getTakenPredicate",           PathConstraint_getTakenPredicate,         METH_NOARGS,    ""},
         {"getThreadId",                 PathConstraint_getThreadId,               METH_NOARGS,    ""},

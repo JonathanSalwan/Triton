@@ -50,6 +50,10 @@ class TestPathConstraint(unittest.TestCase):
         pc = self.ctx.getPathConstraints()[0]
         self.assertEqual(pc.getTakenPredicate().evaluate(), 1)
 
+    def test_getSourceAddress(self):
+        pc = self.ctx.getPathConstraints()[0]
+        self.assertEqual(pc.getSourceAddress(), 17)
+
     def test_getTakenAddress(self):
         pc = self.ctx.getPathConstraints()[0]
         self.assertEqual(pc.getTakenAddress(), 108)
