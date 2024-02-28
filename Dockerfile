@@ -12,7 +12,8 @@ RUN apt update && apt upgrade -y && apt install -y build-essential clang curl gi
 # libcapstone >= 4.0.x
 RUN cd /tmp && \
     curl -o cap.tgz -L https://github.com/aquynh/capstone/archive/5.0.1.tar.gz && \
-    tar xvf cap.tgz && cd capstone-5.0.1/ && ./make.sh && make install && rm -rf /tmp/cap* \
+    tar xvf cap.tgz && cd capstone-5.0.1/ && CAPSTONE_ARCHS="arm aarch64 riscv x86" ./make.sh && \
+    make install && rm -rf /tmp/cap* \
     && ln -s /usr/lib/libcapstone.so.5 /usr/lib/x86_64-linux-gnu/libcapstone.so
 
 # libbitwuzla >= 0.4.0
