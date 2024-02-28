@@ -16,6 +16,7 @@
 #include <triton/operandWrapper.hpp>
 #include <triton/register.hpp>
 #include <triton/x86Semantics.hpp>
+#include <triton/riscvSemantics.hpp>
 
 
 
@@ -44,8 +45,9 @@ namespace triton {
       this->aarch64Isa           = new(std::nothrow) triton::arch::arm::aarch64::AArch64Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
       this->arm32Isa             = new(std::nothrow) triton::arch::arm::arm32::Arm32Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
       this->x86Isa               = new(std::nothrow) triton::arch::x86::x86Semantics(architecture, symbolicEngine, taintEngine, modes, astCtxt);
+      this->riscvIsa             = new(std::nothrow) triton::arch::riscv::riscvSemantics(architecture, symbolicEngine, taintEngine, modes, astCtxt);
 
-      if (this->x86Isa == nullptr || this->aarch64Isa == nullptr || this->arm32Isa == nullptr)
+      if (this->x86Isa == nullptr || this->aarch64Isa == nullptr || this->arm32Isa == nullptr || this->riscvIsa == nullptr)
         throw triton::exceptions::IrBuilder("IrBuilder::IrBuilder(): Not enough memory.");
     }
 
@@ -54,6 +56,7 @@ namespace triton {
       delete this->aarch64Isa;
       delete this->arm32Isa;
       delete this->x86Isa;
+      delete this->riscvIsa;
     }
 
 
@@ -87,6 +90,11 @@ namespace triton {
         case triton::arch::ARCH_X86:
         case triton::arch::ARCH_X86_64:
           ret = this->x86Isa->buildSemantics(inst);
+          break;
+
+        case triton::arch::ARCH_RV64:
+        case triton::arch::ARCH_RV32:
+          ret = this->riscvIsa->buildSemantics(inst);
           break;
 
         default:

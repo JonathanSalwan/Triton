@@ -16,6 +16,9 @@
 #include <triton/x8664Cpu.hpp>
 #include <triton/x86Cpu.hpp>
 #include <triton/x86Specifications.hpp>
+#include <triton/riscv64Cpu.hpp>
+#include <triton/riscv32Cpu.hpp>
+#include <triton/riscvSpecifications.hpp>
 
 
 
@@ -54,6 +57,8 @@ namespace triton {
         case triton::arch::ARCH_X86:     this->cpu.reset(new(std::nothrow) triton::arch::x86::x86Cpu(this->callbacks));              break;
         case triton::arch::ARCH_AARCH64: this->cpu.reset(new(std::nothrow) triton::arch::arm::aarch64::AArch64Cpu(this->callbacks)); break;
         case triton::arch::ARCH_ARM32:   this->cpu.reset(new(std::nothrow) triton::arch::arm::arm32::Arm32Cpu(this->callbacks));     break;
+        case triton::arch::ARCH_RV64:    this->cpu.reset(new(std::nothrow) triton::arch::riscv::riscv64Cpu(this->callbacks));        break;
+        case triton::arch::ARCH_RV32:    this->cpu.reset(new(std::nothrow) triton::arch::riscv::riscv32Cpu(this->callbacks));        break;
         default:
           throw triton::exceptions::Architecture("Architecture::setArchitecture(): Architecture not supported.");
       }
@@ -399,6 +404,10 @@ namespace triton {
         case triton::arch::ARCH_X86:
         case triton::arch::ARCH_X86_64:
           return triton::arch::x86::nop;
+
+        case triton::arch::ARCH_RV64:
+        case triton::arch::ARCH_RV32:
+          return triton::arch::riscv::nop;
 
         default:
           throw triton::exceptions::Architecture("Architecture::getNopInstruction(): Invalid architecture.");
