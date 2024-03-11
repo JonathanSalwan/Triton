@@ -648,6 +648,19 @@ class TestIssue1265(unittest.TestCase):
         x0 = self.ctx.getConcreteRegisterValue(self.ctx.registers.x0)
         self.assertEqual(x0, 0x55667788)
 
+class TestIssue1310(unittest.TestCase):
+    """Testing #1310."""
+
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.AARCH64)
+        self.ctx.setConcreteMemoryAreaValue(0x400000+0x30, b'\x72\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+
+    def test_1(self):
+        inst = Instruction(0x400000, b'\x91\x01\x00\x98') # ldrsw x17, #0x30
+        self.ctx.processing(inst)
+        x17 = self.ctx.getConcreteRegisterValue(self.ctx.registers.x17)
+        self.assertEqual(x17, 0x72)
+
 
 # FIXME: Uncomment this one when we will move to Capstone 5 as min version
 #class TestIssue1195(unittest.TestCase):

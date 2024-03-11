@@ -3385,6 +3385,11 @@ namespace triton {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
 
+          /* LDRSW (literal) */
+          if (inst.operands.size() == 2 && src.getType() == triton::arch::OP_IMM) {
+            src = triton::arch::MemoryAccess(src.getConstImmediate().getValue(), dst.getSize());
+          }
+
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
 
