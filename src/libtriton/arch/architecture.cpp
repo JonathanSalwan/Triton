@@ -266,9 +266,10 @@ namespace triton {
     }
 
 
-    triton::arch::BasicBlock Architecture::disassembly(triton::uint64 addr) const {
+    triton::arch::BasicBlock Architecture::disassembly(triton::uint64 addr, bool(*filterCallback)(std::vector<triton::arch::Instruction>&)) const {
       std::vector<triton::arch::Instruction> ret;
-
+      if (!filterCallback)
+        throw triton::exceptions::Exception("Architecture::disassembly(): Incorrect filterCallback.");
       do {
         if (!this->isConcreteMemoryValueDefined(addr)) {
           break;
@@ -278,9 +279,14 @@ namespace triton {
         this->disassembly(inst);
         ret.push_back(inst);
         addr += inst.getSize();
-      } while (!ret.back().isControlFlow());
+      } while (!filterCallback(ret));
 
       return triton::arch::BasicBlock(ret);
+    }
+
+
+    triton::arch::BasicBlock Architecture::disassembly(triton::uint64 addr) const {
+      return  this->disassembly(addr, ([](std::vector<triton::arch::Instruction>& ret) -> bool {return ret.back().isControlFlow(); }));
     }
 
 
