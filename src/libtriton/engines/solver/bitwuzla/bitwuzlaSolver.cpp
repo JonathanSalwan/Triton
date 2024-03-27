@@ -101,7 +101,8 @@ namespace triton {
         // Create solver.
         auto bzlaOptions = bitwuzla_options_new();
         bitwuzla_set_option(bzlaOptions, BITWUZLA_OPT_PRODUCE_MODELS, 1);
-        auto bzla = bitwuzla_new(bzlaOptions);
+        auto bzlaTermMgr = bitwuzla_term_manager_new();
+        auto bzla = bitwuzla_new(bzlaTermMgr, bzlaOptions);
 
         // Convert Triton' AST to solver terms.
         auto bzlaAst = triton::ast::TritonToBitwuzla();
@@ -149,9 +150,9 @@ namespace triton {
 
             // Negate current model to escape duplication in the next solution.
             const auto& symvar_sort = bzlaAst.getBitvectorSorts().at(it.second->getSize());
-            auto cur_val = bitwuzla_mk_bv_value(symvar_sort, svalue, 2);
-            auto n = bitwuzla_mk_term2(BITWUZLA_KIND_EQUAL, it.first, cur_val);
-            solution.push_back(bitwuzla_mk_term1(BITWUZLA_KIND_NOT, n));
+            auto cur_val = bitwuzla_mk_bv_value(bzlaTermMgr, symvar_sort, svalue, 2);
+            auto n = bitwuzla_mk_term2(bzlaTermMgr, BITWUZLA_KIND_EQUAL, it.first, cur_val);
+            solution.push_back(bitwuzla_mk_term1(bzlaTermMgr, BITWUZLA_KIND_NOT, n));
           }
 
           // Check that model is available.
@@ -165,7 +166,7 @@ namespace triton {
           if (--limit) {
             // Escape last model.
             if (solution.size() > 1) {
-              bitwuzla_assert(bzla, bitwuzla_mk_term(BITWUZLA_KIND_OR, solution.size(), solution.data()));
+              bitwuzla_assert(bzla, bitwuzla_mk_term(bzlaTermMgr, BITWUZLA_KIND_OR, solution.size(), solution.data()));
             }
             else {
               bitwuzla_assert(bzla, solution.front());
@@ -183,6 +184,7 @@ namespace triton {
           *solvingTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
         bitwuzla_delete(bzla);
+        bitwuzla_term_manager_delete(bzlaTermMgr);
         bitwuzla_options_delete(bzlaOptions);
 
         return ret;
@@ -214,7 +216,8 @@ namespace triton {
 
         auto bzlaOptions = bitwuzla_options_new();
         bitwuzla_set_option(bzlaOptions, BITWUZLA_OPT_PRODUCE_MODELS, 1);
-        auto bzla = bitwuzla_new(bzlaOptions);
+        auto bzlaTermMgr = bitwuzla_term_manager_new();
+        auto bzla = bitwuzla_new(bzlaTermMgr, bzlaOptions);
 
         // Query check-sat on empty solver to put Bitwuzla in SAT-state. Thus, it should be able to evaluate concrete formulas.
         if (bitwuzla_check_sat(bzla) != BITWUZLA_SAT) {
@@ -235,6 +238,7 @@ namespace triton {
         }
 
         bitwuzla_delete(bzla);
+        bitwuzla_term_manager_delete(bzlaTermMgr);
         bitwuzla_options_delete(bzlaOptions);
 
         return res;

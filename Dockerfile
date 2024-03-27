@@ -15,11 +15,11 @@ RUN cd /tmp && \
     tar xvf cap.tgz && cd capstone-4.0.2/ && ./make.sh && make install && rm -rf /tmp/cap* \
     && ln -s /usr/lib/libcapstone.so.4 /usr/lib/x86_64-linux-gnu/libcapstone.so
 
-# libbitwuzla >= 0.2.0
+# libbitwuzla >= 0.4.0
 RUN cd /tmp && \
     git clone https://github.com/bitwuzla/bitwuzla.git && \
     cd bitwuzla && \
-    git checkout -b 0.2.0 0.2.0 && \
+    git checkout -b 0.4.0 0.4.0 && \
     python3 ./configure.py --shared && \
     cd build && \
     ninja install && \

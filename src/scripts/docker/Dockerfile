@@ -40,7 +40,7 @@ RUN echo "[+] Download, build and install Bitwuzla" && \
     cd $DEPENDENCIES_DIR && \
     git clone https://github.com/bitwuzla/bitwuzla.git && \
     cd bitwuzla && \
-    git checkout -b 0.2.0 0.2.0 && \
+    git checkout -b 0.4.0 0.4.0 && \
     export PY310_PATH=$(dirname $(realpath -L $(which python3.10))) && \
     CC=clang CXX=clang++ PATH=$PATH:$PY310_PATH python3.10 ./configure.py --shared --prefix $(pwd)/install && \
     cd build && \
