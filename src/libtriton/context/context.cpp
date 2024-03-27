@@ -513,6 +513,12 @@ namespace triton {
   }
 
 
+  triton::arch::BasicBlock Context::disassembly(triton::uint64 addr, bool(*filterCallback)(std::vector<triton::arch::Instruction>&)) const {
+    this->checkArchitecture();
+    return this->arch.disassembly(addr, filterCallback);
+  }
+
+
   triton::arch::BasicBlock Context::disassembly(triton::uint64 addr) const {
     this->checkArchitecture();
     return this->arch.disassembly(addr);

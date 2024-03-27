@@ -260,6 +260,9 @@ namespace triton {
         //! [**architecture api**] - Disassembles a concrete memory area and returns a list of at most `count` disassembled instructions.
         TRITON_EXPORT std::vector<triton::arch::Instruction> disassembly(triton::uint64 addr, triton::usize count) const;
 
+        //! [**architecture api**] - Disassembles a concrete memory area from `addr` until 'filterCallback' returns false. The function returns a 'BasicBlock'
+        TRITON_EXPORT triton::arch::BasicBlock disassembly(triton::uint64 addr, bool(*filterCallback)(std::vector<triton::arch::Instruction>&)) const;
+
         //! [**architecture api**] - Disassembles a concrete memory area from `addr` to control flow instruction and returns a `BasicBlock`.
         TRITON_EXPORT triton::arch::BasicBlock disassembly(triton::uint64 addr) const;
 
