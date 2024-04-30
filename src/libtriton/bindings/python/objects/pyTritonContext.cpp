@@ -503,13 +503,10 @@ namespace triton {
         if (PyMethod_Check(function)) {
           cb_self = PyMethod_GET_SELF(function);
           cb = PyMethod_GET_FUNCTION(function);
-
-          Py_INCREF(cb_self);
         }
         else {
           cb = function;
         }
-        Py_INCREF(cb);
 
         try {
           switch (static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode))) {
@@ -2619,11 +2616,6 @@ namespace triton {
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        Py_DECREF(cb);
-        if (cb_self != nullptr) {
-          Py_DECREF(cb_self);
         }
 
         Py_INCREF(Py_None);
