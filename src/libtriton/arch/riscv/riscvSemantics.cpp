@@ -462,7 +462,7 @@ namespace triton {
         /* Create the semantics */
         auto node = this->astCtxt->ite(this->astCtxt->equal(op1, op2),
                       this->astCtxt->bvadd(pc_ast, op3),
-                      this->astCtxt->bvadd(pc_ast, this->astCtxt->bv(4, pc.getBitSize()))
+                      this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize())
                     );
 
         /* Create symbolic expression */
@@ -473,7 +473,8 @@ namespace triton {
           inst.setConditionTaken(true);
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->isTainted(pc);
+        expr->isTainted = this->taintEngine->taintUnion(pc, src1);
+        expr->isTainted = this->taintEngine->taintUnion(pc, src2);
 
         /* Create the path constraint */
         this->symbolicEngine->pushPathConstraint(inst, expr);
@@ -497,11 +498,16 @@ namespace triton {
         auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
 
         /* Create branch condition AST */
+        bool taken = false;
         auto node = this->astCtxt->bvsge(op1, op2);  // bgez
         if (inst.operands.size() < 3) {
           auto mnem = inst.getDisassembly();
           if (mnem[1] == 'l') {                      // blez
             node = this->astCtxt->bvsle(op1, op2);
+            taken = (long long)(op1->evaluate()) <= 0;
+          }
+          else {
+            taken = (long long)(op1->evaluate()) >= 0;
           }
         }
         else {                                       // bge
@@ -509,23 +515,24 @@ namespace triton {
           op2 = op3;
           op3 = this->symbolicEngine->getOperandAst(inst, imm);
           node = this->astCtxt->bvsge(op1, op2);
+          taken = (long long)(op1->evaluate() - op2->evaluate()) >= 0;
         }
 
         /* Create the semantics */
         node = this->astCtxt->ite(node,
                  this->astCtxt->bvadd(pc_ast, op3),
-                 this->astCtxt->bvadd(pc_ast, this->astCtxt->bv(4, pc.getBitSize()))
+                 this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize())
                );
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if ((long long)(op1->evaluate() - op2->evaluate()) >= 0)
-          inst.setConditionTaken(true);
+        inst.setConditionTaken(taken);
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->isTainted(pc);
+        expr->isTainted = this->taintEngine->taintUnion(pc, src1);
+        expr->isTainted = this->taintEngine->taintUnion(pc, src2);
 
         /* Create the path constraint */
         this->symbolicEngine->pushPathConstraint(inst, expr);
@@ -547,7 +554,7 @@ namespace triton {
         /* Create the semantics */
         auto node = this->astCtxt->ite(this->astCtxt->bvuge(op1, op2),
                       this->astCtxt->bvadd(pc_ast, op3),
-                      this->astCtxt->bvadd(pc_ast, this->astCtxt->bv(4, pc.getBitSize()))
+                      this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize())
                     );
 
         /* Create symbolic expression */
@@ -558,7 +565,8 @@ namespace triton {
           inst.setConditionTaken(true);
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->isTainted(pc);
+        expr->isTainted = this->taintEngine->taintUnion(pc, src1);
+        expr->isTainted = this->taintEngine->taintUnion(pc, src2);
 
         /* Create the path constraint */
         this->symbolicEngine->pushPathConstraint(inst, expr);
@@ -582,11 +590,16 @@ namespace triton {
         auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
 
         /* Create branch condition AST */
+        bool taken = false;
         auto node = this->astCtxt->bvslt(op1, op2);  // bltz
         if (inst.operands.size() < 3) {
           auto mnem = inst.getDisassembly();
-          if (mnem[1] == 'l') {                      // bgtz
+          if (mnem[1] == 'g') {                      // bgtz
             node = this->astCtxt->bvsgt(op1, op2);
+            taken = (long long)(op1->evaluate()) > 0;
+          }
+          else {
+            taken = (long long)(op1->evaluate()) < 0;
           }
         }
         else {                                       // blt
@@ -594,23 +607,25 @@ namespace triton {
           op2 = op3;
           op3 = this->symbolicEngine->getOperandAst(inst, imm);
           node = this->astCtxt->bvslt(op1, op2);
+          taken = (long long)(op1->evaluate() - op2->evaluate()) < 0;
         }
 
         /* Create the semantics */
         node = this->astCtxt->ite(node,
                  this->astCtxt->bvadd(pc_ast, op3),
-                 this->astCtxt->bvadd(pc_ast, this->astCtxt->bv(4, pc.getBitSize()))
+                 this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize())
                );
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Set condition flag */
-        if ((long long)(op1->evaluate() - op2->evaluate()) >= 0)
-          inst.setConditionTaken(true);
+        inst.setConditionTaken(taken);
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->isTainted(pc);
+
+        expr->isTainted = this->taintEngine->taintUnion(pc, src1);
+        expr->isTainted = this->taintEngine->taintUnion(pc, src2);
 
         /* Create the path constraint */
         this->symbolicEngine->pushPathConstraint(inst, expr);
@@ -632,7 +647,7 @@ namespace triton {
         /* Create the semantics */
         auto node = this->astCtxt->ite(this->astCtxt->bvult(op1, op2),
                       this->astCtxt->bvadd(pc_ast, op3),
-                      this->astCtxt->bvadd(pc_ast, this->astCtxt->bv(4, pc.getBitSize()))
+                      this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize())
                     );
 
         /* Create symbolic expression */
@@ -643,7 +658,8 @@ namespace triton {
           inst.setConditionTaken(true);
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->isTainted(pc);
+        expr->isTainted = this->taintEngine->taintUnion(pc, src1);
+        expr->isTainted = this->taintEngine->taintUnion(pc, src2);
 
         /* Create the path constraint */
         this->symbolicEngine->pushPathConstraint(inst, expr);
@@ -673,7 +689,7 @@ namespace triton {
 
         /* Create the semantics */
         auto node = this->astCtxt->ite(this->astCtxt->equal(op1, op2),
-                      this->astCtxt->bvadd(pc_ast, this->astCtxt->bv(4, pc.getBitSize())),
+                      this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize()),
                       this->astCtxt->bvadd(pc_ast, op3)
                     );
 
@@ -685,7 +701,8 @@ namespace triton {
           inst.setConditionTaken(true);
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->isTainted(pc);
+        expr->isTainted = this->taintEngine->taintUnion(pc, src1);
+        expr->isTainted = this->taintEngine->taintUnion(pc, src2);
 
         /* Create the path constraint */
         this->symbolicEngine->pushPathConstraint(inst, expr);
@@ -822,7 +839,7 @@ namespace triton {
         /* Create the semantics */
         auto node = this->astCtxt->ite(this->astCtxt->equal(op1, op2),
                       this->astCtxt->bvadd(pc_ast, op3),
-                      this->astCtxt->bvadd(pc_ast, this->astCtxt->bv(2, pc.getBitSize()))
+                      this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize())
                     );
 
         /* Create symbolic expression */
@@ -833,7 +850,7 @@ namespace triton {
           inst.setConditionTaken(true);
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->isTainted(pc);
+        expr->isTainted = this->taintEngine->taintUnion(pc, src1);
 
         /* Create the path constraint */
         this->symbolicEngine->pushPathConstraint(inst, expr);
@@ -854,7 +871,7 @@ namespace triton {
 
         /* Create the semantics */
         auto node = this->astCtxt->ite(this->astCtxt->equal(op1, op2),
-                      this->astCtxt->bvadd(pc_ast, this->astCtxt->bv(2, pc.getBitSize())),
+                      this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize()),
                       this->astCtxt->bvadd(pc_ast, op3)
                     );
 
@@ -866,7 +883,7 @@ namespace triton {
           inst.setConditionTaken(true);
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->isTainted(pc);
+        expr->isTainted = this->taintEngine->taintUnion(pc, src1);
 
         /* Create the path constraint */
         this->symbolicEngine->pushPathConstraint(inst, expr);
@@ -889,7 +906,7 @@ namespace triton {
         auto imm = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        auto node = this->astCtxt->bvadd(pc_ast, this->astCtxt->bv(2, size));
+        auto node = this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize());
         auto node_pc = this->astCtxt->bvadd(pc_ast, imm);
 
         /* Create symbolic expression */
@@ -925,7 +942,7 @@ namespace triton {
         auto op_src = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        auto node_dst = this->astCtxt->bvadd(pc_ast, this->astCtxt->bv(2, size));
+        auto node_dst = this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize());
         auto node_pc = this->astCtxt->bvand( /* ignore last bit */
                     op_src,
                     this->astCtxt->bvshl(this->astCtxt->bv(-1, size), this->astCtxt->bv(1, size))
@@ -937,7 +954,7 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->isTainted(pc);
-        expr_pc->isTainted = this->taintEngine->isTainted(src);
+        expr_pc->isTainted = this->taintEngine->setTaint(pc, this->taintEngine->isTainted(src));
 
         /* Create the path constraint */
         this->symbolicEngine->pushPathConstraint(inst, expr_pc);
@@ -1014,7 +1031,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "C.LI operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+        expr->isTainted = this->taintEngine->setTaint(dst, false);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -1539,7 +1556,7 @@ namespace triton {
         }
 
         /* Create the semantics */
-        auto node = this->astCtxt->bvadd(pc_ast, this->astCtxt->bv(4, size));
+        auto node = this->astCtxt->bv(inst.getNextAddress(), size);
         auto node_pc = this->astCtxt->bvadd(pc_ast, imm);
 
         /* Create symbolic expression */
@@ -1600,7 +1617,7 @@ namespace triton {
 
         /* Create semantics (jalr with 1 operand) */
         auto pc_ast = this->symbolicEngine->getOperandAst(pc);
-        auto node_dst = this->astCtxt->bvadd(pc_ast, this->astCtxt->bv(4, size));
+        auto node_dst = this->astCtxt->bv(inst.getNextAddress(), size);
         auto node_pc  = this->symbolicEngine->getOperandAst(inst, src);
         if (inst.operands.size() == 3) { // jalr with 3 operands semantics
           dst = src;
@@ -1624,7 +1641,7 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->isTainted(pc);
-        expr_pc->isTainted = this->taintEngine->isTainted(src);
+        expr_pc->isTainted = this->taintEngine->setTaint(pc, this->taintEngine->isTainted(src));
 
         /* Create the path constraint */
         this->symbolicEngine->pushPathConstraint(inst, expr_pc);
@@ -1655,7 +1672,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->isTainted(src);
+        expr->isTainted = this->taintEngine->setTaint(pc, this->taintEngine->isTainted(src));
 
         /* Create the path constraint */
         this->symbolicEngine->pushPathConstraint(inst, expr);
@@ -1769,21 +1786,22 @@ namespace triton {
         // dst := (src_imm(_20) << 12)
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
+        auto size = dst.getBitSize();
 
         /* Create symbolic operands */
         auto imm = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        auto node = this->astCtxt->concat(this->astCtxt->extract(19, 0, imm), this->astCtxt->bv(0, 12));
-        if (dst.getBitSize() == 64) { /* extend to register size */
-          node = this->astCtxt->sx(32, node);
-        }
+        auto node = this->astCtxt->bvshl(
+                      this->astCtxt->sx(size - 20, this->astCtxt->extract(19, 0, imm)),
+                      this->astCtxt->bv(12, size)
+                    );
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LUI operation");
 
         /* Spread taint */
-        expr->isTainted = false;
+        expr->isTainted = this->taintEngine->setTaint(dst, false);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
