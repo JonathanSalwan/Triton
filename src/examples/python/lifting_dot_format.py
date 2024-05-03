@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
-## $ python lifting_dot_format.py > out.dot ; dot -Tpng ./out.dot -o out.png ; eog out.png
+## $ python3 lifting_dot_format.py > out.dot ; dot -Tpng ./out.dot -o out.png ; eog out.png
 ##
 
 import sys
