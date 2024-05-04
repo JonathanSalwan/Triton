@@ -173,14 +173,14 @@ jobs:
         run: |
           sudo python -m pip install build
 
-      - name: Download and build GMP
-        run: |
-          wget -q https://ftp.gnu.org/gnu/gmp/gmp-6.2.1.tar.xz
-          tar -xf gmp-6.2.1.tar.xz
-          cd gmp-6.2.1
-          ./configure --enable-cxx
-          make
-          make install
+      #- name: Download and build GMP
+      #  run: |
+      #    wget -q https://ftp.gnu.org/gnu/gmp/gmp-6.2.1.tar.xz
+      #    tar -xf gmp-6.2.1.tar.xz
+      #    cd gmp-6.2.1
+      #    ./configure --enable-cxx
+      #    make
+      #    make install
 
       - name: Install Ninja
         run: |
