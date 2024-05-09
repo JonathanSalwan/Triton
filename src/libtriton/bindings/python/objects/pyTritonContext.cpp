@@ -533,12 +533,13 @@ namespace triton {
                 /* Call the callback */
                 PyObject* ret = PyObject_CallObject(cb, args);
 
+                /* Release args */
+                Py_DECREF(args);
+
                 /* Check the call */
                 if (ret == nullptr) {
                   throw triton::exceptions::PyCallbacks();
                 }
-
-                Py_DECREF(args);
                 /********* End of lambda *********/
               }, cb));
               break;
@@ -565,12 +566,13 @@ namespace triton {
                 /* Call the callback */
                 PyObject* ret = PyObject_CallObject(cb, args);
 
+                /* Release args */
+                Py_DECREF(args);
+
                 /* Check the call */
                 if (ret == nullptr) {
                   throw triton::exceptions::PyCallbacks();
                 }
-
-                Py_DECREF(args);
                 /********* End of lambda *********/
               }, cb));
               break;
@@ -599,12 +601,13 @@ namespace triton {
                 /* Call the callback */
                 PyObject* ret = PyObject_CallObject(cb, args);
 
+                /* Release args */
+                Py_DECREF(args);
+
                 /* Check the call */
                 if (ret == nullptr) {
                   throw triton::exceptions::PyCallbacks();
                 }
-
-                Py_DECREF(args);
                 /********* End of lambda *********/
               }, cb));
               break;
@@ -633,12 +636,13 @@ namespace triton {
                 /* Call the callback */
                 PyObject* ret = PyObject_CallObject(cb, args);
 
+                /* Release args */
+                Py_DECREF(args);
+
                 /* Check the call */
                 if (ret == nullptr) {
                   throw triton::exceptions::PyCallbacks();
                 }
-
-                Py_DECREF(args);
                 /********* End of lambda *********/
               }, cb));
               break;
@@ -665,6 +669,9 @@ namespace triton {
                 /* Call the callback */
                 PyObject* ret = PyObject_CallObject(cb, args);
 
+                /* Release args */
+                Py_DECREF(args);
+
                 /* Check the call */
                 if (ret == nullptr) {
                   throw triton::exceptions::PyCallbacks();
@@ -676,7 +683,6 @@ namespace triton {
 
                 /* Update node */
                 node = PyAstNode_AsAstNode(ret);
-                Py_DECREF(args);
                 return node;
                 /********* End of lambda *********/
               }, cb));
