@@ -26,14 +26,14 @@
   #define tt_GET_OB_DIGIT(obj) obj->ob_digit
   #define tt_SET_OB_DIGIT(obj, n) Py_SET_SIZE(obj, n)
   #define tt_PyLong_IsNegative(obj) (Py_SIZE(obj) < 0)
-  #define tt_PyLong_DigitCount(obj) (_PyLong_IsNegative(obj) ? -Py_SIZE(obj) : Py_SIZE(obj))
+  #define tt_PyLong_DigitCount(obj) (tt_PyLong_IsNegative(obj) ? -Py_SIZE(obj) : Py_SIZE(obj))
 
 #else
 
   #define tt_GET_OB_DIGIT(obj) obj->ob_digit
   #define tt_SET_OB_DIGIT(obj, n) Py_SIZE(obj) = n
   #define tt_PyLong_IsNegative(obj) (Py_SIZE(obj) < 0)
-  #define tt_PyLong_DigitCount(obj) (_PyLong_IsNegative(obj) ? -Py_SIZE(obj) : Py_SIZE(obj))
+  #define tt_PyLong_DigitCount(obj) (tt_PyLong_IsNegative(obj) ? -Py_SIZE(obj) : Py_SIZE(obj))
 
 #endif
 
