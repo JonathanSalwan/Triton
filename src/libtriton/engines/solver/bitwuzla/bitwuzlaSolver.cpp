@@ -108,9 +108,11 @@ namespace triton {
         auto bzlaAst = triton::ast::TritonToBitwuzla();
         bitwuzla_assert(bzla, bzlaAst.convert(node, bzla));
 
+        auto tmout = timeout != 0 ? timeout : this->timeout;
+
         // Set solving params.
-        SolverParams p(this->timeout, this->memoryLimit);
-        if (this->timeout || this->memoryLimit) {
+        SolverParams p(tmout, this->memoryLimit);
+        if (tmout || this->memoryLimit) {
           bitwuzla_set_termination_callback(bzla, this->terminateCallback, reinterpret_cast<void*>(&p));
         }
 
