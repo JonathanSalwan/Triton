@@ -3,7 +3,7 @@ name: Build Python Package
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  package-version: '1.0.0rc3'
+  package-version: '1.0.0rc4'
 
 jobs:
   build-linux:
