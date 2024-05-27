@@ -156,6 +156,23 @@ REG_SPEC(XMM13, xmm13, triton::bitsize::dqword-1, 0, ZMM13, 0,                  
 REG_SPEC(XMM14, xmm14, triton::bitsize::dqword-1, 0, ZMM14, 0,                         0, XMM14, false) // xmm14
 REG_SPEC(XMM15, xmm15, triton::bitsize::dqword-1, 0, ZMM15, 0,                         0, XMM15, false) // xmm15
 
+REG_SPEC(XMM16, xmm16, triton::bitsize::dqword-1, 0, ZMM16, 0,                         0, XMM16, false) // xmm16
+REG_SPEC(XMM17, xmm17, triton::bitsize::dqword-1, 0, ZMM17, 0,                         0, XMM17, false) // xmm17
+REG_SPEC(XMM18, xmm18, triton::bitsize::dqword-1, 0, ZMM18, 0,                         0, XMM18, false) // xmm18
+REG_SPEC(XMM19, xmm19, triton::bitsize::dqword-1, 0, ZMM19, 0,                         0, XMM19, false) // xmm19
+REG_SPEC(XMM20, xmm20, triton::bitsize::dqword-1, 0, ZMM20, 0,                         0, XMM20, false) // xmm20
+REG_SPEC(XMM21, xmm21, triton::bitsize::dqword-1, 0, ZMM21, 0,                         0, XMM21, false) // xmm21
+REG_SPEC(XMM22, xmm22, triton::bitsize::dqword-1, 0, ZMM22, 0,                         0, XMM22, false) // xmm22
+REG_SPEC(XMM23, xmm23, triton::bitsize::dqword-1, 0, ZMM23, 0,                         0, XMM23, false) // xmm23
+REG_SPEC(XMM24, xmm24, triton::bitsize::dqword-1, 0, ZMM24, 0,                         0, XMM24, false) // xmm24
+REG_SPEC(XMM25, xmm25, triton::bitsize::dqword-1, 0, ZMM25, 0,                         0, XMM25, false) // xmm25
+REG_SPEC(XMM26, xmm26, triton::bitsize::dqword-1, 0, ZMM26, 0,                         0, XMM26, false) // xmm26
+REG_SPEC(XMM27, xmm27, triton::bitsize::dqword-1, 0, ZMM27, 0,                         0, XMM27, false) // xmm27
+REG_SPEC(XMM28, xmm28, triton::bitsize::dqword-1, 0, ZMM28, 0,                         0, XMM28, false) // xmm28
+REG_SPEC(XMM29, xmm29, triton::bitsize::dqword-1, 0, ZMM29, 0,                         0, XMM29, false) // xmm29
+REG_SPEC(XMM30, xmm30, triton::bitsize::dqword-1, 0, ZMM30, 0,                         0, XMM30, false) // xmm30
+REG_SPEC(XMM31, xmm31, triton::bitsize::dqword-1, 0, ZMM31, 0,                         0, XMM31, false) // xmm31
+
 /* AVX-256 */
 
 REG_SPEC(YMM0,  ymm0,  triton::bitsize::qqword-1, 0, ZMM0,  triton::bitsize::qqword-1, 0, YMM0,  true)  // ymm0
@@ -174,6 +191,23 @@ REG_SPEC(YMM12, ymm12, triton::bitsize::qqword-1, 0, ZMM12, 0,                  
 REG_SPEC(YMM13, ymm13, triton::bitsize::qqword-1, 0, ZMM13, 0,                         0, YMM13, false) // ymm13
 REG_SPEC(YMM14, ymm14, triton::bitsize::qqword-1, 0, ZMM14, 0,                         0, YMM14, false) // ymm14
 REG_SPEC(YMM15, ymm15, triton::bitsize::qqword-1, 0, ZMM15, 0,                         0, YMM15, false) // ymm15
+
+REG_SPEC(YMM16, ymm16, triton::bitsize::qqword-1, 0, ZMM16, 0,                         0, YMM16, false) // ymm16
+REG_SPEC(YMM17, ymm17, triton::bitsize::qqword-1, 0, ZMM17, 0,                         0, YMM17, false) // ymm17
+REG_SPEC(YMM18, ymm18, triton::bitsize::qqword-1, 0, ZMM18, 0,                         0, YMM18, false) // ymm18
+REG_SPEC(YMM19, ymm19, triton::bitsize::qqword-1, 0, ZMM19, 0,                         0, YMM19, false) // ymm19
+REG_SPEC(YMM20, ymm20, triton::bitsize::qqword-1, 0, ZMM20, 0,                         0, YMM20, false) // ymm20
+REG_SPEC(YMM21, ymm21, triton::bitsize::qqword-1, 0, ZMM21, 0,                         0, YMM21, false) // ymm21
+REG_SPEC(YMM22, ymm22, triton::bitsize::qqword-1, 0, ZMM22, 0,                         0, YMM22, false) // ymm22
+REG_SPEC(YMM23, ymm23, triton::bitsize::qqword-1, 0, ZMM23, 0,                         0, YMM23, false) // ymm23
+REG_SPEC(YMM24, ymm24, triton::bitsize::qqword-1, 0, ZMM24, 0,                         0, YMM24, false) // ymm24
+REG_SPEC(YMM25, ymm25, triton::bitsize::qqword-1, 0, ZMM25, 0,                         0, YMM25, false) // ymm25
+REG_SPEC(YMM26, ymm26, triton::bitsize::qqword-1, 0, ZMM26, 0,                         0, YMM26, false) // ymm26
+REG_SPEC(YMM27, ymm27, triton::bitsize::qqword-1, 0, ZMM27, 0,                         0, YMM27, false) // ymm27
+REG_SPEC(YMM28, ymm28, triton::bitsize::qqword-1, 0, ZMM28, 0,                         0, YMM28, false) // ymm28
+REG_SPEC(YMM29, ymm29, triton::bitsize::qqword-1, 0, ZMM29, 0,                         0, YMM29, false) // ymm29
+REG_SPEC(YMM30, ymm30, triton::bitsize::qqword-1, 0, ZMM30, 0,                         0, YMM30, false) // ymm30
+REG_SPEC(YMM31, ymm31, triton::bitsize::qqword-1, 0, ZMM31, 0,                         0, YMM31, false) // ymm31
 
 /* AVX-512 */
 
