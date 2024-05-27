@@ -331,7 +331,7 @@ namespace triton {
 
 
       bool x8664Cpu::isSSE(triton::arch::register_e regId) const {
-        return ((regId >= triton::arch::ID_REG_X86_MXCSR && regId <= triton::arch::ID_REG_X86_XMM31) ? true : false);
+        return ((regId >= triton::arch::ID_REG_X86_MXCSR && regId <= triton::arch::ID_REG_X86_XMM15) ? true : false);
       }
 
 
@@ -351,12 +351,16 @@ namespace triton {
 
 
       bool x8664Cpu::isAVX256(triton::arch::register_e regId) const {
-        return ((regId >= triton::arch::ID_REG_X86_YMM0 && regId <= triton::arch::ID_REG_X86_YMM31) ? true : false);
+        return ((regId >= triton::arch::ID_REG_X86_YMM0 && regId <= triton::arch::ID_REG_X86_YMM15) ? true : false);
       }
 
 
       bool x8664Cpu::isAVX512(triton::arch::register_e regId) const {
-        return ((regId >= triton::arch::ID_REG_X86_ZMM0 && regId <= triton::arch::ID_REG_X86_ZMM31) ? true : false);
+        return ((
+          (regId >= triton::arch::ID_REG_X86_ZMM0 && regId <= triton::arch::ID_REG_X86_ZMM31) ||
+          (regId >= triton::arch::ID_REG_X86_YMM16 && regId <= triton::arch::ID_REG_X86_YMM31) ||
+          (regId >= triton::arch::ID_REG_X86_XMM16 && regId <= triton::arch::ID_REG_X86_XMM31)
+        ) ? true : false);
       }
 
 
