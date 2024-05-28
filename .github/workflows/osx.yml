@@ -35,16 +35,6 @@ jobs:
           unzip z3-4.8.17-x64-osx-10.16.zip
           sudo python -m pip install z3-solver==4.8.17.0
 
-      # NOTE: Do we really need this?
-      #- name: Download and build GMP
-      #  run: |
-      #    wget https://ftp.gnu.org/gnu/gmp/gmp-6.2.1.tar.xz
-      #    tar xvf gmp-6.2.1.tar.xz
-      #    cd gmp-6.2.1/
-      #    ./configure --with-pic
-      #    make
-      #    make check
-
       - name: Install Ninja
         run: |
           brew install ninja
