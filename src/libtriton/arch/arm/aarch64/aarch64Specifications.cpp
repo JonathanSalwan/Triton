@@ -168,6 +168,7 @@ namespace triton {
               tritonId = triton::arch::arm::ID_VAS_8B;
               break;
 
+            #if CS_API_MAJOR >= 5
             case triton::extlibs::capstone::ARM64_VAS_4B:
               tritonId = triton::arch::arm::ID_VAS_4B;
               break;
@@ -175,6 +176,7 @@ namespace triton {
             case triton::extlibs::capstone::ARM64_VAS_1B:
               tritonId = triton::arch::arm::ID_VAS_1B;
               break;
+            #endif
 
             case triton::extlibs::capstone::ARM64_VAS_8H:
               tritonId = triton::arch::arm::ID_VAS_8H;
@@ -184,6 +186,7 @@ namespace triton {
               tritonId = triton::arch::arm::ID_VAS_4H;
               break;
 
+            #if CS_API_MAJOR >= 5
             case triton::extlibs::capstone::ARM64_VAS_2H:
               tritonId = triton::arch::arm::ID_VAS_2H;
               break;
@@ -191,6 +194,7 @@ namespace triton {
             case triton::extlibs::capstone::ARM64_VAS_1H:
               tritonId = triton::arch::arm::ID_VAS_1H;
               break;
+            #endif
 
             case triton::extlibs::capstone::ARM64_VAS_4S:
               tritonId = triton::arch::arm::ID_VAS_4S;
@@ -200,9 +204,11 @@ namespace triton {
               tritonId = triton::arch::arm::ID_VAS_2S;
               break;
 
+            #if CS_API_MAJOR >= 5
             case triton::extlibs::capstone::ARM64_VAS_1S:
               tritonId = triton::arch::arm::ID_VAS_1S;
               break;
+            #endif
 
             case triton::extlibs::capstone::ARM64_VAS_2D:
               tritonId = triton::arch::arm::ID_VAS_2D;
@@ -212,9 +218,11 @@ namespace triton {
               tritonId = triton::arch::arm::ID_VAS_1D;
               break;
 
+            #if CS_API_MAJOR >= 5
             case triton::extlibs::capstone::ARM64_VAS_1Q:
               tritonId = triton::arch::arm::ID_VAS_1Q;
               break;
+            #endif
 
             default:
               tritonId = triton::arch::arm::ID_VAS_INVALID;
