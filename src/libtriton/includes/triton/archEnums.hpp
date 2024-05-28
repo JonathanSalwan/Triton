@@ -176,12 +176,18 @@ namespace triton {
         ID_VAS_INVALID = 0, //!< invalid
         ID_VAS_16B,         //!< 16 lanes, each containing an 8-bit element.
         ID_VAS_8B,          //!< 8 lanes, each containing an 8-bit element.
+        ID_VAS_4B,          //!< 4 lane, containing an 8-bit element.
+        ID_VAS_1B,          //!< 1 lane, containing an 8-bit element.
         ID_VAS_8H,          //!< 8 lanes, each containing a 16-bit element.
         ID_VAS_4H,          //!< 4 lanes, each containing a 16-bit element.
+        ID_VAS_2H,          //!< 2 lanes, each containing a 16-bit element.
+        ID_VAS_1H,          //!< 1 lane, containing an 16-bit element.
         ID_VAS_4S,          //!< 4 lanes, each containing a 32-bit element.
         ID_VAS_2S,          //!< 2 lanes, each containing a 32-bit element.
+        ID_VAS_1S,          //!< 1 lane, containing an 32-bit element.
         ID_VAS_2D,          //!< 2 lanes, each containing a 64-bit element.
         ID_VAS_1D,          //!< 1 lane containing a 64-bit element.
+        ID_VAS_1Q,          //!< 1 lane containing a 128-bit element.
         ID_VAS_LAST_ITEM,   //!< must be the last item.
       };
 

@@ -5,7 +5,6 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#include <utility>
 #include <triton/aarch64Semantics.hpp>
 #include <triton/aarch64Specifications.hpp>
 #include <triton/astContext.hpp>
@@ -192,6 +191,7 @@ UBFX                          | Unsigned Bitfield Extract: an alias of UBFM
 UDIV                          | Unsigned Divide
 UMADDL                        | Unsigned Multiply-Add Long
 UMNEGL                        | Unsigned Multiply-Negate Long: an alias of UMSUBL
+UMOV                          | Unsigned Move vector element to GPR
 UMSUBL                        | Unsigned Multiply-Subtract Long
 UMULH                         | Unsigned Multiply High
 UMULL                         | Unsigned Multiply Long: an alias of UMADDL
@@ -359,6 +359,7 @@ namespace triton {
             case ID_INS_UBFX:      this->ubfx_s(inst);          break;
             case ID_INS_UDIV:      this->udiv_s(inst);          break;
             case ID_INS_UMADDL:    this->umaddl_s(inst);        break;
+            case ID_INS_UMOV:      this->umov_s(inst);          break;
             case ID_INS_UMNEGL:    this->umnegl_s(inst);        break;
             case ID_INS_UMSUBL:    this->umsubl_s(inst);        break;
             case ID_INS_UMULH:     this->umulh_s(inst);         break;
@@ -5669,6 +5670,33 @@ namespace triton {
           this->controlFlow_s(inst);
         }
 
+        void AArch64Semantics::umov_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0]; // GPR register
+          auto& src = inst.operands[1]; // vector register
+
+          /* Create the semantics */
+          auto vas_size = src.getConstRegister().getVASSize() * triton::bitsize::byte;
+
+          auto low = src.getConstRegister().getVectorIndex() * vas_size;
+          auto high = low + vas_size - 1;
+          
+          auto node = 
+            this->astCtxt->zx(
+              dst.getBitSize() - vas_size, 
+              this->astCtxt->extract(
+                      high,  
+                      low, 
+                      this->symbolicEngine->getOperandAst(inst, src))
+            );
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst);
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          this->controlFlow_s(inst);
+        }
 
         void AArch64Semantics::umnegl_s(triton::arch::Instruction& inst) {
           auto& dst  = inst.operands[0];

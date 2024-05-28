@@ -168,12 +168,28 @@ namespace triton {
               tritonId = triton::arch::arm::ID_VAS_8B;
               break;
 
+            case triton::extlibs::capstone::ARM64_VAS_4B:
+              tritonId = triton::arch::arm::ID_VAS_4B;
+              break;
+
+            case triton::extlibs::capstone::ARM64_VAS_1B:
+              tritonId = triton::arch::arm::ID_VAS_1B;
+              break;
+
             case triton::extlibs::capstone::ARM64_VAS_8H:
               tritonId = triton::arch::arm::ID_VAS_8H;
               break;
 
             case triton::extlibs::capstone::ARM64_VAS_4H:
               tritonId = triton::arch::arm::ID_VAS_4H;
+              break;
+
+            case triton::extlibs::capstone::ARM64_VAS_2H:
+              tritonId = triton::arch::arm::ID_VAS_2H;
+              break;
+
+            case triton::extlibs::capstone::ARM64_VAS_1H:
+              tritonId = triton::arch::arm::ID_VAS_1H;
               break;
 
             case triton::extlibs::capstone::ARM64_VAS_4S:
@@ -184,12 +200,20 @@ namespace triton {
               tritonId = triton::arch::arm::ID_VAS_2S;
               break;
 
+            case triton::extlibs::capstone::ARM64_VAS_1S:
+              tritonId = triton::arch::arm::ID_VAS_1S;
+              break;
+
             case triton::extlibs::capstone::ARM64_VAS_2D:
               tritonId = triton::arch::arm::ID_VAS_2D;
               break;
 
             case triton::extlibs::capstone::ARM64_VAS_1D:
               tritonId = triton::arch::arm::ID_VAS_1D;
+              break;
+
+            case triton::extlibs::capstone::ARM64_VAS_1Q:
+              tritonId = triton::arch::arm::ID_VAS_1Q;
               break;
 
             default:
