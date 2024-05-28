@@ -552,6 +552,9 @@ namespace triton {
             //! The UMADDL semantics.
             void umaddl_s(triton::arch::Instruction& inst);
 
+            //! The UMOV semantics.
+            void umov_s(triton::arch::Instruction& inst);
+
             //! The UMNEGL semantics.
             void umnegl_s(triton::arch::Instruction& inst);
 
