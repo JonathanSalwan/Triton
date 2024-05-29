@@ -111,7 +111,9 @@ jobs:
         run: |
           wget -UseBasicParsing https://github.com/capstone-engine/capstone/archive/refs/tags/5.0.1.zip -O capstone-5.0.1.zip
           tar -xf capstone-5.0.1.zip
-          mkdir -p capstone-5.0.1/build && cd capstone-5.0.1/build && ../nmake.bat
+          mkdir -p capstone-5.0.1/build
+          cd capstone-5.0.1/build
+          ../nmake.bat
         shell: powershell
 
       - name: Build Triton Python package
