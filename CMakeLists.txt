@@ -192,7 +192,7 @@ endif()
 
 # Find Capstone
 message(STATUS "Compiling with Capstone")
-find_package(CAPSTONE REQUIRED)
+find_package(CAPSTONE 5 REQUIRED)
 message(STATUS "CAPSTONE version: ${CAPSTONE_VERSION}")
 if(TARGET capstone::capstone)
     link_libraries(capstone::capstone)

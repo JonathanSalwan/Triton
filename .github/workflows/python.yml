@@ -109,8 +109,9 @@ jobs:
 
       - name: Download Capstone
         run: |
-          wget -UseBasicParsing https://github.com/capstone-engine/capstone/releases/download/4.0.2/capstone-4.0.2-win64.zip -O capstone-4.0.2-win64.zip
-          tar -xf capstone-4.0.2-win64.zip
+          wget -UseBasicParsing https://github.com/capstone-engine/capstone/archive/refs/tags/5.0.1.zip -O capstone-5.0.1.zip
+          tar -xf capstone-5.0.1.zip
+          mkdir -p capstone-5.0.1/build && cd capstone-5.0.1/build && ../nmake.bat
         shell: powershell
 
       - name: Build Triton Python package
@@ -121,8 +122,8 @@ jobs:
           PYTHON_LIBRARY: ${{ env.pythonLocation }}\libs\${{ matrix.pylib }}
           Z3_INCLUDE_DIRS: ${{ github.workspace }}\z3-4.12.2-x64-win\include
           Z3_LIBRARIES: ${{ github.workspace }}\z3-4.12.2-x64-win\bin\libz3.lib
-          CAPSTONE_INCLUDE_DIRS: ${{ github.workspace }}\capstone-4.0.2-win64\include
-          CAPSTONE_LIBRARIES: ${{ github.workspace }}\capstone-4.0.2-win64\capstone.lib
+          CAPSTONE_INCLUDE_DIRS: ${{ github.workspace }}\capstone-5.0.1\include
+          CAPSTONE_LIBRARIES: ${{ github.workspace }}\capstone-5.0.1\build\capstone.lib
 
       - name: Repair wheel package
         run: |

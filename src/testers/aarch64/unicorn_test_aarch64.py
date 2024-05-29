@@ -2141,6 +2141,17 @@ CODE  = [
     (b"\x20\x1c\xa2\x0e", "orr v0.8b, v1.8b, v2.8b"),
     (b"\x20\x1c\x22\x4e", "and v0.16b, v1.16b, v2.16b"),
     (b"\x20\x1c\x22\x0e", "and v0.8b, v1.8b, v2.8b"),
+    
+    #(b"\x61\x3d\x01\x0e", "umov w1, v11.b[0]"), # working on capstone 5.x but not on 4.x
+    #(b"\x61\x3d\x03\x0e", "umov w1, v11.b[1]"), # working on capstone 5.x but not on 4.x
+    #(b"\x68\x3c\x16\x0e", "umov w8, v3.H[5]"),  # working on capstone 5.x but not on 4.x
+    #(b"\x49\x3c\x06\x0e", "umov w9, v2.H[1]"),  # working on capstone 5.x but not on 4.x
+    
+    #(b"\x43\x3c\x1c\x0e", "umov w3, v2.S[3]"),  # working on capstone next branch but not on 4.x or 5.x
+    #(b"\x29\x3c\x0c\x0e", "umov w9, v1.S[1]"),  # working on capstone next branch but not on 4.x or 5.x
+    #(b"\x22\x3c\x18\x4e", "umov x4, v1.D[1]"),  # working on capstone next branch but not on 4.x or 5.x
+    #(b"\x21\x3c\x08\x4e", "umov x5, v1.D[0]"),  # working on capstone next branch but not on 4.x or 5.x
+
 ]
 
 def emu_with_unicorn(opcode, istate):
