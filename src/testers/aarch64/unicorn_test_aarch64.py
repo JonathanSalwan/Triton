@@ -2147,10 +2147,15 @@ CODE  = [
     (b"\x68\x3c\x16\x0e", "umov w8, v3.H[5]"),  # working on capstone 5.x but not on 4.x
     (b"\x49\x3c\x06\x0e", "umov w9, v2.H[1]"),  # working on capstone 5.x but not on 4.x
     
-    #(b"\x43\x3c\x1c\x0e", "umov w3, v2.S[3]"),  # working on capstone next branch but not on 4.x or 5.x
-    #(b"\x29\x3c\x0c\x0e", "umov w9, v1.S[1]"),  # working on capstone next branch but not on 4.x or 5.x
-    #(b"\x22\x3c\x18\x4e", "umov x4, v1.D[1]"),  # working on capstone next branch but not on 4.x or 5.x
-    #(b"\x21\x3c\x08\x4e", "umov x5, v1.D[0]"),  # working on capstone next branch but not on 4.x or 5.x
+    (b"\x43\x3c\x1c\x0e", "umov w3, v2.S[3]"),  # working on capstone 5.x but not on 4.x
+    (b"\x29\x3c\x0c\x0e", "umov w9, v1.S[1]"),  # working on capstone 5.x but not on 4.x
+    (b"\x22\x3c\x18\x4e", "umov x4, v1.D[1]"),  # working on capstone 5.x but not on 4.x
+    (b"\x21\x3c\x08\x4e", "umov x5, v1.D[0]"),  # working on capstone 5.x but not on 4.x
+    
+    #(b"\x5a\x00\xae\x9e", "fmov x26, v2.D[1]"), # working on capstone next branch
+    #(b"\x00\x00\xaf\x9e", "fmov v0.D[1], x0"),  # working on capstone next branch
+    (b"\x40\x03\x67\x9e", "fmov d0, x26"),  
+    (b"\x02\x00\x66\x9e", "fmov x2, d0"),
 ]
 
 def emu_with_unicorn(opcode, istate):

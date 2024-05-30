@@ -229,6 +229,9 @@ namespace triton {
           //! Returns the AST corresponding to the shift operation. Mainly used for Arm32 operands.
           triton::ast::SharedAbstractNode getShiftAst(const triton::arch::arm::ArmOperandProperties& shift, const triton::ast::SharedAbstractNode& node);
 
+          //! Returns the AST corresponding to the VAS vector index operation. Mainly used for Arm Neon vector operands.
+          triton::ast::SharedAbstractNode getIndexAst(const triton::arch::arm::ArmOperandProperties& vas_index, const triton::ast::SharedAbstractNode& node);
+
           //! Returns the new symbolic expression and links this expression to the instruction.
           TRITON_EXPORT const SharedSymbolicExpression& createSymbolicExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::OperandWrapper& dst, const std::string& comment="");
 
