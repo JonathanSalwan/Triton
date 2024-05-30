@@ -131,6 +131,34 @@ namespace triton {
 
         PyObject* arm32RegistersDictClass = xPyClass_New(nullptr, arm32RegistersDict, xPyString_FromString("ARM32"));
         xPyDict_SetItemString(registersDict, "ARM32", arm32RegistersDictClass);
+
+        // Create RISCV64 REG namespace
+
+        PyObject* riscv64RegistersDict = xPyDict_New();
+
+        #define REG_SPEC(_0, UPPER_NAME, _1, _2, _3, _4, _5) \
+          xPyDict_SetItemString(riscv64RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_RV64_##UPPER_NAME));
+        // Use REG not available in capstone as normal register
+        #define REG_SPEC_NO_CAPSTONE REG_SPEC
+        #define SYS_REG_SPEC REG_SPEC
+        #include "triton/riscv64.spec"
+
+        PyObject* riscv64RegistersDictClass = xPyClass_New(nullptr, riscv64RegistersDict, xPyString_FromString("RV64"));
+        xPyDict_SetItemString(registersDict, "RV64", riscv64RegistersDictClass);
+
+        // Create RISCV32 REG namespace
+
+        PyObject* riscv32RegistersDict = xPyDict_New();
+
+        #define REG_SPEC(_0, UPPER_NAME, _1, _2, _3, _4, _5) \
+          xPyDict_SetItemString(riscv32RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_RV32_##UPPER_NAME));
+        // Use REG not available in capstone as normal register
+        #define REG_SPEC_NO_CAPSTONE REG_SPEC
+        #define SYS_REG_SPEC REG_SPEC
+        #include "triton/riscv32.spec"
+
+        PyObject* riscv32RegistersDictClass = xPyClass_New(nullptr, riscv32RegistersDict, xPyString_FromString("RV32"));
+        xPyDict_SetItemString(registersDict, "RV32", riscv32RegistersDictClass);
       }
 
     }; /* python namespace */

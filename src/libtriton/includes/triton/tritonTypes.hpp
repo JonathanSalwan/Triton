@@ -105,7 +105,7 @@ namespace triton {
     //! unsigned MAX_INT 32 or 64 bits according to the CPU.
     typedef std::size_t usize;
 
-    #if defined(__x86_64__) || defined(_M_X64)  || defined(__aarch64__)
+    #if defined(__x86_64__) || defined(_M_X64)  || defined(__aarch64__) || defined(__riscv64__)
     //! unsigned long long if the arch is 64-bits.
     typedef unsigned long long __uint;
 
