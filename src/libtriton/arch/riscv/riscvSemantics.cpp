@@ -105,18 +105,18 @@ C.AND                         | And (register)
 C.ANDI                        | And (immediate)
 C.BEQZ                        | Branch if equal to zero
 C.BNEZ                        | Branch if not equal to zero
-C_J                           | Jump
-C_JAL                         | Jump and link
-C_JALR                        | Jump and link register
-C_JR                          | Jump register
-C_LD                          | Load register double word / 64-bit only /
-C_LDSP                        | Load register double word from SP / 64-bit only /
-C_LI                          | Load immediate
-C_LUI                         | Load upper intermediate
-C_LW                          | Load register signed word
-C_LWSP                        | Load register word from SP / 64-bit only /
-C_MV                          | Move register
-C_NOP                         | No operation
+C.J                           | Jump
+C.JAL                         | Jump and link / 32-bit only /
+C.JALR                        | Jump and link register
+C.JR                          | Jump register
+C.LD                          | Load register double word / 64-bit only /
+C.LDSP                        | Load register double word from SP / 64-bit only /
+C.LI                          | Load immediate
+C.LUI                         | Load upper intermediate
+C.LW                          | Load register signed word
+C.LWSP                        | Load register word from SP / 64-bit only /
+C.MV                          | Move register
+C.NOP                         | No operation
 C.OR                          | Or (register)
 C.SD                          | Store register double word  / 64-bit only /
 C.SDSP                        | Store register double word to SP / 64-bit only /
@@ -967,6 +967,7 @@ namespace triton {
         auto& src1 = inst.operands[1]; // offset - disp
         auto& src2 = inst.operands[2]; // rs1 - base
 
+        // FIXME when fixed https://github.com/capstone-engine/capstone/issues/2351
         /* Construct double word memory access manually with base and displacement */
         triton::arch::MemoryAccess mem;
         mem.setBits(triton::bitsize::qword - 1, 0);
@@ -996,6 +997,7 @@ namespace triton {
         auto& dst  = inst.operands[0]; // rd
         auto& src1 = inst.operands[1]; // offset - disp; (sp - base)
 
+        // FIXME when fixed https://github.com/capstone-engine/capstone/issues/2351
         /* Construct double word memory access manually with base and displacement */
         triton::arch::MemoryAccess mem;
         mem.setBits(triton::bitsize::qword - 1, 0);
@@ -1044,6 +1046,7 @@ namespace triton {
         auto& src1 = inst.operands[1]; // offset - disp
         auto& src2 = inst.operands[2]; // rs1 - base
 
+        // FIXME when fixed https://github.com/capstone-engine/capstone/issues/2351
         /* Construct word memory access manually with base and displacement */
         triton::arch::MemoryAccess mem;
         mem.setBits(triton::bitsize::dword - 1, 0);
@@ -1076,6 +1079,7 @@ namespace triton {
         auto& dst  = inst.operands[0]; // rd
         auto& src = inst.operands[1];  // offset - disp; (sp - base)
 
+        // FIXME when fixed https://github.com/capstone-engine/capstone/issues/2351
         /* Construct word memory access manually with base and displacement */
         triton::arch::MemoryAccess mem;
         mem.setBits(triton::bitsize::dword - 1, 0);
@@ -1155,6 +1159,7 @@ namespace triton {
         auto& imm = inst.operands[1];  // offset - disp
         auto& dst = inst.operands[2];  // rs1 - base
 
+        // FIXME when fixed https://github.com/capstone-engine/capstone/issues/2351
         /* Construct double word memory access manually with base and displacement */
         triton::arch::MemoryAccess mem;
         mem.setBits(triton::bitsize::qword - 1, 0);
@@ -1184,6 +1189,7 @@ namespace triton {
         auto& src = inst.operands[0];  // rs
         auto& imm = inst.operands[1];  // offset - disp; (sp - base)
 
+        // FIXME when fixed https://github.com/capstone-engine/capstone/issues/2351
         /* Construct double word memory access manually with base and displacement */
         triton::arch::MemoryAccess mem;
         mem.setBits(triton::bitsize::qword - 1, 0);
@@ -1336,6 +1342,7 @@ namespace triton {
         auto& imm = inst.operands[1];  // offset - disp
         auto& dst = inst.operands[2];  // rs1 - base
 
+        // FIXME when fixed https://github.com/capstone-engine/capstone/issues/2351
         /* Construct double word memory access manually with base and displacement */
         triton::arch::MemoryAccess mem;
         mem.setBits(triton::bitsize::dword - 1, 0);
@@ -1368,6 +1375,7 @@ namespace triton {
         auto& src = inst.operands[0];  // rs
         auto& imm = inst.operands[1];  // offset - disp; (sp - base)
 
+        // FIXME when fixed https://github.com/capstone-engine/capstone/issues/2351
         /* Construct double word memory access manually with base and displacement */
         triton::arch::MemoryAccess mem;
         mem.setBits(triton::bitsize::dword - 1, 0);
@@ -1410,7 +1418,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "C.XOR operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src));
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(dst) | this->taintEngine->isTainted(src));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -1564,8 +1572,8 @@ namespace triton {
         auto expr_pc = this->symbolicEngine->createSymbolicExpression(inst, node_pc, pc, "Program Counter");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->isTainted(pc);
-        expr_pc->isTainted = this->taintEngine->isTainted(pc);
+        expr->isTainted = this->taintEngine->setTaint(reg, this->taintEngine->isTainted(pc));
+        expr_pc->isTainted = this->taintEngine->setTaint(pc, this->taintEngine->isTainted(pc));
 
         /* Create the path constraint */
         this->symbolicEngine->pushPathConstraint(inst, expr_pc);

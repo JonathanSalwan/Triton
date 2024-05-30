@@ -13,12 +13,12 @@
 #include <triton/arm32Cpu.hpp>
 #include <triton/arm32Specifications.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/riscv32Cpu.hpp>
+#include <triton/riscv64Cpu.hpp>
+#include <triton/riscvSpecifications.hpp>
 #include <triton/x8664Cpu.hpp>
 #include <triton/x86Cpu.hpp>
 #include <triton/x86Specifications.hpp>
-#include <triton/riscv64Cpu.hpp>
-#include <triton/riscv32Cpu.hpp>
-#include <triton/riscvSpecifications.hpp>
 
 
 
