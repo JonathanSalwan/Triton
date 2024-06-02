@@ -65,6 +65,7 @@ EON (shifted register)        | Bitwise Exclusive OR NOT (shifted register)
 EOR (immediate)               | Bitwise Exclusive OR (immediate)
 EOR (shifted register)        | Bitwise Exclusive OR (shifted register)
 EXTR                          | EXTR: Extract register
+FMOV                          | Floating-point Move register without conversion.
 LD3 (multiple structure)      | Load multiple 3-element structures to three registers.
 LD3R                          | Load single 3-element structure and Replicate to all lanes of three registers.
 LD4 (multiple structure)      | Load multiple 4-element structures to four registers.
@@ -259,6 +260,7 @@ namespace triton {
             case ID_INS_EON:       this->eon_s(inst);           break;
             case ID_INS_EOR:       this->eor_s(inst);           break;
             case ID_INS_EXTR:      this->extr_s(inst);          break;
+            case ID_INS_FMOV:      this->fmov_s(inst);          break;
             case ID_INS_LD3:       this->ld3_s(inst);           break;
             case ID_INS_LD3R:      this->ld3r_s(inst);          break;
             case ID_INS_LD4:       this->ld4_s(inst);           break;
@@ -1854,6 +1856,22 @@ namespace triton {
           this->controlFlow_s(inst);
         }
 
+        void AArch64Semantics::fmov_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src = inst.operands[1];
+          
+          /* Create the semantics */
+          auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "FMOV operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
 
         void AArch64Semantics::ld3_s(triton::arch::Instruction& inst) {
           std::list<triton::ast::SharedAbstractNode> vec0;
@@ -5677,16 +5695,10 @@ namespace triton {
           /* Create the semantics */
           auto vas_size = src.getConstRegister().getVASSize() * triton::bitsize::byte;
 
-          auto low = src.getConstRegister().getVectorIndex() * vas_size;
-          auto high = low + vas_size - 1;
-          
           auto node = 
             this->astCtxt->zx(
               dst.getBitSize() - vas_size, 
-              this->astCtxt->extract(
-                      high,  
-                      low, 
-                      this->symbolicEngine->getOperandAst(inst, src))
+              this->symbolicEngine->getOperandAst(src)    
             );
 
           /* Create symbolic expression */

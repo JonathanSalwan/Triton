@@ -790,6 +790,15 @@ namespace triton {
         }
       }
 
+      triton::ast::SharedAbstractNode SymbolicEngine::getIndexAst(const triton::arch::arm::ArmOperandProperties& vas_index, const triton::ast::SharedAbstractNode& node) {
+        auto vas_size = vas_index.getVASSize() * triton::bitsize::byte;
+
+        auto low = vas_index.getVectorIndex() * vas_size;
+        auto high = low + vas_size - 1;
+        
+        return this->astCtxt->extract(high, low, node);
+      }
+
 
       triton::ast::SharedAbstractNode SymbolicEngine::getExtendAst(const triton::arch::arm::ArmOperandProperties& extend, const triton::ast::SharedAbstractNode& node) {
         triton::uint32 size = extend.getExtendSize();
@@ -936,6 +945,11 @@ namespace triton {
         /* Shift AST if it's a shift operand (mainly used for Arm) */
         if (reg.getShiftType() != triton::arch::arm::ID_SHIFT_INVALID) {
           return this->getShiftAst(static_cast<const triton::arch::arm::ArmOperandProperties>(reg), node);
+        }
+
+        /* Extract AST if it's have vector index (mainly used for Arm Neon) */
+        if (reg.getVectorIndex() != -1 && reg.getVASSize() != 0) {
+          return this->getIndexAst(static_cast<const triton::arch::arm::ArmOperandProperties>(reg), node);
         }
 
         return node;

@@ -11,6 +11,7 @@
 .DS_Store
 .gdb_history
 CMakeLists.txt.user
+CMakeUserPresets.json
 build*/*
 peda-session*
 pin.log
@@ -19,6 +20,7 @@ private/*
 *.so
 .cache
 .vscode
+.venv
 dist/
 *.egg-info/
 wheelhouse/
