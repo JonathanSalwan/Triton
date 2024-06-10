@@ -2174,10 +2174,11 @@ namespace triton {
         auto  size = src2.getBitSize();
 
         /* Create symbolic operands */
+        auto bits = size == 64 ? 0x3f : 0x1f;
         auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
         auto op2 = this->astCtxt->bvand(
                      this->symbolicEngine->getOperandAst(inst, src2),
-                     this->astCtxt->bv(0x1f, size)
+                     this->astCtxt->bv(bits, size)
                    );
 
         /* Create the semantics */
@@ -2441,10 +2442,11 @@ namespace triton {
         auto  size = src2.getBitSize();
 
         /* Create symbolic operands */
+        auto bits = size == 64 ? 0x3f : 0x1f;
         auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
         auto op2 = this->astCtxt->bvand(
                      this->symbolicEngine->getOperandAst(inst, src2),
-                     this->astCtxt->bv(0x1f, size)
+                     this->astCtxt->bv(bits, size)
                    );
 
         /* Create the semantics */
@@ -2498,10 +2500,11 @@ namespace triton {
         auto  size = src2.getBitSize();
 
         /* Create symbolic operands */
+        auto bits = size == 64 ? 0x3f : 0x1f;
         auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
         auto op2 = this->astCtxt->bvand(
                      this->symbolicEngine->getOperandAst(inst, src2),
-                     this->astCtxt->bv(0x1f, size)
+                     this->astCtxt->bv(bits, size)
                    );
 
         /* Create the semantics */

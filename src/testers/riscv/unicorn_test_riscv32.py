@@ -184,16 +184,31 @@ CODE  = [
     (b"\xb3\x30\xb0\x00", "sltu  x1,  x0,  x11"),  # snez
 
     # SLL
+    (b"\x13\xe5\xf5\x0f", "ori   x10, x11, #0xff"),
+    (b"\x93\x65\xe6\x0f", "ori   x11, x12, #0xfe"),
+    (b"\x33\x15\xb5\x00", "sll   x10, x10, x11"),
     (b"\xb3\x15\xb5\x00", "sll   x11, x10, x11"),
+    (b"\xb3\x15\xb5\x00", "sll   x12, x13, x12"),
+    (b"\x33\x16\xf8\x00", "sll   x12, x16, x15"),
     (b"\x93\x10\x85\x00", "slli  x1,  x10, #8"),
     (b"\x93\x15\xf5\x00", "slli  x11, x10, #0xf"),
     (b"\x12\x06",       "c.slli  x12, x12, #0x4"),
     # SRA
+    (b"\x13\xe5\xf5\x0f", "ori   x10, x11, #0xff"),
+    (b"\x93\x65\xe6\x0f", "ori   x11, x12, #0xfe"),
+    (b"\x33\x55\xb5\x40", "sra   x10, x10, x11"),
+    (b"\xb3\x55\xb5\x40", "sra   x11, x10, x11"),
+    (b"\x33\xd6\xe7\x40", "sra   x12, x15, x14"),
     (b"\xb3\x55\xb5\x40", "sra   x11, x10, x11"),
     (b"\x93\x55\x85\x40", "srai  x11, x10, #8"),
     (b"\x93\x55\xf5\x40", "srai  x11, x10, #0xf"),
     (b"\x85\x85",       "c.srai  x11, x11, #0x1"),
     # SRL
+    (b"\x13\xe5\xf5\x0f", "ori   x10, x11, #0xff"),
+    (b"\x93\x65\xe6\x0f", "ori   x11, x12, #0xfe"),
+    (b"\x33\x55\xb5\x00", "srl   x10, x10, x11"),
+    (b"\xb3\x55\xb5\x00", "srl   x11, x10, x11"),
+    (b"\x33\xd6\xe7\x00", "srl   x12, x15, x14"),
     (b"\xb3\x55\xb5\x00", "srl   x11, x10, x11"),
     (b"\x93\x55\x85\x00", "srli  x11, x10, #8"),
     (b"\x93\x55\xf5\x00", "srli  x11, x10, #0xf"),
