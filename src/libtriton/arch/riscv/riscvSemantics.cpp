@@ -1437,7 +1437,7 @@ namespace triton {
         /* Create the semantics */
         auto node = this->astCtxt->ite(
                       this->astCtxt->equal(op2, this->astCtxt->bv(0, op2->getBitvectorSize())),
-                      this->astCtxt->bv(0, dst.getBitSize()),
+                      this->astCtxt->bv(-1, dst.getBitSize()),
                       this->astCtxt->bvsdiv(op1, op2)
                     );
 
@@ -1464,7 +1464,7 @@ namespace triton {
         /* Create the semantics */
         auto node = this->astCtxt->ite(
                       this->astCtxt->equal(op2, this->astCtxt->bv(0, op2->getBitvectorSize())),
-                      this->astCtxt->bv(0, dst.getBitSize()),
+                      this->astCtxt->bv(-1, dst.getBitSize()),
                       this->astCtxt->bvudiv(op1, op2)
                     );
 
@@ -1491,7 +1491,7 @@ namespace triton {
         /* Create the semantics */
         auto node = this->astCtxt->ite(
                       this->astCtxt->equal(op2, this->astCtxt->bv(0, op2->getBitvectorSize())),
-                      this->astCtxt->bv(0, dst.getBitSize()),
+                      this->astCtxt->bv(-1, dst.getBitSize()),
                       this->astCtxt->sx(32, this->astCtxt->bvudiv(op1, op2))
                     );
 
@@ -1518,7 +1518,7 @@ namespace triton {
         /* Create the semantics */
         auto node = this->astCtxt->ite(
                       this->astCtxt->equal(op2, this->astCtxt->bv(0, op2->getBitvectorSize())),
-                      this->astCtxt->bv(0, dst.getBitSize()),
+                      this->astCtxt->bv(-1, dst.getBitSize()),
                       this->astCtxt->sx(32, this->astCtxt->bvsdiv(op1, op2))
                     );
 
@@ -2004,6 +2004,7 @@ namespace triton {
         auto& dst  = inst.operands[0];
         auto& src1 = inst.operands[1];
         auto& src2 = inst.operands[2];
+        auto size = dst.getBitSize();
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
@@ -2012,8 +2013,15 @@ namespace triton {
         /* Create the semantics */
         auto node = this->astCtxt->ite(
                       this->astCtxt->equal(op2, this->astCtxt->bv(0, op2->getBitvectorSize())),
-                      this->astCtxt->bv(0, dst.getBitSize()),
-                      this->astCtxt->bvsrem(op1, op2)
+                      op1,
+                      this->astCtxt->ite( // overflow check
+                        this->astCtxt->land(
+                          this->astCtxt->equal(op1, this->astCtxt->bv(-1, size)),
+                          this->astCtxt->equal(op2, this->astCtxt->bv((1 << (size - 1)), size))
+                        ),
+                        this->astCtxt->bv(0, size),
+                        this->astCtxt->bvsrem(op1, op2)
+                      )
                     );
 
         /* Create symbolic expression */
@@ -2039,7 +2047,7 @@ namespace triton {
         /* Create the semantics */
         auto node = this->astCtxt->ite(
                       this->astCtxt->equal(op2, this->astCtxt->bv(0, op2->getBitvectorSize())),
-                      this->astCtxt->bv(0, dst.getBitSize()),
+                      op1,
                       this->astCtxt->bvurem(op1, op2)
                     );
 
@@ -2066,7 +2074,7 @@ namespace triton {
         /* Create the semantics */
         auto node = this->astCtxt->ite(
                       this->astCtxt->equal(op2, this->astCtxt->bv(0, op2->getBitvectorSize())),
-                      this->astCtxt->bv(0, dst.getBitSize()),
+                      this->astCtxt->sx(32, op1),
                       this->astCtxt->sx(32, this->astCtxt->bvurem(op1, op2))
                     );
 
@@ -2091,10 +2099,18 @@ namespace triton {
         auto op2 = this->astCtxt->extract(31, 0, this->symbolicEngine->getOperandAst(inst, src2));
 
         /* Create the semantics */
-        auto node = this->astCtxt->ite(
+        uint32_t ov_value = 0x80000000;
+        auto node = this->astCtxt->ite( // div-by-zero check
                       this->astCtxt->equal(op2, this->astCtxt->bv(0, op2->getBitvectorSize())),
-                      this->astCtxt->bv(0, dst.getBitSize()),
-                      this->astCtxt->sx(32, this->astCtxt->bvsrem(op1, op2))
+                      this->astCtxt->sx(32, op1),
+                      this->astCtxt->ite( // signed overflow check
+                        this->astCtxt->land(
+                          this->astCtxt->equal(op1, this->astCtxt->bv(ov_value, 32)),
+                          this->astCtxt->equal(op2, this->astCtxt->bv(-1, 32))
+                        ),
+                        this->astCtxt->bv(0, dst.getBitSize()),
+                        this->astCtxt->sx(32, this->astCtxt->bvsrem(op1, op2))
+                      )
                     );
 
         /* Create symbolic expression */
