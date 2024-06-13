@@ -176,12 +176,32 @@ CODE  = [
     (b"\xbb\x56\xa6\x02", "divuw x13, x12, x10"),
     (b"\x3b\x47\xb6\x02", "divw  x14, x12, x11"),
     (b"\x3b\x40\xa6\x02", "divw  x0,  x12, x10"),
+    # div-by-zero corner case
+    (b"\xb7\x08\x00\x00", "lui   x17, #0"),
+    (b"\xb3\x45\x16\x03", "div   x11, x12, x17"),
+    (b"\xb3\x55\x16\x03", "divu  x11, x12, x17"),
+    (b"\xbb\x55\x16\x03", "divuw x11, x12, x17"),
+    (b"\xbb\x40\x16\x03", "divw  x11, x12, x17"),
 
     # REM/U/W
     (b"\xb3\x65\xa6\x02", "rem   x11, x12, x10"),
     (b"\xb3\x75\xa6\x02", "remu  x11, x12, x10"),
     (b"\xbb\x75\xa7\x02", "remuw x11, x14, x10"),
     (b"\xbb\x65\xa7\x02", "remw  x11, x14, x10"),
+    # div-by-zero corner case
+    (b"\xb7\x08\x00\x00", "lui   x17, #0"),
+    (b"\xb3\x65\x16\x03", "rem   x11, x12, x17"),
+    (b"\xbb\x75\x17\x03", "remuw x11, x14, x17"),
+    (b"\xb3\x75\x16\x03", "remu  x11, x12, x17"),
+    (b"\xbb\x65\x17\x03", "remw  x11, x14, x17"),
+    # signed overflow
+    (b"\xb7\xf8\xff\xff", "lui   x17, #0xfffff"),
+    (b"\x93\x98\x38\x01", "slli  x17, x17, #19"),
+    (b"\x13\x05\xf0\xff", "addi  x10, x0,  #-1"),
+    (b"\xbb\xe5\xa8\x02", "remw  x11, x17, x10"),
+    (b"\x93\x05\x16\x00", "addi  x11, x12, #1"),
+    (b"\x93\x98\x08\x02", "slli  x17, x17, #32"),
+    (b"\xb3\xe5\xa8\x02", "rem   x11, x17, x10"),
 
     # SUB/W
     (b"\xb3\x05\xa0\x40", "sub   x11, x0,  x10"),

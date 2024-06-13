@@ -142,10 +142,22 @@ CODE  = [
     # DIV/U
     (b"\x33\x46\xa6\x02", "div   x12, x12, x10"),
     (b"\x33\x56\xa6\x02", "divu  x12, x12, x10"),
+    # div-by-zero corner case
+    (b"\xb7\x08\x00\x00", "lui   x17, #0"),
+    (b"\xb3\x45\x16\x03", "div   x11, x12, x17"),
+    (b"\xb3\x58\x16\x03", "divu  x17, x12, x17"),
 
     # REM/U
     (b"\xb3\x65\xa6\x02", "rem   x11, x12, x10"),
     (b"\xb3\x75\xa6\x02", "remu  x11, x12, x10"),
+    # corner cases
+    (b"\xb7\x08\x00\x00", "lui   x17, #0"),
+    (b"\xb3\x65\x16\x03", "rem   x11, x12, x17"), # division by zero
+    (b"\xb3\x75\x17\x03", "remu  x11, x14, x17"),
+    (b"\xb7\xf8\xff\xff", "lui   x17, #0xfffff"),
+    (b"\x93\x98\x38\x01", "slli  x17, x17, #19"),
+    (b"\x13\x05\xf0\xff", "addi  x10, x0,  #-1"),
+    (b"\xb3\xe5\xa8\x02", "rem   x11, x17, x10"), # signed overflow
 
     # SUB/W
     (b"\xb3\x05\xa0\x40", "sub   x11, x0,  x10"),
