@@ -11,10 +11,10 @@
         "boost-math",
         "boost-multiprecision",
         "boost-numeric-conversion",
-        { "name": "capstone", "default-features": false, "features": ["arm", "arm64", "x86"] },
+        { "name": "capstone", "default-features": false, "features": ["arm", "arm64", "riscv", "x86"] },
         "z3"
     ],
     "overrides": [
-        { "name":"capstone", "version-semver":"5.0.0-rc2" }
+        { "name":"capstone", "version-semver":"5.0.1", "port-version": 1 }
     ]
 }

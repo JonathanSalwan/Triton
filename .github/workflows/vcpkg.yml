@@ -42,7 +42,7 @@ jobs:
       name: Get vcpkg
       with:
         repository: 'microsoft/vcpkg'
-        ref: '2022.04.12'
+        ref: '2024.05.24'
         path: '${{ github.workspace }}/_vcpkg'
         fetch-depth: 0
 
