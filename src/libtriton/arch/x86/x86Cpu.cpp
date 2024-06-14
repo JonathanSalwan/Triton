@@ -264,7 +264,12 @@ namespace triton {
 
 
       bool x86Cpu::isSSE(triton::arch::register_e regId) const {
-        return ((regId >= triton::arch::ID_REG_X86_MXCSR && regId <= triton::arch::ID_REG_X86_XMM7) ? true : false);
+        return ((regId >= triton::arch::ID_REG_X86_XMM0 && regId <= triton::arch::ID_REG_X86_XMM7) ? true : false);
+      }
+
+
+      bool x86Cpu::isSSECTL(triton::arch::register_e regId) const {
+        return ((regId >= triton::arch::ID_REG_X86_MXCSR && regId <= triton::arch::ID_REG_X86_MXCSR_MASK) ? true : false);
       }
 
 
@@ -336,7 +341,7 @@ namespace triton {
           const auto& reg = kv.second;
 
           /* Add GPR */
-          if (reg.getSize() == this->gprSize())
+          if (this->isGPR(regId) && reg.getSize() == this->gprSize())
             ret.insert(&reg);
 
           /* Add Flags */
@@ -345,10 +350,6 @@ namespace triton {
 
           /* Add STX */
           else if (this->isSTX(regId))
-            ret.insert(&reg);
-
-          /* Add SSE */
-          else if (this->isSSE(regId))
             ret.insert(&reg);
 
           /* Add FPU */
@@ -361,6 +362,9 @@ namespace triton {
 
           /* Add TSC */
           else if (this->isTSC(regId))
+            ret.insert(&reg);
+
+          else if (this->isSSECTL(regId))
             ret.insert(&reg);
 
           /* Add AVX-256 */

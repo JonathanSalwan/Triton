@@ -339,16 +339,16 @@ REG_SPEC_NO_CAPSTONE(FSW_B,   fsw_b,   0, 0, FSW_B,   0, 0, FSW_B,   true)  // b
 
 /* EFER */
 
-REG_SPEC_NO_CAPSTONE(EFER, efer, triton::bitsize::qword-1, 0, EFER, triton::bitsize::qword-1, 0, EFER, true) // efer
+REG_SPEC_NO_CAPSTONE(EFER, efer, triton::bitsize::qword-1, 0, EFER, triton::bitsize::qword-1, 0, EFER, false) // efer
 
-REG_SPEC_NO_CAPSTONE(EFER_TCE,   efer_tce,   0, 0, EFER_TCE,   0, 0, EFER_TCE,   true) // efer_tce
-REG_SPEC_NO_CAPSTONE(EFER_FFXSR, efer_ffxsr, 0, 0, EFER_FFXSR, 0, 0, EFER_FFXSR, true) // efer_ffxsr
-REG_SPEC_NO_CAPSTONE(EFER_LMSLE, efer_lmsle, 0, 0, EFER_LMSLE, 0, 0, EFER_LMSLE, true) // efer_lmsle
-REG_SPEC_NO_CAPSTONE(EFER_SVME,  efer_svme,  0, 0, EFER_SVME,  0, 0, EFER_SVME,  true) // efer_svme
-REG_SPEC_NO_CAPSTONE(EFER_NXE,   efer_nxe,   0, 0, EFER_NXE,   0, 0, EFER_NXE,   true) // efer_nxe
-REG_SPEC_NO_CAPSTONE(EFER_LMA,   efer_lma,   0, 0, EFER_LMA,   0, 0, EFER_LMA,   true) // efer_lma
-REG_SPEC_NO_CAPSTONE(EFER_LME,   efer_lme,   0, 0, EFER_LME,   0, 0, EFER_LME,   true) // efer_lme
-REG_SPEC_NO_CAPSTONE(EFER_SCE,   efer_sce,   0, 0, EFER_SCE,   0, 0, EFER_SCE,   true) // efer_sce
+REG_SPEC_NO_CAPSTONE(EFER_TCE,   efer_tce,   0, 0, EFER_TCE,   0, 0, EFER_TCE,   false) // efer_tce
+REG_SPEC_NO_CAPSTONE(EFER_FFXSR, efer_ffxsr, 0, 0, EFER_FFXSR, 0, 0, EFER_FFXSR, false) // efer_ffxsr
+REG_SPEC_NO_CAPSTONE(EFER_LMSLE, efer_lmsle, 0, 0, EFER_LMSLE, 0, 0, EFER_LMSLE, false) // efer_lmsle
+REG_SPEC_NO_CAPSTONE(EFER_SVME,  efer_svme,  0, 0, EFER_SVME,  0, 0, EFER_SVME,  false) // efer_svme
+REG_SPEC_NO_CAPSTONE(EFER_NXE,   efer_nxe,   0, 0, EFER_NXE,   0, 0, EFER_NXE,   false) // efer_nxe
+REG_SPEC_NO_CAPSTONE(EFER_LMA,   efer_lma,   0, 0, EFER_LMA,   0, 0, EFER_LMA,   false) // efer_lma
+REG_SPEC_NO_CAPSTONE(EFER_LME,   efer_lme,   0, 0, EFER_LME,   0, 0, EFER_LME,   false) // efer_lme
+REG_SPEC_NO_CAPSTONE(EFER_SCE,   efer_sce,   0, 0, EFER_SCE,   0, 0, EFER_SCE,   false) // efer_sce
 
 /* Segments */
 
