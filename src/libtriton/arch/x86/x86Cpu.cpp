@@ -232,6 +232,7 @@ namespace triton {
           this->isMMX(regId)      ||
           this->isSTX(regId)      ||
           this->isSSE(regId)      ||
+          this->isSSECTL(regId)   ||
           this->isFPU(regId)      ||
           this->isEFER(regId)     ||
           this->isTSC(regId)      ||
