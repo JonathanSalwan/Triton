@@ -11,7 +11,7 @@ configuration:
 clone_folder: c:\projects\triton
 
 environment:
-  CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-4.0.2\include
+  CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-5.0.1\include
   PLATFORM_TOOLSET: v142
   CMAKE_TEMPLATE: Visual Studio 16 2019
 
@@ -20,7 +20,7 @@ environment:
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python38-x64
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\x64\%configuration%\capstone.lib
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-5.0.1\msvc\x64\%configuration%\capstone.lib
       LIEF_VERSION: 0.12.1
       LIEF_ZIP: lief-0.12.1-cp38-cp38-win_amd64.whl
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
@@ -33,7 +33,7 @@ environment:
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python39-x64
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\x64\%configuration%\capstone.lib
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-5.0.1\msvc\x64\%configuration%\capstone.lib
       LIEF_VERSION: 0.12.1
       LIEF_ZIP: lief-0.12.1-cp39-cp39-win_amd64.whl
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
@@ -46,7 +46,7 @@ environment:
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python310-x64
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\x64\%configuration%\capstone.lib
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-5.0.1\msvc\x64\%configuration%\capstone.lib
       LIEF_VERSION: 0.12.1
       LIEF_ZIP: lief-0.12.1-cp310-cp310-win_amd64.whl
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
@@ -59,7 +59,7 @@ environment:
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python310-x64
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\x64\%configuration%\capstone.lib
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-5.0.1\msvc\x64\%configuration%\capstone.lib
       LIEF_VERSION: 0.12.1
       LIEF_ZIP: lief-0.12.1-cp310-cp310-win_amd64.whl
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
@@ -84,10 +84,10 @@ install:
   - set PYTHONPATH=C:\projects\triton\build\%Z3_PKG_NAME%\bin\python;%PYTHONPATH%
     # Install capstone
   - cmd: echo Downloading capstone...
-  - cmd: appveyor DownloadFile https://github.com/aquynh/capstone/archive/4.0.2.zip
-  - cmd: 7z x 4.0.2.zip
+  - cmd: appveyor DownloadFile https://github.com/aquynh/capstone/archive/5.0.1.zip
+  - cmd: 7z x 5.0.1.zip
   - cmd: echo Building capstone...
-  - cmd: msbuild capstone-4.0.2\msvc\capstone.sln /p:Configuration=%configuration% /p:Platform=%platform% /p:PlatformToolset=%PLATFORM_TOOLSET% /t:capstone_static /m
+  - cmd: msbuild capstone-5.0.1\msvc\capstone.sln /p:Configuration=%configuration% /p:Platform=%platform% /p:PlatformToolset=%PLATFORM_TOOLSET% /t:capstone_static /m
     # Install LIEF
   - cmd: echo Downloading LIEF...
   - cmd: appveyor DownloadFile https://github.com/lief-project/LIEF/releases/download/%LIEF_VERSION%/%LIEF_ZIP%
