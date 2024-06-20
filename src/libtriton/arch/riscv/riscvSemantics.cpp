@@ -2225,10 +2225,9 @@ namespace triton {
                    );
 
         /* Create the semantics */
-        auto node = this->astCtxt->bvshl(
-                      this->astCtxt->sx(32, this->astCtxt->extract(31, 0, op1)),
-                      op2
-                    );
+        auto node = this->astCtxt->sx(32,
+                        this->astCtxt->bvshl(this->astCtxt->extract(31, 0, op1),
+                                             this->astCtxt->extract(31, 0, op2)));
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SLL(I)W operation");
@@ -2493,10 +2492,9 @@ namespace triton {
                    );
 
         /* Create the semantics */
-        auto node = this->astCtxt->bvashr(
-                      this->astCtxt->sx(32, this->astCtxt->extract(31, 0, op1)),
-                      op2
-                    );
+        auto node = this->astCtxt->sx(32,
+                        this->astCtxt->bvashr(this->astCtxt->extract(31, 0, op1),
+                                              this->astCtxt->extract(31, 0, op2)));
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SRA(I)W operation");
@@ -2551,10 +2549,9 @@ namespace triton {
                    );
 
         /* Create the semantics */
-        auto node = this->astCtxt->bvlshr(
-                      this->astCtxt->sx(32, this->astCtxt->extract(31, 0, op1)),
-                      op2
-                    );
+        auto node = this->astCtxt->sx(32,
+                        this->astCtxt->bvlshr(this->astCtxt->extract(31, 0, op1),
+                                              this->astCtxt->extract(31, 0, op2)));
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SRL(I)W operation");

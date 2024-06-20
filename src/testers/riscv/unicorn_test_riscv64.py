@@ -257,6 +257,12 @@ CODE  = [
     (b"\xbb\x15\x05\x00", "sllw  x11, x10, x0"),
     (b"\x9b\x15\xb5\x00", "slliw x11, x10, #0xb"),
     (b"\x1b\x15\x15\x00", "slliw x10, x10, #0x1"),
+    (b"\xb7\xe8\xcd\xab", "lui   x17, #0xabcde"),
+    (b"\x93\x88\x78\x45", "addi  x17, x17, #0x457"),
+    (b"\x1b\x95\xc8\x00", "slliw x10, x17, #0xc"),
+    (b"\x1b\x95\xf8\x01", "slliw x10, x17, #0x1f"),
+    (b"\x3b\x95\x18\x01", "sllw  x10, x17, x17"),
+    (b"\x3b\x95\x28\x01", "sllw  x10, x17, x18"),
     # SRA
     (b"\x13\xe5\xf5\x0f", "ori   x10, x11, #0xff"),
     (b"\x93\x65\xe6\x0f", "ori   x11, x12, #0xfe"),
@@ -270,6 +276,10 @@ CODE  = [
     (b"\xbb\x55\x05\x40", "sraw  x11, x10, x0"),
     (b"\x9b\x55\xb5\x40", "sraiw x11, x10, #0xb"),
     (b"\x1b\x55\x15\x40", "sraiw x10, x10, #0x1"),
+    (b"\x1b\xd5\xc8\x40", "sraiw x10, x17, #0xc"),
+    (b"\x1b\xd5\xf8\x41", "sraiw x10, x17, #0x1f"),
+    (b"\x3b\xd5\x18\x41", "sraw  x10, x17, x17"),
+    (b"\x3b\xd5\x28\x41", "sraw  x10, x17, x18"),
     # SRL
     (b"\x13\xe5\xf5\x0f", "ori   x10, x11, #0xff"),
     (b"\x93\x65\xe6\x0f", "ori   x11, x12, #0xfe"),
@@ -284,6 +294,10 @@ CODE  = [
     (b"\xbb\x55\x05\x00", "srlw  x11, x10, x0"),
     (b"\x9b\x55\xb5\x00", "srliw x11, x10, #0xb"),
     (b"\x1b\x55\x15\x00", "srliw x10, x10, #0x1"),
+    (b"\x1b\xd5\xc8\x00", "srliw x10, x17, #0xc"),
+    (b"\x1b\xd5\xf8\x01", "srliw x10, x17, #0x1f"),
+    (b"\x3b\xd5\x18\x01", "srlw  x10, x17, x17"),
+    (b"\x3b\xd5\x28\x01", "srlw  x10, x17, x18"),
 
 ]
 
