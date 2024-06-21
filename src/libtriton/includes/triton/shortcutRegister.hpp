@@ -149,7 +149,7 @@ namespace triton {
                                                               triton::arch::ID_REG_RV64_##UPPER_NAME,              \
                                                               RISCV_UPPER,                                         \
                                                               RISCV_LOWER,                                         \
-                                                              true);
+                                                              MUTABLE);
               #define REG_SPEC_NO_CAPSTONE REG_SPEC
               #include "triton/riscv64.spec"
               }
@@ -162,7 +162,7 @@ namespace triton {
                                                               triton::arch::ID_REG_RV32_##UPPER_NAME,              \
                                                               RISCV_UPPER,                                         \
                                                               RISCV_LOWER,                                         \
-                                                              true);
+                                                              MUTABLE);
               #define REG_SPEC_NO_CAPSTONE REG_SPEC
               #include "triton/riscv32.spec"
               }

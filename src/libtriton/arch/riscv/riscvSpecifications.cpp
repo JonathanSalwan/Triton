@@ -32,7 +32,7 @@ namespace triton {
                                                       triton::arch::ID_REG_RV64_##UPPER_NAME,                  \
                                                       RISCV_UPPER,                                             \
                                                       RISCV_LOWER,                                             \
-                                                      true)                                                    \
+                                                      MUTABLE)                                                 \
                               );                                                                               \
             name2id.emplace(#LOWER_NAME, ID_REG_RV64_##UPPER_NAME);                                            \
             name2id.emplace(#ABI_NAME,   ID_REG_RV64_##UPPER_NAME);
@@ -49,7 +49,7 @@ namespace triton {
                                                       triton::arch::ID_REG_RV32_##UPPER_NAME,                  \
                                                       RISCV_UPPER,                                             \
                                                       RISCV_LOWER,                                             \
-                                                      true)                                                    \
+                                                      MUTABLE)                                                 \
                               );                                                                               \
             name2id.emplace(#LOWER_NAME, ID_REG_RV32_##UPPER_NAME);                                            \
             name2id.emplace(#ABI_NAME,   ID_REG_RV32_##UPPER_NAME);
