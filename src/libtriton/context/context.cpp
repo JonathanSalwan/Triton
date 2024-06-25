@@ -10,6 +10,8 @@
 #include <triton/config.hpp>
 #include <triton/context.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/riscv32Cpu.hpp>
+#include <triton/riscv64Cpu.hpp>
 #include <triton/x8664Cpu.hpp>
 #include <triton/x86Cpu.hpp>
 
@@ -461,6 +463,12 @@ namespace triton {
         break;
       case triton::arch::ARCH_AARCH64:
         *static_cast<triton::arch::arm::aarch64::AArch64Cpu*>(this->getCpuInstance()) = *static_cast<triton::arch::arm::aarch64::AArch64Cpu*>(other.getCpuInstance());
+        break;
+      case triton::arch::ARCH_RV64:
+        *static_cast<triton::arch::riscv::riscv64Cpu*>(this->getCpuInstance()) = *static_cast<triton::arch::riscv::riscv64Cpu*>(other.getCpuInstance());
+        break;
+      case triton::arch::ARCH_RV32:
+        *static_cast<triton::arch::riscv::riscv32Cpu*>(this->getCpuInstance()) = *static_cast<triton::arch::riscv::riscv32Cpu*>(other.getCpuInstance());
         break;
       default:
         throw triton::exceptions::Engines("Context::setConcreteState(): Invalid architecture.");

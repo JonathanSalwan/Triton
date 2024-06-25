@@ -58,5 +58,5 @@ RUN echo "[+] Download, build and install Capstone" && \
     wget -q https://github.com/capstone-engine/capstone/archive/refs/tags/5.0.1.tar.gz -O capstone-5.0.1.tar.gz && \
     tar xf capstone-5.0.1.tar.gz && \
     cd ./capstone-5.0.1 && \
-    ./make.sh && \
+    CAPSTONE_ARCHS="arm aarch64 riscv x86" ./make.sh && \
     sudo make install

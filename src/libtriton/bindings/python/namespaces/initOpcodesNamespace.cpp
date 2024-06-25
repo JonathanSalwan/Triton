@@ -10,6 +10,7 @@
 #include <triton/pythonXFunctions.hpp>
 #include <triton/aarch64Specifications.hpp>
 #include <triton/arm32Specifications.hpp>
+#include <triton/riscvSpecifications.hpp>
 #include <triton/x86Specifications.hpp>
 
 
@@ -2178,6 +2179,180 @@ According to the CPU architecture, the OPCODE namespace contains all kinds of op
 - **OPCODE.AARCH64.XTN**<br>
 - **OPCODE.AARCH64.ZIP1**<br>
 - **OPCODE.AARCH64.ZIP2**<br>
+
+\subsection OPCODE_riscv64_py_api RV64
+
+- **OPCODE.RV64.ADD**<br>
+- **OPCODE.RV64.ADDI**<br>
+- **OPCODE.RV64.ADDIW**<br>
+- **OPCODE.RV64.ADDW**<br>
+- **OPCODE.RV64.AND**<br>
+- **OPCODE.RV64.ANDI**<br>
+- **OPCODE.RV64.AND**<br>
+- **OPCODE.RV64.AUIPC**<br>
+- **OPCODE.RV64.BEQ**<br>
+- **OPCODE.RV64.BGE**<br>
+- **OPCODE.RV64.BGEU**<br>
+- **OPCODE.RV64.BLT**<br>
+- **OPCODE.RV64.BLTU**<br>
+- **OPCODE.RV64.BNE**<br>
+- **OPCODE.RV64.C_ADD**<br>
+- **OPCODE.RV64.C_ADDI**<br>
+- **OPCODE.RV64.C_ADDI16SP**<br>
+- **OPCODE.RV64.C_ADDI4SPN**<br>
+- **OPCODE.RV64.C_ADDIW**<br>
+- **OPCODE.RV64.C_ADDW**<br>
+- **OPCODE.RV64.C_AND**<br>
+- **OPCODE.RV64.C_ANDI**<br>
+- **OPCODE.RV64.C_BEQZ**<br>
+- **OPCODE.RV64.C_BNEZ**<br>
+- **OPCODE.RV64.C_J**<br>
+- **OPCODE.RV64.C_JALR**<br>
+- **OPCODE.RV64.C_JR**<br>
+- **OPCODE.RV64.C_LD**<br>
+- **OPCODE.RV64.C_LDSP**<br>
+- **OPCODE.RV64.C_LI**<br>
+- **OPCODE.RV64.C_LUI**<br>
+- **OPCODE.RV64.C_LW**<br>
+- **OPCODE.RV64.C_LWSP**<br>
+- **OPCODE.RV64.C_MV**<br>
+- **OPCODE.RV64.C_NOP**<br>
+- **OPCODE.RV64.C_OR**<br>
+- **OPCODE.RV64.C_SD**<br>
+- **OPCODE.RV64.C_SDSP**<br>
+- **OPCODE.RV64.C_SLLI**<br>
+- **OPCODE.RV64.C_SRAI**<br>
+- **OPCODE.RV64.C_SRLI**<br>
+- **OPCODE.RV64.C_SUB**<br>
+- **OPCODE.RV64.C_SUBW**<br>
+- **OPCODE.RV64.C_SW**<br>
+- **OPCODE.RV64.C_SWSP**<br>
+- **OPCODE.RV64.C_XOR**<br>
+- **OPCODE.RV64.DIV**<br>
+- **OPCODE.RV64.DIVU**<br>
+- **OPCODE.RV64.DIVUW**<br>
+- **OPCODE.RV64.DIVW**<br>
+- **OPCODE.RV64.JAL**<br>
+- **OPCODE.RV64.JALR**<br>
+- **OPCODE.RV64.LB**<br>
+- **OPCODE.RV64.LBU**<br>
+- **OPCODE.RV64.LD**<br>
+- **OPCODE.RV64.LH**<br>
+- **OPCODE.RV64.LHU**<br>
+- **OPCODE.RV64.LUI**<br>
+- **OPCODE.RV64.LW**<br>
+- **OPCODE.RV64.LWU**<br>
+- **OPCODE.RV64.MUL**<br>
+- **OPCODE.RV64.MULH**<br>
+- **OPCODE.RV64.MULHSU**<br>
+- **OPCODE.RV64.MULHU**<br>
+- **OPCODE.RV64.MULW**<br>
+- **OPCODE.RV64.OR**<br>
+- **OPCODE.RV64.ORI**<br>
+- **OPCODE.RV64.REM**<br>
+- **OPCODE.RV64.REMU**<br>
+- **OPCODE.RV64.REMUW**<br>
+- **OPCODE.RV64.REMW**<br>
+- **OPCODE.RV64.SB**<br>
+- **OPCODE.RV64.SD**<br>
+- **OPCODE.RV64.SH**<br>
+- **OPCODE.RV64.SLL**<br>
+- **OPCODE.RV64.SLLI**<br>
+- **OPCODE.RV64.SLLIW**<br>
+- **OPCODE.RV64.SLLW**<br>
+- **OPCODE.RV64.SLT**<br>
+- **OPCODE.RV64.SLTI**<br>
+- **OPCODE.RV64.SLTIU**<br>
+- **OPCODE.RV64.SLTU**<br>
+- **OPCODE.RV64.SRA**<br>
+- **OPCODE.RV64.SRAI**<br>
+- **OPCODE.RV64.SRAIW**<br>
+- **OPCODE.RV64.SRAW**<br>
+- **OPCODE.RV64.SRL**<br>
+- **OPCODE.RV64.SRLI**<br>
+- **OPCODE.RV64.SRLIW**<br>
+- **OPCODE.RV64.SRLW**<br>
+- **OPCODE.RV64.SUB**<br>
+- **OPCODE.RV64.SUBW**<br>
+- **OPCODE.RV64.SW**<br>
+- **OPCODE.RV64.XOR**<br>
+- **OPCODE.RV64.XORI**<br>
+
+\subsection OPCODE_riscv32_py_api RV32
+
+- **OPCODE.RV32.ADD**<br>
+- **OPCODE.RV32.ADDI**<br>
+- **OPCODE.RV32.AND**<br>
+- **OPCODE.RV32.ANDI**<br>
+- **OPCODE.RV32.AND**<br>
+- **OPCODE.RV32.AUIPC**<br>
+- **OPCODE.RV32.BEQ**<br>
+- **OPCODE.RV32.BGE**<br>
+- **OPCODE.RV32.BGEU**<br>
+- **OPCODE.RV32.BLT**<br>
+- **OPCODE.RV32.BLTU**<br>
+- **OPCODE.RV32.BNE**<br>
+- **OPCODE.RV32.C_ADD**<br>
+- **OPCODE.RV32.C_ADDI**<br>
+- **OPCODE.RV32.C_ADDI16SP**<br>
+- **OPCODE.RV32.C_ADDI4SPN**<br>
+- **OPCODE.RV32.C_AND**<br>
+- **OPCODE.RV32.C_ANDI**<br>
+- **OPCODE.RV32.C_BEQZ**<br>
+- **OPCODE.RV32.C_BNEZ**<br>
+- **OPCODE.RV32.C_J**<br>
+- **OPCODE.RV32.C_JAL**<br>
+- **OPCODE.RV32.C_JALR**<br>
+- **OPCODE.RV32.C_JR**<br>
+- **OPCODE.RV32.C_LI**<br>
+- **OPCODE.RV32.C_LUI**<br>
+- **OPCODE.RV32.C_LW**<br>
+- **OPCODE.RV32.C_LWSP**<br>
+- **OPCODE.RV32.C_MV**<br>
+- **OPCODE.RV32.C_NOP**<br>
+- **OPCODE.RV32.C_OR**<br>
+- **OPCODE.RV32.C_SLLI**<br>
+- **OPCODE.RV32.C_SRAI**<br>
+- **OPCODE.RV32.C_SRLI**<br>
+- **OPCODE.RV32.C_SUB**<br>
+- **OPCODE.RV32.C_SW**<br>
+- **OPCODE.RV32.C_SWSP**<br>
+- **OPCODE.RV32.C_XOR**<br>
+- **OPCODE.RV32.DIV**<br>
+- **OPCODE.RV32.DIVU**<br>
+- **OPCODE.RV32.JAL**<br>
+- **OPCODE.RV32.JALR**<br>
+- **OPCODE.RV32.LB**<br>
+- **OPCODE.RV32.LBU**<br>
+- **OPCODE.RV32.LD**<br>
+- **OPCODE.RV32.LH**<br>
+- **OPCODE.RV32.LHU**<br>
+- **OPCODE.RV32.LUI**<br>
+- **OPCODE.RV32.LW**<br>
+- **OPCODE.RV32.MUL**<br>
+- **OPCODE.RV32.MULH**<br>
+- **OPCODE.RV32.MULHS**<br>
+- **OPCODE.RV32.MULHU**<br>
+- **OPCODE.RV32.OR**<br>
+- **OPCODE.RV32.ORI**<br>
+- **OPCODE.RV32.REM**<br>
+- **OPCODE.RV32.REMU**<br>
+- **OPCODE.RV32.SB**<br>
+- **OPCODE.RV32.SH**<br>
+- **OPCODE.RV32.SLL**<br>
+- **OPCODE.RV32.SLLI**<br>
+- **OPCODE.RV32.SLT**<br>
+- **OPCODE.RV32.SLTI**<br>
+- **OPCODE.RV32.SLTIU**<br>
+- **OPCODE.RV32.SLTU**<br>
+- **OPCODE.RV32.SRA**<br>
+- **OPCODE.RV32.SRAI**<br>
+- **OPCODE.RV32.SRL**<br>
+- **OPCODE.RV32.SRLI**<br>
+- **OPCODE.RV32.SUB**<br>
+- **OPCODE.RV32.SW**<br>
+- **OPCODE.RV32.XOR**<br>
+- **OPCODE.RV32.XORI**<br>
 
 */
 
@@ -4350,6 +4525,190 @@ namespace triton {
 
         PyObject* arm32OpcodesDictClass = xPyClass_New(nullptr, arm32OpcodesDict, xPyString_FromString("ARM32"));
         xPyDict_SetItemString(opcodesDict, "ARM32", arm32OpcodesDictClass);
+
+
+        PyObject* riscv64OpcodesDict = xPyDict_New();
+
+        xPyDict_SetItemString(riscv64OpcodesDict, "ADD",    PyLong_FromUint32(triton::arch::riscv::ID_INS_ADD));
+        xPyDict_SetItemString(riscv64OpcodesDict, "ADDI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_ADDI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "ADDIW",  PyLong_FromUint32(triton::arch::riscv::ID_INS_ADDIW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "ADDW",   PyLong_FromUint32(triton::arch::riscv::ID_INS_ADDW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "AND",    PyLong_FromUint32(triton::arch::riscv::ID_INS_AND));
+        xPyDict_SetItemString(riscv64OpcodesDict, "ANDI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_ANDI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "AND",    PyLong_FromUint32(triton::arch::riscv::ID_INS_AND));
+        xPyDict_SetItemString(riscv64OpcodesDict, "AUIPC",  PyLong_FromUint32(triton::arch::riscv::ID_INS_AUIPC));
+        xPyDict_SetItemString(riscv64OpcodesDict, "BEQ",    PyLong_FromUint32(triton::arch::riscv::ID_INS_BEQ));
+        xPyDict_SetItemString(riscv64OpcodesDict, "BGE",    PyLong_FromUint32(triton::arch::riscv::ID_INS_BGE));
+        xPyDict_SetItemString(riscv64OpcodesDict, "BGEU",   PyLong_FromUint32(triton::arch::riscv::ID_INS_BGEU));
+        xPyDict_SetItemString(riscv64OpcodesDict, "BLT",    PyLong_FromUint32(triton::arch::riscv::ID_INS_BLT));
+        xPyDict_SetItemString(riscv64OpcodesDict, "BLTU",   PyLong_FromUint32(triton::arch::riscv::ID_INS_BLTU));
+        xPyDict_SetItemString(riscv64OpcodesDict, "BNE",    PyLong_FromUint32(triton::arch::riscv::ID_INS_BNE));
+        xPyDict_SetItemString(riscv64OpcodesDict, "DIV",    PyLong_FromUint32(triton::arch::riscv::ID_INS_DIV));
+        xPyDict_SetItemString(riscv64OpcodesDict, "DIVU",   PyLong_FromUint32(triton::arch::riscv::ID_INS_DIVU));
+        xPyDict_SetItemString(riscv64OpcodesDict, "DIVUW",  PyLong_FromUint32(triton::arch::riscv::ID_INS_DIVUW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "DIVW",   PyLong_FromUint32(triton::arch::riscv::ID_INS_DIVW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "JAL",    PyLong_FromUint32(triton::arch::riscv::ID_INS_JAL));
+        xPyDict_SetItemString(riscv64OpcodesDict, "JALR",   PyLong_FromUint32(triton::arch::riscv::ID_INS_JALR));
+        xPyDict_SetItemString(riscv64OpcodesDict, "LB",     PyLong_FromUint32(triton::arch::riscv::ID_INS_LB));
+        xPyDict_SetItemString(riscv64OpcodesDict, "LBU",    PyLong_FromUint32(triton::arch::riscv::ID_INS_LBU));
+        xPyDict_SetItemString(riscv64OpcodesDict, "LD",     PyLong_FromUint32(triton::arch::riscv::ID_INS_LD));
+        xPyDict_SetItemString(riscv64OpcodesDict, "LH",     PyLong_FromUint32(triton::arch::riscv::ID_INS_LH));
+        xPyDict_SetItemString(riscv64OpcodesDict, "LHU",    PyLong_FromUint32(triton::arch::riscv::ID_INS_LHU));
+        xPyDict_SetItemString(riscv64OpcodesDict, "LUI",    PyLong_FromUint32(triton::arch::riscv::ID_INS_LUI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "LW",     PyLong_FromUint32(triton::arch::riscv::ID_INS_LW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "LWU",    PyLong_FromUint32(triton::arch::riscv::ID_INS_LWU));
+        xPyDict_SetItemString(riscv64OpcodesDict, "MUL",    PyLong_FromUint32(triton::arch::riscv::ID_INS_MUL));
+        xPyDict_SetItemString(riscv64OpcodesDict, "MULH ",  PyLong_FromUint32(triton::arch::riscv::ID_INS_MULH));
+        xPyDict_SetItemString(riscv64OpcodesDict, "MULHSU", PyLong_FromUint32(triton::arch::riscv::ID_INS_MULHSU));
+        xPyDict_SetItemString(riscv64OpcodesDict, "MULHU",  PyLong_FromUint32(triton::arch::riscv::ID_INS_MULHU));
+        xPyDict_SetItemString(riscv64OpcodesDict, "MULW",   PyLong_FromUint32(triton::arch::riscv::ID_INS_MULW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "OR",     PyLong_FromUint32(triton::arch::riscv::ID_INS_OR));
+        xPyDict_SetItemString(riscv64OpcodesDict, "ORI",    PyLong_FromUint32(triton::arch::riscv::ID_INS_ORI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "REM",    PyLong_FromUint32(triton::arch::riscv::ID_INS_REM));
+        xPyDict_SetItemString(riscv64OpcodesDict, "REMU",   PyLong_FromUint32(triton::arch::riscv::ID_INS_REMU));
+        xPyDict_SetItemString(riscv64OpcodesDict, "REMUW",  PyLong_FromUint32(triton::arch::riscv::ID_INS_REMUW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "REMW",   PyLong_FromUint32(triton::arch::riscv::ID_INS_REMW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SB",     PyLong_FromUint32(triton::arch::riscv::ID_INS_SB));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SD",     PyLong_FromUint32(triton::arch::riscv::ID_INS_SD));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SH",     PyLong_FromUint32(triton::arch::riscv::ID_INS_SH));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SLL",    PyLong_FromUint32(triton::arch::riscv::ID_INS_SLL));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SLLI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_SLLI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SLLIW",  PyLong_FromUint32(triton::arch::riscv::ID_INS_SLLIW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SLLW",   PyLong_FromUint32(triton::arch::riscv::ID_INS_SLLW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SLT",    PyLong_FromUint32(triton::arch::riscv::ID_INS_SLT));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SLTI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_SLTI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SLTIU",  PyLong_FromUint32(triton::arch::riscv::ID_INS_SLTIU));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SLTU",   PyLong_FromUint32(triton::arch::riscv::ID_INS_SLTU));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SRA",    PyLong_FromUint32(triton::arch::riscv::ID_INS_SRA));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SRAI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_SRAI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SRAIW",  PyLong_FromUint32(triton::arch::riscv::ID_INS_SRAIW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SRAW",   PyLong_FromUint32(triton::arch::riscv::ID_INS_SRAW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SRL",    PyLong_FromUint32(triton::arch::riscv::ID_INS_SRL));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SRLI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_SRLI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SRLIW",  PyLong_FromUint32(triton::arch::riscv::ID_INS_SRLIW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SRLW",   PyLong_FromUint32(triton::arch::riscv::ID_INS_SRLW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SUB",    PyLong_FromUint32(triton::arch::riscv::ID_INS_SUB));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SUBW",   PyLong_FromUint32(triton::arch::riscv::ID_INS_SUBW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "SW",     PyLong_FromUint32(triton::arch::riscv::ID_INS_SW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "XOR",    PyLong_FromUint32(triton::arch::riscv::ID_INS_XOR));
+        xPyDict_SetItemString(riscv64OpcodesDict, "XORI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_XORI));
+
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_ADD",      PyLong_FromUint32(triton::arch::riscv::ID_INS_C_ADD));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_ADDI",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_ADDI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_ADDI16SP", PyLong_FromUint32(triton::arch::riscv::ID_INS_C_ADDI16SP));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_ADDI4SPN", PyLong_FromUint32(triton::arch::riscv::ID_INS_C_ADDI4SPN));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_ADDIW",    PyLong_FromUint32(triton::arch::riscv::ID_INS_C_ADDIW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_ADDW",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_ADDW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_AND",      PyLong_FromUint32(triton::arch::riscv::ID_INS_C_AND));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_ANDI",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_ANDI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_BEQZ",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_BEQZ));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_BNEZ",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_BNEZ));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_J",        PyLong_FromUint32(triton::arch::riscv::ID_INS_C_J));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_JALR",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_JALR));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_JR",       PyLong_FromUint32(triton::arch::riscv::ID_INS_C_JR));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_LD",       PyLong_FromUint32(triton::arch::riscv::ID_INS_C_LD));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_LDSP",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_LDSP));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_LI",       PyLong_FromUint32(triton::arch::riscv::ID_INS_C_LI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_LUI",      PyLong_FromUint32(triton::arch::riscv::ID_INS_C_LUI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_LW",       PyLong_FromUint32(triton::arch::riscv::ID_INS_C_LW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_LWSP",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_LWSP));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_MV",       PyLong_FromUint32(triton::arch::riscv::ID_INS_C_MV));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_NOP ",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_NOP));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_OR",       PyLong_FromUint32(triton::arch::riscv::ID_INS_C_OR));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_SD",       PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SD));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_SDSP",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SDSP));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_SLLI",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SLLI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_SRAI",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SRAI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_SRLI",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SRLI));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_SUB",      PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SUB));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_SUBW",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SUBW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_SW",       PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SW));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_SWSP",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SWSP));
+        xPyDict_SetItemString(riscv64OpcodesDict, "C_XOR",      PyLong_FromUint32(triton::arch::riscv::ID_INS_C_XOR));
+
+        PyObject* riscv64OpcodesDictClass = xPyClass_New(nullptr, riscv64OpcodesDict, xPyString_FromString("RV64"));
+        xPyDict_SetItemString(opcodesDict, "RV64", riscv64OpcodesDictClass);
+
+
+        PyObject* riscv32OpcodesDict = xPyDict_New();
+
+        xPyDict_SetItemString(riscv32OpcodesDict, "ADD",    PyLong_FromUint32(triton::arch::riscv::ID_INS_ADD));
+        xPyDict_SetItemString(riscv32OpcodesDict, "ADDI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_ADDI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "AND",    PyLong_FromUint32(triton::arch::riscv::ID_INS_AND));
+        xPyDict_SetItemString(riscv32OpcodesDict, "ANDI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_ANDI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "AND",    PyLong_FromUint32(triton::arch::riscv::ID_INS_AND));
+        xPyDict_SetItemString(riscv32OpcodesDict, "AUIPC",  PyLong_FromUint32(triton::arch::riscv::ID_INS_AUIPC));
+        xPyDict_SetItemString(riscv32OpcodesDict, "BEQ",    PyLong_FromUint32(triton::arch::riscv::ID_INS_BEQ));
+        xPyDict_SetItemString(riscv32OpcodesDict, "BGE",    PyLong_FromUint32(triton::arch::riscv::ID_INS_BGE));
+        xPyDict_SetItemString(riscv32OpcodesDict, "BGEU",   PyLong_FromUint32(triton::arch::riscv::ID_INS_BGEU));
+        xPyDict_SetItemString(riscv32OpcodesDict, "BLT",    PyLong_FromUint32(triton::arch::riscv::ID_INS_BLT));
+        xPyDict_SetItemString(riscv32OpcodesDict, "BLTU",   PyLong_FromUint32(triton::arch::riscv::ID_INS_BLTU));
+        xPyDict_SetItemString(riscv32OpcodesDict, "BNE",    PyLong_FromUint32(triton::arch::riscv::ID_INS_BNE));
+        xPyDict_SetItemString(riscv32OpcodesDict, "DIV",    PyLong_FromUint32(triton::arch::riscv::ID_INS_DIV));
+        xPyDict_SetItemString(riscv32OpcodesDict, "DIVU",   PyLong_FromUint32(triton::arch::riscv::ID_INS_DIVU));
+        xPyDict_SetItemString(riscv32OpcodesDict, "JAL",    PyLong_FromUint32(triton::arch::riscv::ID_INS_JAL));
+        xPyDict_SetItemString(riscv32OpcodesDict, "JALR",   PyLong_FromUint32(triton::arch::riscv::ID_INS_JALR));
+        xPyDict_SetItemString(riscv32OpcodesDict, "LB",     PyLong_FromUint32(triton::arch::riscv::ID_INS_LB));
+        xPyDict_SetItemString(riscv32OpcodesDict, "LBU",    PyLong_FromUint32(triton::arch::riscv::ID_INS_LBU));
+        xPyDict_SetItemString(riscv32OpcodesDict, "LD",     PyLong_FromUint32(triton::arch::riscv::ID_INS_LD));
+        xPyDict_SetItemString(riscv32OpcodesDict, "LH",     PyLong_FromUint32(triton::arch::riscv::ID_INS_LH));
+        xPyDict_SetItemString(riscv32OpcodesDict, "LHU",    PyLong_FromUint32(triton::arch::riscv::ID_INS_LHU));
+        xPyDict_SetItemString(riscv32OpcodesDict, "LUI",    PyLong_FromUint32(triton::arch::riscv::ID_INS_LUI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "LW",     PyLong_FromUint32(triton::arch::riscv::ID_INS_LW));
+        xPyDict_SetItemString(riscv32OpcodesDict, "MUL",    PyLong_FromUint32(triton::arch::riscv::ID_INS_MUL));
+        xPyDict_SetItemString(riscv32OpcodesDict, "MULH ",  PyLong_FromUint32(triton::arch::riscv::ID_INS_MULH));
+        xPyDict_SetItemString(riscv32OpcodesDict, "MULHSU", PyLong_FromUint32(triton::arch::riscv::ID_INS_MULHSU));
+        xPyDict_SetItemString(riscv32OpcodesDict, "MULHU",  PyLong_FromUint32(triton::arch::riscv::ID_INS_MULHU));
+        xPyDict_SetItemString(riscv32OpcodesDict, "OR",     PyLong_FromUint32(triton::arch::riscv::ID_INS_OR));
+        xPyDict_SetItemString(riscv32OpcodesDict, "ORI",    PyLong_FromUint32(triton::arch::riscv::ID_INS_ORI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "REM",    PyLong_FromUint32(triton::arch::riscv::ID_INS_REM));
+        xPyDict_SetItemString(riscv32OpcodesDict, "REMU",   PyLong_FromUint32(triton::arch::riscv::ID_INS_REMU));
+        xPyDict_SetItemString(riscv32OpcodesDict, "SB",     PyLong_FromUint32(triton::arch::riscv::ID_INS_SB));
+        xPyDict_SetItemString(riscv32OpcodesDict, "SH",     PyLong_FromUint32(triton::arch::riscv::ID_INS_SH));
+        xPyDict_SetItemString(riscv32OpcodesDict, "SLL",    PyLong_FromUint32(triton::arch::riscv::ID_INS_SLL));
+        xPyDict_SetItemString(riscv32OpcodesDict, "SLLI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_SLLI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "SLT",    PyLong_FromUint32(triton::arch::riscv::ID_INS_SLT));
+        xPyDict_SetItemString(riscv32OpcodesDict, "SLTI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_SLTI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "SLTIU",  PyLong_FromUint32(triton::arch::riscv::ID_INS_SLTIU));
+        xPyDict_SetItemString(riscv32OpcodesDict, "SLTU",   PyLong_FromUint32(triton::arch::riscv::ID_INS_SLTU));
+        xPyDict_SetItemString(riscv32OpcodesDict, "SRA",    PyLong_FromUint32(triton::arch::riscv::ID_INS_SRA));
+        xPyDict_SetItemString(riscv32OpcodesDict, "SRAI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_SRAI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "SRL",    PyLong_FromUint32(triton::arch::riscv::ID_INS_SRL));
+        xPyDict_SetItemString(riscv32OpcodesDict, "SRLI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_SRLI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "SUB",    PyLong_FromUint32(triton::arch::riscv::ID_INS_SUB));
+        xPyDict_SetItemString(riscv32OpcodesDict, "SW",     PyLong_FromUint32(triton::arch::riscv::ID_INS_SW));
+        xPyDict_SetItemString(riscv32OpcodesDict, "XOR",    PyLong_FromUint32(triton::arch::riscv::ID_INS_XOR));
+        xPyDict_SetItemString(riscv32OpcodesDict, "XORI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_XORI));
+
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_ADD",      PyLong_FromUint32(triton::arch::riscv::ID_INS_C_ADD));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_ADDI",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_ADDI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_ADDI16SP", PyLong_FromUint32(triton::arch::riscv::ID_INS_C_ADDI16SP));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_ADDI4SPN", PyLong_FromUint32(triton::arch::riscv::ID_INS_C_ADDI4SPN));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_AND",      PyLong_FromUint32(triton::arch::riscv::ID_INS_C_AND));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_ANDI",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_ANDI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_BEQZ",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_BEQZ));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_BNEZ",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_BNEZ));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_J",        PyLong_FromUint32(triton::arch::riscv::ID_INS_C_J));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_JAL",      PyLong_FromUint32(triton::arch::riscv::ID_INS_C_JAL));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_JALR",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_JALR));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_JR",       PyLong_FromUint32(triton::arch::riscv::ID_INS_C_JR));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_LI",       PyLong_FromUint32(triton::arch::riscv::ID_INS_C_LI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_LUI",      PyLong_FromUint32(triton::arch::riscv::ID_INS_C_LUI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_LW",       PyLong_FromUint32(triton::arch::riscv::ID_INS_C_LW));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_LWSP",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_LWSP));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_MV",       PyLong_FromUint32(triton::arch::riscv::ID_INS_C_MV));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_NOP ",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_NOP));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_OR",       PyLong_FromUint32(triton::arch::riscv::ID_INS_C_OR));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_SLLI",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SLLI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_SRAI",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SRAI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_SRLI",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SRLI));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_SUB",      PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SUB));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_SW",       PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SW));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_SWSP",     PyLong_FromUint32(triton::arch::riscv::ID_INS_C_SWSP));
+        xPyDict_SetItemString(riscv32OpcodesDict, "C_XOR",      PyLong_FromUint32(triton::arch::riscv::ID_INS_C_XOR));
+
+        PyObject* riscv32OpcodesDictClass = xPyClass_New(nullptr, riscv32OpcodesDict, xPyString_FromString("RV32"));
+        xPyDict_SetItemString(opcodesDict, "RV32", riscv32OpcodesDictClass);
       }
 
     }; /* python namespace */
