@@ -1223,7 +1223,7 @@ namespace triton {
         auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
         auto op2 = this->astCtxt->bvand(
                      this->symbolicEngine->getOperandAst(inst, src),
-                     dst.getBitSize() == 64 ? this->astCtxt->bv(0x1f, size) : this->astCtxt->bv(0x0f, size)
+                     dst.getBitSize() == 64 ? this->astCtxt->bv(0x3f, size) : this->astCtxt->bv(0x1f, size)
                    );
 
         /* Create the semantics */
@@ -1249,7 +1249,7 @@ namespace triton {
         auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
         auto op2 = this->astCtxt->bvand(
                      this->symbolicEngine->getOperandAst(inst, src),
-                     dst.getBitSize() == 64 ? this->astCtxt->bv(0x1f, size) : this->astCtxt->bv(0x0f, size)
+                     dst.getBitSize() == 64 ? this->astCtxt->bv(0x3f, size) : this->astCtxt->bv(0x1f, size)
                    );
 
         /* Create the semantics */
@@ -1275,7 +1275,7 @@ namespace triton {
         auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
         auto op2 = this->astCtxt->bvand(
                      this->symbolicEngine->getOperandAst(inst, src),
-                     dst.getBitSize() == 64 ? this->astCtxt->bv(0x1f, size) : this->astCtxt->bv(0x0f, size)
+                     dst.getBitSize() == 64 ? this->astCtxt->bv(0x3f, size) : this->astCtxt->bv(0x1f, size)
                    );
 
         /* Create the semantics */
