@@ -205,6 +205,7 @@ CODE  = [
     (b"\x93\x10\x85\x00", "slli  x1,  x10, #8"),
     (b"\x93\x15\xf5\x00", "slli  x11, x10, #0xf"),
     (b"\x12\x06",       "c.slli  x12, x12, #0x4"),
+    (b"\xf2\x0f",       "c.slli  x31, x31, #0x1c"),
     # SRA
     (b"\x13\xe5\xf5\x0f", "ori   x10, x11, #0xff"),
     (b"\x93\x65\xe6\x0f", "ori   x11, x12, #0xfe"),
@@ -215,6 +216,8 @@ CODE  = [
     (b"\x93\x55\x85\x40", "srai  x11, x10, #8"),
     (b"\x93\x55\xf5\x40", "srai  x11, x10, #0xf"),
     (b"\x85\x85",       "c.srai  x11, x11, #0x1"),
+    (b"\xb7\x05\x00\x88", "lui   x11, #0x88000"),
+    (b"\xfd\x85",       "c.srai  x11, x11, #0x1f"),
     # SRL
     (b"\x13\xe5\xf5\x0f", "ori   x10, x11, #0xff"),
     (b"\x93\x65\xe6\x0f", "ori   x11, x12, #0xfe"),
@@ -225,6 +228,8 @@ CODE  = [
     (b"\x93\x55\x85\x00", "srli  x11, x10, #8"),
     (b"\x93\x55\xf5\x00", "srli  x11, x10, #0xf"),
     (b"\x85\x81",       "c.srli  x11, x11, #0x1"),
+    (b"\xb7\x05\x00\x88", "lui   x11, #0x88000"),
+    (b"\xfd\x81",       "c.srli  x11, x11, #0x1f"),
 
 ]
 
@@ -585,7 +590,7 @@ if __name__ == '__main__':
         "x28":   0x0,
         "x29":   0x0,
         "x30":   0x0,
-        "x31":   0x0,
+        "x31":   0x2107ff,
         "f0":    0x0123456789abcdef,
         "f1":    0xfedcba9876543210,
         "f2":    0xfefedcdc56567878,
