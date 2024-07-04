@@ -29,7 +29,7 @@ option(GCOV                              "Enable code coverage"                 
 option(LLVM_INTERFACE                    "Use LLVM for lifting"                            OFF)
 option(MSVC_STATIC                       "Use statically-linked runtime library"           OFF)
 option(Z3_INTERFACE                      "Use Z3 as SMT solver"                            ON)
-option(BOOST_INTERFACE                   "Use Boost as multiprecision library"             ON)
+option(BOOST_INTERFACE                   "Use Boost as multiprecision library"             OFF)
 option(PYTHON_BINDINGS_AUTOCOMPLETE      "Generate an autocomplete stub file"              OFF)
 
 # Define cmake dependent options
