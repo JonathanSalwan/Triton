@@ -297,6 +297,7 @@ namespace triton {
           this->isGPR(regId)      ||
           this->isMMX(regId)      ||
           this->isSTX(regId)      ||
+          this->isSSECTL(regId)   ||
           this->isSSE(regId)      ||
           this->isFPU(regId)      ||
           this->isEFER(regId)     ||
@@ -330,8 +331,13 @@ namespace triton {
       }
 
 
+      bool x8664Cpu::isSSECTL(triton::arch::register_e regId) const {
+        return ((regId >= triton::arch::ID_REG_X86_MXCSR && regId <= triton::arch::ID_REG_X86_MXCSR_MASK) ? true : false);
+      }
+
+
       bool x8664Cpu::isSSE(triton::arch::register_e regId) const {
-        return ((regId >= triton::arch::ID_REG_X86_MXCSR && regId <= triton::arch::ID_REG_X86_XMM15) ? true : false);
+        return ((regId >= triton::arch::ID_REG_X86_XMM0 && regId <= triton::arch::ID_REG_X86_XMM15) ? true : false);
       }
 
 
@@ -363,6 +369,9 @@ namespace triton {
         ) ? true : false);
       }
 
+      bool x8664Cpu::isAVX512Parent(triton::arch::register_e regId) const {
+        return ((regId >= triton::arch::ID_REG_X86_ZMM0 && regId <= triton::arch::ID_REG_X86_ZMM31) ? true : false);
+      }
 
       bool x8664Cpu::isControl(triton::arch::register_e regId) const {
         return ((regId >= triton::arch::ID_REG_X86_CR0 && regId <= triton::arch::ID_REG_X86_CR15) ? true : false);
@@ -411,7 +420,7 @@ namespace triton {
           const auto& reg = kv.second;
 
           /* Add GPR */
-          if (reg.getSize() == this->gprSize())
+          if (this->isGPR(regId) && reg.getSize() == this->gprSize())
             ret.insert(&reg);
 
           /* Add Flags */
@@ -420,10 +429,6 @@ namespace triton {
 
           /* Add STX */
           else if (this->isSTX(regId))
-            ret.insert(&reg);
-
-          /* Add SSE */
-          else if (this->isSSE(regId))
             ret.insert(&reg);
 
           /* Add FPU */
@@ -438,12 +443,11 @@ namespace triton {
           else if (this->isTSC(regId))
             ret.insert(&reg);
 
-          /* Add AVX-256 */
-          else if (this->isAVX256(regId))
+          else if (this->isSSECTL(regId))
             ret.insert(&reg);
 
           /* Add AVX-512 */
-          else if (this->isAVX512(regId))
+          else if (this->isAVX512Parent(regId))
             ret.insert(&reg);
 
           /* Add Control */

@@ -233,6 +233,9 @@ namespace triton {
           //! Returns true if regId is a STX register.
           TRITON_EXPORT bool isSTX(triton::arch::register_e regId) const;
 
+          //! Returns true if regId is a SSE Contol register.
+          TRITON_EXPORT bool isSSECTL(triton::arch::register_e regId) const;
+
           //! Returns true if regId is a SSE register.
           TRITON_EXPORT bool isSSE(triton::arch::register_e regId) const;
 

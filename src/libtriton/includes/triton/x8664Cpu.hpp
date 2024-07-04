@@ -297,6 +297,9 @@ namespace triton {
           //! Returns true if regId is a STX register.
           TRITON_EXPORT bool isSTX(triton::arch::register_e regId) const;
 
+          //! Returns true if regId is a SSE Contol register.
+          TRITON_EXPORT bool isSSECTL(triton::arch::register_e regId) const;
+
           //! Returns true if regId is a SSE register.
           TRITON_EXPORT bool isSSE(triton::arch::register_e regId) const;
 
@@ -312,8 +315,11 @@ namespace triton {
           //! Returns true if regId is a AVX-256 (YMM) register.
           TRITON_EXPORT bool isAVX256(triton::arch::register_e regId) const;
 
-          //! Returns true if regId is a AVX-512 (ZMM) register.
+          //! Returns true if regId is a AVX-512 (ZMM) register, or XMM and YMM registers after 15.
           TRITON_EXPORT bool isAVX512(triton::arch::register_e regId) const;
+
+          //! Returns true if regId is a AVX-512 (ZMM) register.
+          TRITON_EXPORT bool isAVX512Parent(triton::arch::register_e regId) const;
 
           //! Returns true if regId is a control (cr) register.
           TRITON_EXPORT bool isControl(triton::arch::register_e regId) const;
