@@ -1,4 +1,4 @@
-ARG BASE_IMG
+ARG BASE_IMG=quay.io/pypa/manylinux_2_28_x86_64
 
 FROM $BASE_IMG
 
@@ -41,7 +41,7 @@ RUN echo "[+] Download, build and install Bitwuzla" && \
     git clone https://github.com/bitwuzla/bitwuzla.git && \
     cd bitwuzla && \
     git checkout -b 0.4.0 0.4.0 && \
-    export PY310_PATH=$(dirname $(realpath -L $(which python3.10))) && \
+    export PY310_PATH=$(python3.10 -c 'import sys, os; print(os.path.dirname(sys.executable))') && \
     CC=clang CXX=clang++ PATH=$PATH:$PY310_PATH python3.10 ./configure.py --shared --prefix $(pwd)/install && \
     cd build && \
     PATH=$PATH:$PY310_PATH ninja -j $(nproc) install
