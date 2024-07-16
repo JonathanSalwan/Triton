@@ -33,8 +33,10 @@ namespace triton {
       ARCH_INVALID = 0, /*!< Invalid architecture.   */
       ARCH_AARCH64,     /*!< AArch64 architecture.   */
       ARCH_ARM32,       /*!< ARM32 architecture.     */
+      #ifdef COMPILE_RISCV
       ARCH_RV32,        /*!< RISCV32 architecture.   */
       ARCH_RV64,        /*!< RISCV64 architecture.   */
+      #endif
       ARCH_X86,         /*!< X86 architecture.       */
       ARCH_X86_64,      /*!< X86_64 architecture.    */
     };
@@ -82,6 +84,7 @@ namespace triton {
       #define REG_SPEC_NO_CAPSTONE REG_SPEC
       #include "triton/arm32.spec"
 
+      #ifdef COMPILE_RISCV
       #define REG_SPEC(_1, UPPER_NAME, _2, _3, _4, _5, _6) \
       ID_REG_RV64_##UPPER_NAME,
       #define REG_SPEC_NO_CAPSTONE REG_SPEC
@@ -91,6 +94,7 @@ namespace triton {
       ID_REG_RV32_##UPPER_NAME,
       #define REG_SPEC_NO_CAPSTONE REG_SPEC
       #include "triton/riscv32.spec"
+      #endif
 
       /* Must be the last item */
       ID_REG_LAST_ITEM //!< must be the last item

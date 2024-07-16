@@ -132,6 +132,7 @@ namespace triton {
         PyObject* arm32RegistersDictClass = xPyClass_New(nullptr, arm32RegistersDict, xPyString_FromString("ARM32"));
         xPyDict_SetItemString(registersDict, "ARM32", arm32RegistersDictClass);
 
+        #ifdef COMPILE_RISCV
         // Create RISCV64 REG namespace
 
         PyObject* riscv64RegistersDict = xPyDict_New();
@@ -159,6 +160,7 @@ namespace triton {
 
         PyObject* riscv32RegistersDictClass = xPyClass_New(nullptr, riscv32RegistersDict, xPyString_FromString("RV32"));
         xPyDict_SetItemString(registersDict, "RV32", riscv32RegistersDictClass);
+        #endif
       }
 
     }; /* python namespace */

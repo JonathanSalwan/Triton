@@ -49,11 +49,13 @@ namespace triton {
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/arm32.spec"
 
+        #ifdef COMPILE_RISCV
         // ShortcutRegister set for RV32 is the same,
         #define REG_SPEC(_0, _1, LOWER_NAME, _2, _3, _4, _5) \
         triton::arch::Register riscv_##LOWER_NAME;
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/riscv64.spec"
+        #endif
 
         /*! Constructor */
         ShortcutRegister() {};
@@ -76,11 +78,13 @@ namespace triton {
           #define REG_SPEC_NO_CAPSTONE REG_SPEC
           #include "triton/arm32.spec"
 
+          #ifdef COMPILE_RISCV
           // ShortcutRegister set for RV32 is the same,
           #define REG_SPEC(_0, _1, LOWER_NAME, _2, _3, _4, _5) \
           this->riscv_##LOWER_NAME = triton::arch::Register();
           #define REG_SPEC_NO_CAPSTONE REG_SPEC
           #include "triton/riscv64.spec"
+          #endif
         };
 
         /*! Inits the shortcut */
@@ -142,6 +146,7 @@ namespace triton {
               }
               break;
 
+            #ifdef COMPILE_RISCV
             case triton::arch::ARCH_RV64: {
               #define REG_SPEC(CS_UPPER_NAME, UPPER_NAME, LOWER_NAME, ABI_NAME, RISCV_UPPER, RISCV_LOWER, MUTABLE) \
               this->riscv_##LOWER_NAME = triton::arch::Register(triton::arch::ID_REG_RV64_##UPPER_NAME,            \
@@ -167,6 +172,7 @@ namespace triton {
               #include "triton/riscv32.spec"
               }
               break;
+              #endif
 
             default:
               throw triton::exceptions::Architecture("ShortcutRegister::init(): Invalid architecture.");

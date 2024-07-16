@@ -34,6 +34,8 @@ for i, example in enumerate(itertools.chain(glob.iglob(os.path.join(EXAMPLE_DIR,
         if ('TRAVIS' in os.environ or 'APPVEYOR' in os.environ) and example_name.find('hackcon-2016-angry-reverser') >= 0:
             # FIXME: Doesn't work on Travis and Appveyor...
             return
+        if ('APPVEYOR' in os.environ or not 'COMPILE_RISCV' in os.environ) and example_name.find('riscv') >= 0:
+            return
 
         p = subprocess.Popen([sys.executable, example_name] + args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
