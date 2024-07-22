@@ -210,6 +210,7 @@ namespace triton {
     /*! @} End of arm namespace */
     };
 
+    #ifdef COMPILE_RISCV
     //! The riscv namespace
     namespace riscv {
     /*!
@@ -259,6 +260,7 @@ namespace triton {
 
     /*! @} End of riscv namespace */
     };
+    #endif
   /*! @} End of arch namespace */
   };
 /*! @} End of triton namespace */

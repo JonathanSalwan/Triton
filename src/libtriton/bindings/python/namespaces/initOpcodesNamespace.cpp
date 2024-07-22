@@ -10,7 +10,9 @@
 #include <triton/pythonXFunctions.hpp>
 #include <triton/aarch64Specifications.hpp>
 #include <triton/arm32Specifications.hpp>
+#ifdef COMPILE_RISCV
 #include <triton/riscvSpecifications.hpp>
+#endif
 #include <triton/x86Specifications.hpp>
 
 

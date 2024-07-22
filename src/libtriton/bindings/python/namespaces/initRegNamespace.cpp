@@ -67,6 +67,14 @@ zmm1:512 bv[511..0]
 
 \htmlinclude aarch64_reg
 
+\subsection REG_RV32_py_api riscv32 registers
+
+\htmlinclude rv32_reg
+
+\subsection REG_RV64_py_api riscv64 registers
+
+\htmlinclude rv64_reg
+
 */
 
 
