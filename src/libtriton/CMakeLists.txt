@@ -148,7 +148,7 @@ set(LIBTRITON_HEADER_FILES
 )
 
 # Add riscv source and header files
-if(${COMPILE_RISCV})
+if(${CS_VERSION_MAJOR} GREATER_EQUAL 5)
     list(APPEND LIBTRITON_SOURCE_FILES
         arch/riscv/riscv32Cpu.cpp
         arch/riscv/riscv64Cpu.cpp

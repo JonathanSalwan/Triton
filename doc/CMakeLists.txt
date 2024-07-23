@@ -36,7 +36,7 @@ add_custom_target(gen_rv32_doc_from_spec
     DEPENDS ${TRITON_ROOT}/src/libtriton/includes/triton/riscv32.spec
 )
 
-if(COMPILE_RISCV)
+if(${CS_VERSION_MAJOR} GREATER_EQUAL 5)
     add_custom_target(doc
         COMMAND doxygen ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
         DEPENDS gen_x86_doc_from_spec
@@ -55,7 +55,7 @@ else()
 endif()
 
 if(PYTHON_BINDINGS_AUTOCOMPLETE)
-    if(COMPILE_RISCV)
+    if(${CS_VERSION_MAJOR} GREATER_EQUAL 5)
         add_custom_target(python_autocomplete
         COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/autocomplete/generate_autocomplete.py "--basedir" "${CMAKE_CURRENT_BINARY_DIR}" "$<$<BOOL:${BITWUZLA_INTERFACE}>:--bitwuzla>" "$<$<BOOL:${Z3_INTERFACE}>:--z3>"
         DEPENDS gen_x86_doc_from_spec

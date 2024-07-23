@@ -64,7 +64,7 @@ jobs:
     - name: Configure (Windows)
       if: ${{ matrix.platform == 'windows' }}
       run: |
-        cmake --preset=${{ matrix.cmake-preset }} -DBUILD_SHARED_LIBS:BOOL=ON -DCS_VERSION_MAJOR:STRING=5 -DCOMPILE_RISCV:BOOL=ON -DVCPKG_OVERLAY_TRIPLETS:PATH=${{ github.workspace }}\vcpkg\triplets -DVCPKG_TARGET_TRIPLET:STRING=${{ matrix.vcpkg-triplet }}
+        cmake --preset=${{ matrix.cmake-preset }} -DBUILD_SHARED_LIBS:BOOL=ON -DCS_VERSION_MAJOR:STRING=5 -DVCPKG_OVERLAY_TRIPLETS:PATH=${{ github.workspace }}\vcpkg\triplets -DVCPKG_TARGET_TRIPLET:STRING=${{ matrix.vcpkg-triplet }}
       env:
         # capstone 4.0.2 does not produce a CMake Config, hence the need to point directly to include directories and libraries
         CAPSTONE_INCLUDE_DIRS: ${{ github.workspace }}/build/${{ matrix.cmake-preset }}/vcpkg_installed/${{ matrix.vcpkg-triplet }}/include
@@ -76,7 +76,7 @@ jobs:
       if: ${{ matrix.platform != 'windows' }}
       run: |
         python -m pip install importlib-resources
-        cmake --preset=${{ matrix.cmake-preset }} -DBUILD_SHARED_LIBS:BOOL=ON -DCS_VERSION_MAJOR:STRING=5 -DCOMPILE_RISCV:BOOL=ON -DVCPKG_OVERLAY_TRIPLETS:PATH=${{ github.workspace }}/vcpkg/triplets -DVCPKG_TARGET_TRIPLET:STRING=${{ matrix.vcpkg-triplet }}
+        cmake --preset=${{ matrix.cmake-preset }} -DBUILD_SHARED_LIBS:BOOL=ON -DCS_VERSION_MAJOR:STRING=5 -DVCPKG_OVERLAY_TRIPLETS:PATH=${{ github.workspace }}/vcpkg/triplets -DVCPKG_TARGET_TRIPLET:STRING=${{ matrix.vcpkg-triplet }}
       env:
         # capstone 4.0.2 does not produce a CMake Config, hence the need to point directly to include directories and libraries
         CAPSTONE_INCLUDE_DIRS: ${{ github.workspace }}/build/${{ matrix.cmake-preset }}/vcpkg_installed/${{ matrix.vcpkg-triplet }}/include
@@ -86,7 +86,7 @@ jobs:
 
     - name: Build
       run: |
-        cmake --build --preset build-${{ matrix.cmake-preset }} --config Release -DCS_VERSION_MAJOR:STRING=5 -DCOMPILE_RISCV:BOOL=ON
+        cmake --build --preset build-${{ matrix.cmake-preset }} --config Release -DCS_VERSION_MAJOR:STRING=5
 
     - name: Test
       # Test disabled on Windows `pip install lief` fails as there is no ready to use .whl and compilation fails
@@ -98,7 +98,7 @@ jobs:
 
     - name: Install
       run: |
-        cmake --build --preset build-${{ matrix.cmake-preset }} --config Release --target install -DCOMPILE_RISCV:BOOL=ON
+        cmake --build --preset build-${{ matrix.cmake-preset }} --config Release --target install -DCS_VERSION_MAJOR:STRING=5
 
     - name: Upload
       uses: actions/upload-artifact@v3
