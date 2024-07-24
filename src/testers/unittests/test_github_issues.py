@@ -3,6 +3,7 @@
 """Issue from Github."""
 
 import unittest
+import os
 from triton import *
 
 
@@ -662,34 +663,40 @@ class TestIssue1310(unittest.TestCase):
         self.assertEqual(x17, 0x72)
 
 
-# FIXME: Uncomment this one when we will move to Capstone 5 as min version
-#class TestIssue1195(unittest.TestCase):
-#    """Testing #1195."""
-#
-#    def test_1(self):
-#        ctx = TritonContext(ARCH.AARCH64)
-#
-#        ctx.setConcreteRegisterValue(ctx.registers.x20, 0)
-#        ctx.setConcreteRegisterValue(ctx.registers.tpidr_el0, 0x1122334455667788)
-#
-#        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.tpidr_el0), 0x1122334455667788)
-#        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x20), 0)
-#
-#        ctx.processing(Instruction(b"\x54\xD0\x3B\xD5")) # mrs x20, tpidr_el0
-#
-#        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.tpidr_el0), 0x1122334455667788)
-#        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x20), 0x1122334455667788)
-#
-#    def test_2(self):
-#        ctx = TritonContext(ARCH.AARCH64)
-#
-#        ctx.setConcreteRegisterValue(ctx.registers.x20, 0x1122334455667788)
-#        ctx.setConcreteRegisterValue(ctx.registers.tpidr_el0, 0)
-#
-#        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.tpidr_el0), 0)
-#        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x20), 0x1122334455667788)
-#
-#        ctx.processing(Instruction(b"\x54\xd0\x1b\xd5")) #  msr tpidr_el0, x20
-#
-#        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.tpidr_el0), 0x1122334455667788)
-#        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x20), 0x1122334455667788)
+# FIXME: Add Appveyor when we will move to Capstone 5 as min version
+class TestIssue1195(unittest.TestCase):
+    """Testing #1195."""
+
+    def test_1(self):
+        if ('APPVEYOR' in os.environ):
+            pass
+        else:
+            ctx = TritonContext(ARCH.AARCH64)
+
+            ctx.setConcreteRegisterValue(ctx.registers.x20, 0)
+            ctx.setConcreteRegisterValue(ctx.registers.tpidr_el0, 0x1122334455667788)
+
+            self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.tpidr_el0), 0x1122334455667788)
+            self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x20), 0)
+
+            ctx.processing(Instruction(b"\x54\xD0\x3B\xD5")) # mrs x20, tpidr_el0
+
+            self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.tpidr_el0), 0x1122334455667788)
+            self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x20), 0x1122334455667788)
+
+    def test_2(self):
+        if ('APPVEYOR' in os.environ):
+            pass
+        else:
+            ctx = TritonContext(ARCH.AARCH64)
+
+            ctx.setConcreteRegisterValue(ctx.registers.x20, 0x1122334455667788)
+            ctx.setConcreteRegisterValue(ctx.registers.tpidr_el0, 0)
+
+            self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.tpidr_el0), 0)
+            self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x20), 0x1122334455667788)
+
+            ctx.processing(Instruction(b"\x54\xd0\x1b\xd5")) #  msr tpidr_el0, x20
+
+            self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.tpidr_el0), 0x1122334455667788)
+            self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x20), 0x1122334455667788)
