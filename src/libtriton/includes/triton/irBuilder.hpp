@@ -79,6 +79,11 @@ namespace triton {
         //! x86 ISA builder.
         triton::arch::SemanticsInterface* x86Isa;
 
+        #ifdef COMPILE_RISCV
+        //! RISCV ISA builder.
+        triton::arch::SemanticsInterface* riscvIsa;
+        #endif
+
       public:
         //! Constructor.
         TRITON_EXPORT IrBuilder(triton::arch::Architecture* architecture,
