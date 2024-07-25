@@ -18,6 +18,7 @@
 
 - \ref SMT_aarch64_Semantics_Supported_page
 - \ref SMT_arm32_Semantics_Supported_page
+- \ref SMT_riscv_Semantics_Supported_page
 - \ref SMT_x86_Semantics_Supported_page
 
 */

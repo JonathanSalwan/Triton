@@ -13,17 +13,6 @@
 
 
 
-/*! \page SMT_Semantics_Supported_page SMT Semantics Supported
-    \brief [**internal**] All information about the supported semantics.
-
-- \ref SMT_aarch64_Semantics_Supported_page
-- \ref SMT_arm32_Semantics_Supported_page
-- \ref SMT_riscv_Semantics_Supported_page
-- \ref SMT_x86_Semantics_Supported_page
-
-*/
-
-
 /*! \page SMT_riscv_Semantics_Supported_page RV32 and RV64 SMT semantics supported
     \brief [**internal**] List of the supported semantics for the RV32 and RV64 architectures.
 
@@ -92,8 +81,10 @@ SUBW  (pseudo: NEGW)          | Subtract word / 64-bit only /
 SW                            | Store register word
 XOR                           | Exclusive or (register)
 XORI (pseudo: NOT)            | Exclusive or (immediate)
-------------------------------|------------
-                    Compressed instructions
+
+&nbsp;
+
+Mnemonic (compressed inst.)   | Description
 ------------------------------|------------
 C.ADD                         | Add (register)
 C.ADDI                        | Add (immediate)
@@ -1604,11 +1595,12 @@ namespace triton {
 
 
       void riscvSemantics::jalr_s(triton::arch::Instruction& inst) {
-        /* x[rd] := pc + 4; pc := (x[rs] + imm) & ~1
-        /* Check for possible pseudo instructions
-           ret     -- [jalr x0, x1, 0] -- Return from subroutine
-           jr rs   -- [jalr x0, rs, 0] -- Jump register
-           jalr rs -- [jalr x1, rs, 0] -- Jump and link register
+        /*
+         * x[rd] := pc + 4; pc := (x[rs] + imm) & ~1
+         * Check for possible pseudo instructions
+         * ret     -- [jalr x0, x1, 0] -- Return from subroutine
+         * jr rs   -- [jalr x0, rs, 0] -- Jump register
+         * jalr rs -- [jalr x1, rs, 0] -- Jump and link register
          */
         auto mnem = inst.getDisassembly();
         if (mnem[2] != 'l') { jalr_no_link_s(inst); return; } // ret & jr semantics

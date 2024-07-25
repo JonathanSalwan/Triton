@@ -68,7 +68,7 @@ elif SPEC.find('riscv64') >= 0:
         for line in f.readlines():
             if line.startswith("REG_SPEC") or line.startswith("SYS_REG_SPEC"):
                 args = line[line.find("(") + 1: line.find(")")].split(", ")
-                rv64_regs.append(args[0])
+                rv64_regs.append(args[1])
 
     with open(os.path.join(BUILD_DIR, "rv64_reg"), "w") as out:
         out.write('<ul>\n')
@@ -83,7 +83,7 @@ elif SPEC.find('riscv32') >= 0:
         for line in f.readlines():
             if line.startswith("REG_SPEC") or line.startswith("SYS_REG_SPEC"):
                 args = line[line.find("(") + 1: line.find(")")].split(", ")
-                rv32_regs.append(args[0])
+                rv32_regs.append(args[1])
 
     with open(os.path.join(BUILD_DIR, "rv32_reg"), "w") as out:
         out.write('<ul>\n')
