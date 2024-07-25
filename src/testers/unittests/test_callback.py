@@ -109,3 +109,15 @@ class TestCallback(unittest.TestCase):
 
         test_call(False)
         test_call(True)
+
+    def test_nested_cb_issue(self):
+        def setup_callback(ctx):
+            def getMem(triton_ctx, memacc):
+                pass
+            ctx.addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, getMem)
+
+        ctx = TritonContext(ARCH.X86_64)
+
+        setup_callback(ctx)
+
+        ctx.getConcreteMemoryAreaValue(0x1000, 0x1)
