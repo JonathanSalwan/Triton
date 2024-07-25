@@ -5,7 +5,7 @@ automate reverse engineering, perform software verification or just emulate code
 
 * Dynamic **symbolic** execution
 * Dynamic **taint** analysis
-* AST representation of the **x86**, **x86-64**, **ARM32** and **AArch64** ISA semantic
+* AST representation of the **x86**, **x86-64**, **ARM32**, **AArch64** and **RISC-V 32/64**  ISA semantic
 * Expressions **synthesis**
 * SMT **simplification** passes
 * **Lifting** to **LLVM** as well as **Z3** and back
