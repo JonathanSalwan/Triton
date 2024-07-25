@@ -649,6 +649,7 @@ class TestIssue1265(unittest.TestCase):
         x0 = self.ctx.getConcreteRegisterValue(self.ctx.registers.x0)
         self.assertEqual(x0, 0x55667788)
 
+
 class TestIssue1310(unittest.TestCase):
     """Testing #1310."""
 
@@ -700,3 +701,16 @@ class TestIssue1195(unittest.TestCase):
 
             self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.tpidr_el0), 0x1122334455667788)
             self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.x20), 0x1122334455667788)
+
+
+class TestIssue1035(unittest.TestCase):
+    def setup_callback(self, ctx):
+        def getMem(triton_ctx, memacc):
+            self.x = 1234
+        ctx.addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, getMem)
+
+    def test_1(self):
+        ctx = TritonContext(ARCH.X86_64)
+        self.setup_callback(ctx)
+        ctx.getConcreteMemoryAreaValue(0x1000, 0x1)
+        self.assertEqual(self.x, 1234)
