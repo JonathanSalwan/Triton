@@ -148,22 +148,20 @@ set(LIBTRITON_HEADER_FILES
 )
 
 # Add riscv source and header files
-if(${CS_VERSION_MAJOR} GREATER_EQUAL 5)
-    list(APPEND LIBTRITON_SOURCE_FILES
-        arch/riscv/riscv32Cpu.cpp
-        arch/riscv/riscv64Cpu.cpp
-        arch/riscv/riscvSemantics.cpp
-        arch/riscv/riscvSpecifications.cpp
-    )
-    list(APPEND LIBTRITON_HEADER_FILES
-        includes/triton/riscv32.spec
-        includes/triton/riscv64.spec
-        includes/triton/riscv32Cpu.hpp
-        includes/triton/riscv64Cpu.hpp
-        includes/triton/riscvSemantics.hpp
-        includes/triton/riscvSpecifications.hpp
-    )
-endif()
+list(APPEND LIBTRITON_SOURCE_FILES
+    arch/riscv/riscv32Cpu.cpp
+    arch/riscv/riscv64Cpu.cpp
+    arch/riscv/riscvSemantics.cpp
+    arch/riscv/riscvSpecifications.cpp
+)
+list(APPEND LIBTRITON_HEADER_FILES
+    includes/triton/riscv32.spec
+    includes/triton/riscv64.spec
+    includes/triton/riscv32Cpu.hpp
+    includes/triton/riscv64Cpu.hpp
+    includes/triton/riscvSemantics.hpp
+    includes/triton/riscvSpecifications.hpp
+)
 
 # Define all resource files
 set(LIBTRITON_RESOURCE_FILES
