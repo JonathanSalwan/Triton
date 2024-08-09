@@ -48,11 +48,18 @@ if(PYTHON_BINDINGS)
     message(STATUS "Compiling with Python bindings")
 
     if(NOT PYTHON_VERSION AND NOT PYTHON_EXECUTABLE)
+        # On Windows, python3 points to the Windows Store version of Python.
+        # Installations from the Python website do not contain python3.exe
+        if(WIN32)
+            set(PYTHON_NAMES python python3)
+        else()
+            set(PYTHON_NAMES python3 python)
+        endif()
         # Find the python version the user has in the PATH
         # This prevents an issue where an unexpected python version is used
         # (eg the system/homebrew python in a virtual environment)
         find_program(PYTHON_EXECUTABLE
-            NAMES python3 python
+            NAMES ${PYTHON_NAMES}
             NO_PACKAGE_ROOT_PATH
             NO_CMAKE_PATH
             NO_CMAKE_ENVIRONMENT_PATH
@@ -194,9 +201,6 @@ endif()
 message(STATUS "Compiling with Capstone")
 find_package(CAPSTONE 5 REQUIRED)
 message(STATUS "CAPSTONE version: ${CAPSTONE_VERSION}")
-if(${CS_VERSION_MAJOR} GREATER_EQUAL 5)
-    add_definitions(-DCOMPILE_RISCV)
-endif()
 if(TARGET capstone::capstone)
     link_libraries(capstone::capstone)
 elseif(DEFINED CAPSTONE_INCLUDE_DIRS)

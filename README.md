@@ -97,7 +97,7 @@ from triton import *
 Triton relies on the following dependencies:
 
 ```
-* libcapstone                >= 4.0.x   https://github.com/capstone-engine/capstone
+* libcapstone                >= 5.0.x   https://github.com/capstone-engine/capstone
 * libboost      (optional)   >= 1.68
 * libpython     (optional)   >= 3.6
 * libz3         (optional)   >= 4.6.0   https://github.com/Z3Prover/z3
@@ -164,8 +164,8 @@ You can use cmake to generate the .sln file of libTriton.
   -DPYTHON_LIBRARIES="C:/Python36/libs/python36.lib" \
   -DZ3_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/z3-4.6.0-x64-win/include" \
   -DZ3_LIBRARIES="C:/Users/jonathan/Works/Tools/z3-4.6.0-x64-win/bin/libz3.lib" \
-  -DCAPSTONE_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/capstone-4.0.2-win64/include" \
-  -DCAPSTONE_LIBRARIES="C:/Users/jonathan/Works/Tools/capstone-4.0.2-win64/capstone.lib" ..
+  -DCAPSTONE_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/capstone-5.0.1-win64/include" \
+  -DCAPSTONE_LIBRARIES="C:/Users/jonathan/Works/Tools/capstone-5.0.1-win64/capstone.lib" ..
 ```
 
 However, if you prefer to directly download the precompiled library, check out our AppVeyor's [artefacts](https://ci.appveyor.com/project/JonathanSalwan/triton/history).

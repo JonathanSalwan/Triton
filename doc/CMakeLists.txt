@@ -36,27 +36,17 @@ add_custom_target(gen_rv32_doc_from_spec
     DEPENDS ${TRITON_ROOT}/src/libtriton/includes/triton/riscv32.spec
 )
 
-if(${CS_VERSION_MAJOR} GREATER_EQUAL 5)
-    add_custom_target(doc
-        COMMAND doxygen ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
-        DEPENDS gen_x86_doc_from_spec
-        DEPENDS gen_aarch64_doc_from_spec
-        DEPENDS gen_arm32_doc_from_spec
-        DEPENDS gen_rv64_doc_from_spec
-        DEPENDS gen_rv32_doc_from_spec
-    )
-else()
-    add_custom_target(doc
-        COMMAND doxygen ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
-        DEPENDS gen_x86_doc_from_spec
-        DEPENDS gen_aarch64_doc_from_spec
-        DEPENDS gen_arm32_doc_from_spec
-    )
-endif()
+add_custom_target(doc
+    COMMAND doxygen ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+    DEPENDS gen_x86_doc_from_spec
+    DEPENDS gen_aarch64_doc_from_spec
+    DEPENDS gen_arm32_doc_from_spec
+    DEPENDS gen_rv64_doc_from_spec
+    DEPENDS gen_rv32_doc_from_spec
+)
 
 if(PYTHON_BINDINGS_AUTOCOMPLETE)
-    if(${CS_VERSION_MAJOR} GREATER_EQUAL 5)
-        add_custom_target(python_autocomplete
+    add_custom_target(python_autocomplete
         COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/autocomplete/generate_autocomplete.py "--basedir" "${CMAKE_CURRENT_BINARY_DIR}" "$<$<BOOL:${BITWUZLA_INTERFACE}>:--bitwuzla>" "$<$<BOOL:${Z3_INTERFACE}>:--z3>"
         DEPENDS gen_x86_doc_from_spec
         DEPENDS gen_aarch64_doc_from_spec
@@ -64,14 +54,6 @@ if(PYTHON_BINDINGS_AUTOCOMPLETE)
         DEPENDS gen_rv64_doc_from_spec
         DEPENDS gen_rv32_doc_from_spec
     )
-    else()
-        add_custom_target(python_autocomplete
-            COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/autocomplete/generate_autocomplete.py "--basedir" "${CMAKE_CURRENT_BINARY_DIR}" "$<$<BOOL:${BITWUZLA_INTERFACE}>:--bitwuzla>" "$<$<BOOL:${Z3_INTERFACE}>:--z3>"
-            DEPENDS gen_x86_doc_from_spec
-            DEPENDS gen_aarch64_doc_from_spec
-            DEPENDS gen_arm32_doc_from_spec
-        )
-    endif()
     if (NOT DEFINED PYTHON_SITE_PACKAGES)
         execute_process(COMMAND ${PYTHON_EXECUTABLE} -c "from sysconfig import get_path; print(get_path('platlib'))" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
     endif()

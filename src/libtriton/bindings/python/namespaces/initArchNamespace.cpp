@@ -43,10 +43,8 @@ namespace triton {
       void initArchNamespace(PyObject* archDict) {
         xPyDict_SetItemString(archDict, "AARCH64", PyLong_FromUint32(triton::arch::ARCH_AARCH64));
         xPyDict_SetItemString(archDict, "ARM32",   PyLong_FromUint32(triton::arch::ARCH_ARM32));
-        #ifdef COMPILE_RISCV
         xPyDict_SetItemString(archDict, "RV32",    PyLong_FromUint32(triton::arch::ARCH_RV32));
         xPyDict_SetItemString(archDict, "RV64",    PyLong_FromUint32(triton::arch::ARCH_RV64));
-        #endif
         xPyDict_SetItemString(archDict, "X86",     PyLong_FromUint32(triton::arch::ARCH_X86));
         xPyDict_SetItemString(archDict, "X86_64",  PyLong_FromUint32(triton::arch::ARCH_X86_64));
       }

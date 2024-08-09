@@ -10,9 +10,7 @@
 #include <triton/pythonXFunctions.hpp>
 #include <triton/aarch64Specifications.hpp>
 #include <triton/arm32Specifications.hpp>
-#ifdef COMPILE_RISCV
 #include <triton/riscvSpecifications.hpp>
-#endif
 #include <triton/x86Specifications.hpp>
 
 
@@ -4529,7 +4527,6 @@ namespace triton {
         xPyDict_SetItemString(opcodesDict, "ARM32", arm32OpcodesDictClass);
 
 
-        #ifdef COMPILE_RISCV
         PyObject* riscv64OpcodesDict = xPyDict_New();
 
         xPyDict_SetItemString(riscv64OpcodesDict, "ADD",    PyLong_FromUint32(triton::arch::riscv::ID_INS_ADD));
@@ -4712,7 +4709,6 @@ namespace triton {
 
         PyObject* riscv32OpcodesDictClass = xPyClass_New(nullptr, riscv32OpcodesDict, xPyString_FromString("RV32"));
         xPyDict_SetItemString(opcodesDict, "RV32", riscv32OpcodesDictClass);
-        #endif
       }
 
     }; /* python namespace */
