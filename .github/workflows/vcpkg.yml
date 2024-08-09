@@ -46,7 +46,6 @@ jobs:
       name: Get CMake
 
     - name: Set up Python 3.11
-      if: ${{ matrix.platform == 'macos' }}
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
@@ -79,11 +78,9 @@ jobs:
         cmake --build --preset build-${{ matrix.cmake-preset }} --config Release
 
     - name: Test
-      # Test disabled on Windows `pip install lief` fails as there is no ready to use .whl and compilation fails
-      # Test disabled on macOS `pip install lief` fails as there is no ready to use .whl and compilation fails
-      if: ${{ (matrix.platform != 'windows') && (matrix.platform != 'macos') }}
       run: |
-        ${{ matrix.python-executable }} -m pip install lief==0.10.1 unicorn==2.0.0 z3-solver
+        ${{ matrix.python-executable }} --version
+        ${{ matrix.python-executable }} -m pip install lief==0.15.1 unicorn==2.0.1.post1 z3-solver
         ctest --preset test-${{ matrix.cmake-preset }} -C Release --output-on-failure
 
     - name: Install
