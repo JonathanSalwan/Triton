@@ -32,9 +32,7 @@ namespace triton {
       #include <capstone/arm.h>
       #include <capstone/arm64.h>
       #include <capstone/capstone.h>
-      #ifdef COMPILE_RISCV
       #include <capstone/riscv.h>
-      #endif
       #include <capstone/x86.h>
     /*! @} End of capstone namespace */
     };
