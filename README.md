@@ -30,8 +30,8 @@ As **Triton** is a kind of a part-time project, please, **don't blame us** if it
     <img src="https://img.shields.io/github/actions/workflow/status/JonathanSalwan/Triton/osx.yml?branch=master&label=OSX&logo=apple">
   </a>
   &nbsp;
-  <a href="https://ci.appveyor.com/project/JonathanSalwan/triton">
-    <img src="https://img.shields.io/appveyor/ci/JonathanSalwan/triton/master.svg?label=Windows&logo=windows">
+  <a href="https://github.com/JonathanSalwan/Triton/actions/workflows/vcpkg.yml/">
+    <img src="https://img.shields.io/github/actions/workflow/status/JonathanSalwan/Triton/vcpkg.yml?branch=master&label=Windows&logo=windows&logoColor=white">
   </a>
   &nbsp;
   <a href="https://codecov.io/gh/JonathanSalwan/Triton">
