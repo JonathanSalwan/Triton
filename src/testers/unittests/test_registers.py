@@ -266,3 +266,23 @@ class TestRegisterObject(unittest.TestCase):
         self.assertEqual(self.x64.registers.rax, self.x64.getRegister('RaX'))
         self.assertEqual(self.arm.registers.r0, self.arm.getRegister('R0'))
         self.assertEqual(self.aarch.registers.x9, self.aarch.getRegister('x9'))
+
+class TestRegisterParents(unittest.TestCase):
+    """Test register Parent Register List"""
+
+    def setUp(self):
+        """Define the arch list"""
+        self.archctx = []
+        self.archctx.append(TritonContext(ARCH.X86))
+        self.archctx.append(TritonContext(ARCH.X86_64))
+        self.archctx.append(TritonContext(ARCH.ARM32))
+        self.archctx.append(TritonContext(ARCH.AARCH64))
+
+    def test_reg_parents(self):
+        for ctx in self.archctx:
+            parents = ctx.getParentRegisters()
+            for pr in parents:
+                self.assertEqual(pr, ctx.getParentRegister(pr))
+
+            for r in ctx.getAllRegisters():
+                self.assertIn(ctx.getParentRegister(r), parents)

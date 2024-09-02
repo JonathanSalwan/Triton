@@ -18,6 +18,7 @@
 
 - \ref SMT_aarch64_Semantics_Supported_page
 - \ref SMT_arm32_Semantics_Supported_page
+- \ref SMT_riscv_Semantics_Supported_page
 - \ref SMT_x86_Semantics_Supported_page
 
 */
@@ -7158,7 +7159,7 @@ namespace triton {
             /* res = AX / Source */
             auto result = this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(triton::bitsize::byte, divisor));
             /* mod = AX % Source */
-            auto mod = this->astCtxt->bvsmod(dividend, this->astCtxt->sx(triton::bitsize::byte, divisor));
+            auto mod = this->astCtxt->bvsrem(dividend, this->astCtxt->sx(triton::bitsize::byte, divisor));
             /* AH = mod */
             /* AL = res */
             auto node = this->astCtxt->concat(
@@ -7181,7 +7182,7 @@ namespace triton {
             auto temp = this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(triton::bitsize::word, divisor));
             auto result = this->astCtxt->extract((triton::bitsize::word - 1), 0, temp);
             /* mod = DX:AX % Source */
-            auto mod = this->astCtxt->extract((triton::bitsize::word - 1), 0, this->astCtxt->bvsmod(dividend, this->astCtxt->sx(triton::bitsize::word, divisor)));
+            auto mod = this->astCtxt->extract((triton::bitsize::word - 1), 0, this->astCtxt->bvsrem(dividend, this->astCtxt->sx(triton::bitsize::word, divisor)));
             /* Create the symbolic expression for AX */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, ax, "IDIV operation");
             /* Apply the taint for AX */
@@ -7202,7 +7203,7 @@ namespace triton {
             auto temp = this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(triton::bitsize::dword, divisor));
             auto result = this->astCtxt->extract((triton::bitsize::dword - 1), 0, temp);
             /* mod = EDX:EAX % Source */
-            auto mod = this->astCtxt->extract((triton::bitsize::dword - 1), 0, this->astCtxt->bvsmod(dividend, this->astCtxt->sx(triton::bitsize::dword, divisor)));
+            auto mod = this->astCtxt->extract((triton::bitsize::dword - 1), 0, this->astCtxt->bvsrem(dividend, this->astCtxt->sx(triton::bitsize::dword, divisor)));
             /* Create the symbolic expression for EAX */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, eax, "IDIV operation");
             /* Apply the taint for EAX */
@@ -7223,7 +7224,7 @@ namespace triton {
             auto temp = this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(triton::bitsize::qword, divisor));
             auto result = this->astCtxt->extract((triton::bitsize::qword - 1), 0, temp);
             /* mod = RDX:RAX % Source */
-            auto mod = this->astCtxt->extract((triton::bitsize::qword - 1), 0, this->astCtxt->bvsmod(dividend, this->astCtxt->sx(triton::bitsize::qword, divisor)));
+            auto mod = this->astCtxt->extract((triton::bitsize::qword - 1), 0, this->astCtxt->bvsrem(dividend, this->astCtxt->sx(triton::bitsize::qword, divisor)));
             /* Create the symbolic expression for RAX */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, rax, "IDIV operation");
             /* Apply the taint for EAX */

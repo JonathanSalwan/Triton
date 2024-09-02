@@ -297,20 +297,28 @@ namespace triton {
             auto regId = kv.first;
             const auto& reg = kv.second;
 
-            /* Skip Vector and System registers */
-            if (this->isVectorRegister(regId) || this->isSystemRegister(regId))
+            /* Skip Vector registers */
+            if (this->isVectorRegister(regId))
               continue;
 
             /* Add GPR */
-            if (reg.getSize() == this->gprSize())
+            else if (this->isGPR(regId) && reg.getSize() == this->gprSize())
+              ret.insert(&reg);
+
+            /* Add SPSR */
+            else if (regId == ID_REG_AARCH64_SPSR)
               ret.insert(&reg);
 
             /* Add scalar register */
-            if (this->isScalarRegister(regId) && reg.getSize() == triton::bitsize::dqword)
+            else if (this->isScalarRegister(regId) && reg.getBitSize() == triton::bitsize::dqword)
               ret.insert(&reg);
 
             /* Add Flags */
             else if (this->isFlag(regId))
+              ret.insert(&reg);
+
+            /* Add System Registers */
+            else if (this->isSystemRegister(regId))
               ret.insert(&reg);
           }
 

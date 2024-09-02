@@ -778,6 +778,15 @@ CODE  = [
     (None, [], b"\x48\xB8\x20\x56\xE0\xA9\x0D\x06\x8B\xC6",   "mov rax, C68B060DA9E05620"),
     (None, [], b"\x48\x89\x44\x24\x18",                       "mov qword ptr ss:[rsp+18], rax"),
 
+    (None, [], b"\xba\xff\xff\xff\xff",                       "mov edx, 0xffffffff"),
+    (None, [], b"\xb8\x59\xe4\xad\xbd",                       "mov eax, 0xbdade459"),
+    (None, [], b"\xb9\xe8\x03\x00\x00",                       "mov ecx, 0x3e8"),
+    (None, [], b"\xf7\xf9",                                   "idiv ecx"),
+
+    (None, [], b"\x48\xc7\xc0\x31\xee\x28\x4b",               "mov rax,0x4b28ee31"),
+    (None, [], b"\x49\xb9\x69\x75\x08\xb2\x00\x00\x00\x00",   "movabs r9,0xb2087569"),
+    (None, [], b"\x41\xf6\xf9",                               "idiv r9b"),
+
     (None, [],              b"\xbb\xd5\x71\x36\x00",          "mov ebx, 0x3671d5"),
     (None, [],              b"\xd1\xc3",                      "rol ebx, 1"),
     (None, [REG.X86_64.OF], b"\xc1\xc3\x02",                  "rol ebx, 2"),

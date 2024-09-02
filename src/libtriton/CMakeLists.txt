@@ -32,6 +32,10 @@ set(LIBTRITON_SOURCE_FILES
     arch/memoryAccess.cpp
     arch/operandWrapper.cpp
     arch/register.cpp
+    arch/riscv/riscv32Cpu.cpp
+    arch/riscv/riscv64Cpu.cpp
+    arch/riscv/riscvSemantics.cpp
+    arch/riscv/riscvSpecifications.cpp
     arch/x86/x8664Cpu.cpp
     arch/x86/x86Cpu.cpp
     arch/x86/x86Semantics.cpp
@@ -88,6 +92,12 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/astRepresentation.hpp
     includes/triton/astRepresentationInterface.hpp
     includes/triton/astSmtRepresentation.hpp
+    includes/triton/riscv32.spec
+    includes/triton/riscv32Cpu.hpp
+    includes/triton/riscv64.spec
+    includes/triton/riscv64Cpu.hpp
+    includes/triton/riscvSemantics.hpp
+    includes/triton/riscvSpecifications.hpp
     includes/triton/basicBlock.hpp
     includes/triton/bitsVector.hpp
     includes/triton/bitwuzlaSolver.hpp

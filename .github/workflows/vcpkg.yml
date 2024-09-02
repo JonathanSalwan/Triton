@@ -12,26 +12,22 @@ jobs:
         os:
           - macOS-latest
           - ubuntu-20.04
-          # FIXME
-          #- windows-2022
+          - windows-2022
         include:
-          #- os: windows-2022
-          #  platform: windows
-          #  vcpkg-triplet: x64-windows-static-release-md
-          #  cmake-preset: windows-x64
-          #  capstone-library: capstone.lib
-          #  python-executable: python
+          - os: windows-2022
+            platform: windows
+            vcpkg-triplet: x64-windows-static-release-md
+            cmake-preset: windows-x64
+            python-executable: python
           - os: ubuntu-20.04
             platform: linux
             vcpkg-triplet: x64-linux-release
             cmake-preset: linux-x64
-            capstone-library: libcapstone.a
             python-executable: python3
           - os: macOS-latest
             platform: macos
             vcpkg-triplet: x64-osx-release
             cmake-preset: macos-x64
-            capstone-library: libcapstone.a
             python-executable: python3
 
     steps:
@@ -42,7 +38,7 @@ jobs:
       name: Get vcpkg
       with:
         repository: 'microsoft/vcpkg'
-        ref: '2022.04.12'
+        ref: '2024.05.24'
         path: '${{ github.workspace }}/_vcpkg'
         fetch-depth: 0
 
@@ -50,7 +46,6 @@ jobs:
       name: Get CMake
 
     - name: Set up Python 3.11
-      if: ${{ matrix.platform == 'macos' }}
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
@@ -66,9 +61,6 @@ jobs:
       run: |
         cmake --preset=${{ matrix.cmake-preset }} -DBUILD_SHARED_LIBS:BOOL=ON -DVCPKG_OVERLAY_TRIPLETS:PATH=${{ github.workspace }}\vcpkg\triplets -DVCPKG_TARGET_TRIPLET:STRING=${{ matrix.vcpkg-triplet }}
       env:
-        # capstone 4.0.2 does not produce a CMake Config, hence the need to point directly to include directories and libraries
-        CAPSTONE_INCLUDE_DIRS: ${{ github.workspace }}/build/${{ matrix.cmake-preset }}/vcpkg_installed/${{ matrix.vcpkg-triplet }}/include
-        CAPSTONE_LIBRARIES: ${{ github.workspace }}/build/${{ matrix.cmake-preset }}/vcpkg_installed/${{ matrix.vcpkg-triplet }}/lib/${{ matrix.capstone-library }}
         VCPKG_ROOT: ${{ github.workspace }}/_vcpkg
         VCPKG_FEATURE_FLAGS: manifests,versions,binarycaching,registries
 
@@ -78,9 +70,6 @@ jobs:
         python -m pip install importlib-resources
         cmake --preset=${{ matrix.cmake-preset }} -DBUILD_SHARED_LIBS:BOOL=ON -DVCPKG_OVERLAY_TRIPLETS:PATH=${{ github.workspace }}/vcpkg/triplets -DVCPKG_TARGET_TRIPLET:STRING=${{ matrix.vcpkg-triplet }}
       env:
-        # capstone 4.0.2 does not produce a CMake Config, hence the need to point directly to include directories and libraries
-        CAPSTONE_INCLUDE_DIRS: ${{ github.workspace }}/build/${{ matrix.cmake-preset }}/vcpkg_installed/${{ matrix.vcpkg-triplet }}/include
-        CAPSTONE_LIBRARIES: ${{ github.workspace }}/build/${{ matrix.cmake-preset }}/vcpkg_installed/${{ matrix.vcpkg-triplet }}/lib/${{ matrix.capstone-library }}
         VCPKG_ROOT: ${{ github.workspace }}/_vcpkg
         VCPKG_FEATURE_FLAGS: manifests,versions,binarycaching,registries
 
@@ -89,11 +78,9 @@ jobs:
         cmake --build --preset build-${{ matrix.cmake-preset }} --config Release
 
     - name: Test
-      # Test disabled on Windows `pip install lief` fails as there is no ready to use .whl and compilation fails
-      # Test disabled on macOS `pip install lief` fails as there is no ready to use .whl and compilation fails
-      if: ${{ (matrix.platform != 'windows') && (matrix.platform != 'macos') }}
       run: |
-        ${{ matrix.python-executable }} -m pip install lief==0.10.1 unicorn==2.0.0 z3-solver
+        ${{ matrix.python-executable }} --version
+        ${{ matrix.python-executable }} -m pip install lief==0.15.1 unicorn==2.0.1.post1 z3-solver
         ctest --preset test-${{ matrix.cmake-preset }} -C Release --output-on-failure
 
     - name: Install
