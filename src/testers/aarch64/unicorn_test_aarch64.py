@@ -2156,9 +2156,9 @@ CODE  = [
     #(b"\x00\x00\xaf\x9e", "fmov v0.D[1], x0"),  # working on capstone next branch
     (b"\x40\x03\x67\x9e", "fmov d0, x26"),  
     (b"\x02\x00\x66\x9e", "fmov x2, d0"),
-    (b"\x04\x90\xe0\x1e", "fmov h4, #2.5"),
     (b"\x00\x10\x20\x1e", "fmov s0, #2.0"),
     (b"\x03\x10\x2e\x1e", "fmov s3, #1.0"),
+    #(b"\x04\x90\xe0\x1e", "fmov h4, #2.5"), # unicorn not implement f16 ops
 ]
 
 def emu_with_unicorn(opcode, istate):
