@@ -567,7 +567,7 @@ namespace triton {
 
                       if (size == sizeof(double)) {
                         triton::uint64 result;
-                        std:memcpy(&result, &fp_value, sizeof(double));
+                        std::memcpy(&result, &fp_value, sizeof(double));
                         return result;
                       }
                       else if (size == sizeof(float)) {
