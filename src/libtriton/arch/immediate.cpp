@@ -5,10 +5,17 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
+#include <triton/immediate.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
-#include <triton/immediate.hpp>
+#include <triton/softfloat.hpp>
+#include <triton/coreUtils.hpp>
 
+#ifdef LITTLE_ENDIAN // provided by CMake
+constexpr auto sys_endianness = triton::arch::LE_ENDIANNESS;
+#else
+constexpr auto sys_endianness = triton::arch::BE_ENDIANNESS;
+#endif
 
 
 namespace triton {
@@ -21,6 +28,42 @@ namespace triton {
 
     Immediate::Immediate(triton::uint64 value, triton::uint32 size /* bytes */) {
       this->setValue(value, size);
+    }
+
+    Immediate::Immediate(double value, triton::uint32 size /* bytes */, triton::arch::endianness_e platform_endianness) {
+      triton::uint64 imm_value;
+
+      auto need_swap = sys_endianness != platform_endianness;
+
+      if (size == sizeof(double)) {  
+        static_assert(sizeof(double) == sizeof(triton::uint64), 
+            "Unexpected double type size");
+        std::memcpy(&imm_value, &value, sizeof(double));
+        if (need_swap) {
+          imm_value = utils::byteswap(imm_value);
+        }
+      }
+      else if (size == sizeof(float)) { // single-precision
+        float fvalue = static_cast<float>(value);
+        triton::uint32 repr;
+        static_assert(sizeof(float) == sizeof(uint32_t),
+            "Unexpected float type size");
+        std::memcpy(&repr, &fvalue, sizeof(float));
+    
+        imm_value = need_swap ? static_cast<triton::uint64>(utils::byteswap(repr))
+                            : static_cast<triton::uint64>(repr);
+      } else if (size == 2) { // half-precision
+        float fvalue = static_cast<float>(value);
+        triton::uint16 repr = sf::f32_to_f16(fvalue);
+        imm_value = need_swap ? static_cast<triton::uint64>(utils::byteswap(repr)) 
+                          : static_cast<triton::uint64>(repr);
+        
+      }
+      else {
+        throw triton::exceptions::Immediate("Immediate::Immediate(double): Invalid encoding size.");
+      }
+
+      this->setValue(imm_value, size);
     }
 
 

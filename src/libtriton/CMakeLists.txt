@@ -69,6 +69,7 @@ set(LIBTRITON_SOURCE_FILES
     stubs/x8664-ms-libc.cpp
     stubs/x8664-systemv-libc.cpp
     utils/coreUtils.cpp
+    utils/softfloat.cpp
 )
 
 # Define all header files
@@ -106,6 +107,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/comparableFunctor.hpp
     includes/triton/context.hpp
     includes/triton/coreUtils.hpp
+    includes/triton/softfloat.hpp
     includes/triton/cpuInterface.hpp
     includes/triton/cpuSize.hpp
     includes/triton/dllexport.hpp
@@ -155,6 +157,10 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/x86Specifications.hpp
     includes/triton/z3Solver.hpp
     includes/triton/z3ToTriton.hpp
+)
+
+set_source_files_properties(utils/softfloat.cpp PROPERTIES COMPILE_DEFINITIONS
+    ${CMAKE_CXX_BYTE_ORDER}
 )
 
 # Define all resource files
