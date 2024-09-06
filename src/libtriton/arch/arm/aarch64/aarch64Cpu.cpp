@@ -543,8 +543,8 @@ namespace triton {
                   imm.setShiftValue(op->shift.value);
 
                   inst.operands.push_back(triton::arch::OperandWrapper(imm));
-                  }
                   break;
+                }
 
                 default:
                   /* NOTE: CIMM, and missing one are not supported yet. */

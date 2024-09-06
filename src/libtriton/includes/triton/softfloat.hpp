@@ -23,12 +23,13 @@ namespace triton {
      *  \addtogroup softfloat
      *  @{
      */
-      
-      //! Cast 32-bit floating point value to 16-bit according to IEEE-754
-      auto f32_to_f16(float value) -> uint16_t;
 
-    }
+    //! Cast 32-bit floating point value to 16-bit according to IEEE-754
+    auto f32_to_f16(float value) -> uint16_t;
 
-}
+  /*! @} End of softfloat namespace */
+  };
+/*! @} End of triton namespace */
+};
 
 #endif /* TRITON_SOFTFLOAT_HPP */

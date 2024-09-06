@@ -83,10 +83,7 @@ namespace triton {
     template <> TRITON_EXPORT triton::uint512 cast(const triton::uint80&  value);
 
     template <typename T>
-    std::enable_if_t<
-      std::is_unsigned_v<T>,
-      T> 
-    byteswap(T value) {
+    std::enable_if_t<std::is_unsigned_v<T>, T> byteswap(T value) {
       std::array<std::byte, sizeof(value)> repr;
       std::memcpy(&repr, &value, sizeof(value));
       std::reverse(repr.begin(), repr.end());
