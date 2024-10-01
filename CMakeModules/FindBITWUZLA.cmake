@@ -23,7 +23,7 @@ endif()
 
 if(NOT BITWUZLA_INCLUDE_DIRS AND NOT BITWUZLA_LIBRARIES)
     find_path(BITWUZLA_INCLUDE_DIR
-      NAMES bitwuzla/bitwuzla.h
+      NAMES bitwuzla/bitwuzla.h bitwuzla/cpp/bitwuzla.h
       PATHS ${BITWUZLA_PKGCONF_INCLUDE_DIRS}
     )
 
