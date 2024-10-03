@@ -112,7 +112,7 @@ struct CustomRelocation {
 std::vector<CustomRelocation> customRelocation = {
     {"strlen", strlenHandler, 0x10000000},
     {"printf", printfHandler, 0x10000001},
-    {"__libc_start_main", libcMainHandler, 0x10c8},
+    {"__libc_start_main", libcMainHandler, 0x10000002},
 };
 
 void hookingHandler(triton::Context& ctx) {
