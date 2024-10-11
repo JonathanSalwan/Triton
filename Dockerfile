@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 ubuntu:20.04
+FROM --platform=linux/amd64 ubuntu:22.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 COPY . /Triton
@@ -30,11 +30,11 @@ RUN cd /tmp && \
 # libz3 >= 4.6.0
 RUN pip3 install z3-solver==4.8.14
 
-RUN PYV=`python3 -c "import platform;print(platform.python_version()[:3])"` && \
+RUN PYV=`python3 -c "import platform;print(f'3.{platform.python_version_tuple()[1]}')"` && \
     # Triton (LLVM for lifting; z3 or bitwuzla as SMT solver)
     cd /Triton && mkdir /tmp/triton-build && cd /tmp/triton-build && cmake -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=$(/usr/lib/llvm-12/bin/llvm-config --prefix) -DZ3_INTERFACE=ON -DZ3_INCLUDE_DIRS=/usr/local/lib/python$PYV/dist-packages/z3/include/ -DZ3_LIBRARIES=/usr/local/lib/python$PYV/dist-packages/z3/lib/libz3.so -DBITWUZLA_INTERFACE=ON  -DBITWUZLA_INCLUDE_DIRS=/usr/local/include -DBITWUZLA_LIBRARIES=/usr/local/lib/x86_64-linux-gnu/libbitwuzla.so /Triton && make -j$(nproc) && make install
 
-RUN PYV=`python3 -c "import platform;print(platform.python_version()[:3])"` && \
+RUN PYV=`python3 -c "import platform;print(f'3.{platform.python_version_tuple()[1]}')"` && \
     PYP="/usr/lib/python$PYV/site-packages" && \
     echo export PYTHONPATH="$PYP:\$PYTHONPATH" >> /etc/bash.bashrc && \
     python3 -c "import z3; print('Z3 version:', z3.get_version_string())" && \
