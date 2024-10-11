@@ -916,6 +916,9 @@ CODE  = [
     (b"\x20\x14\x82\xda", "csneg x0, x1, x2, ne"),
     (b"\x40\x14\x81\xda", "csneg x0, x2, x1, ne"),
 
+    (b"\x00\xA1\x9F\xDA", "csinv x0, x8, xzr, ge"),
+    (b"\x20\x01\x9F\xDA", "csinv x0, x9, xzr, eq"),
+
     (b"\x41\x14\x82\xda", "cneg x1, x2, eq"),
     (b"\x22\x14\x81\xda", "cneg x2, x1, eq"),
     (b"\x41\x04\x82\xda", "cneg x1, x2, ne"),
