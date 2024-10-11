@@ -246,6 +246,9 @@ namespace triton {
             //! The CSNEG semantics
             void csneg_s(triton::arch::Instruction& inst);
 
+            //! The CSINV semantics
+            void csinv_s(triton::arch::Instruction& inst);
+
             //! The EON semantics.
             void eon_s(triton::arch::Instruction& inst);
 
