@@ -1795,7 +1795,7 @@ namespace triton {
           auto node = this->getCodeConditionAst(inst, op1, op2);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CSNEG operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CSINV operation");
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
