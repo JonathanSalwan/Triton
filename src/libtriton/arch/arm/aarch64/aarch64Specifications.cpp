@@ -405,6 +405,7 @@ namespace triton {
               break;
 
             case triton::extlibs::capstone::ARM64_INS_BIC:
+            case triton::extlibs::capstone::ARM64_INS_BICS:
               tritonId = triton::arch::arm::aarch64::ID_INS_BIC;
               break;
 
