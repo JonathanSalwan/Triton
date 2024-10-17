@@ -60,6 +60,7 @@ CNEG                          | Conditional Negate returns: an alias of CSNEG
 CSEL                          | Conditional Select
 CSET                          | Conditional Set: an alias of CSINC
 CSINC                         | Conditional Select Increment
+CSINV                         | Conditional Select Inversion
 CSNEG                         | Conditional Select Negation
 EON (shifted register)        | Bitwise Exclusive OR NOT (shifted register)
 EOR (immediate)               | Bitwise Exclusive OR (immediate)
@@ -257,6 +258,7 @@ namespace triton {
             case ID_INS_CSET:      this->cset_s(inst);          break;
             case ID_INS_CSINC:     this->csinc_s(inst);         break;
             case ID_INS_CSNEG:     this->csneg_s(inst);         break;
+            case ID_INS_CSINV:     this->csinv_s(inst);         break;
             case ID_INS_EON:       this->eon_s(inst);           break;
             case ID_INS_EOR:       this->eor_s(inst);           break;
             case ID_INS_EXTR:      this->extr_s(inst);          break;
@@ -1779,6 +1781,29 @@ namespace triton {
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
         }
+
+        void AArch64Semantics::csinv_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src1 = inst.operands[1];
+          auto& src2 = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+          auto op2 = this->astCtxt->bvnot(this->symbolicEngine->getOperandAst(inst, src2));
+
+          /* Create the semantics */
+          auto node = this->getCodeConditionAst(inst, op1, op2);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CSINV operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
 
 
         void AArch64Semantics::eon_s(triton::arch::Instruction& inst) {
