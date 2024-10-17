@@ -3298,7 +3298,7 @@ namespace triton {
           auto op = this->symbolicEngine->getOperandAst(inst, src);
 
           /* Create the semantics of the LOAD */
-          auto node1 = this->astCtxt->sx(dst.getBitSize() - 8, op);
+          auto node1 = this->astCtxt->sx(dst.getBitSize() - 8, this->astCtxt->extract(7, 0, op));
 
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "LDRSB operation - LOAD access");
@@ -3353,7 +3353,7 @@ namespace triton {
           auto op = this->symbolicEngine->getOperandAst(inst, src);
 
           /* Create the semantics of the LOAD */
-          auto node1 = this->astCtxt->sx(dst.getBitSize() - 16, op);
+          auto node1 = this->astCtxt->sx(dst.getBitSize() - 16, this->astCtxt->extract(15, 0, op));
 
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "LDRSH operation - LOAD access");
@@ -3413,7 +3413,7 @@ namespace triton {
           auto op = this->symbolicEngine->getOperandAst(inst, src);
 
           /* Create the semantics of the LOAD */
-          auto node1 = this->astCtxt->sx(dst.getBitSize() - 32, op);
+          auto node1 = this->astCtxt->sx(dst.getBitSize() - 32, this->astCtxt->extract(31, 0, op));
 
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "LDRSW operation - LOAD access");

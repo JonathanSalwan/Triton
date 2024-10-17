@@ -531,8 +531,23 @@ namespace triton {
                   break;
                 }
 
+                case triton::extlibs::capstone::ARM64_OP_FP: {
+                  if (size == 0) {
+                    throw triton::exceptions::Disassembly("Aarch64Cpu::disassembly(): Cannot correctly decode FP operand");
+                  }
+
+                  Immediate imm{op->fp, size, this->getEndianness()};
+
+                  /* Set Shift type and value */
+                  imm.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
+                  imm.setShiftValue(op->shift.value);
+
+                  inst.operands.push_back(triton::arch::OperandWrapper(imm));
+                  break;
+                }
+
                 default:
-                  /* NOTE: FP, CIMM, and missing one are not supported yet. */
+                  /* NOTE: CIMM, and missing one are not supported yet. */
                   throw triton::exceptions::Disassembly("AArch64Cpu::disassembly(): Invalid operand.");
               } // switch
             } // for operand
