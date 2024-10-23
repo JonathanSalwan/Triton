@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create Docker image
         run: bash ./src/scripts/docker/build-docker-image.sh
 
       - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: "14.0"
           directory: ${{ runner.temp }}/llvm
@@ -30,33 +30,46 @@ jobs:
                 build-triton-linux-x86_64 bash /src/src/scripts/docker/build-wheel-linux.sh
 
       - name: Upload Wheel packages (Python 3.8)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_31_x86_64.whl
           path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_31_x86_64.whl
           if-no-files-found: warn
 
       - name: Upload Wheel packages (Python 3.9)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_31_x86_64.whl
           path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_31_x86_64.whl
           if-no-files-found: warn
 
       - name: Upload Wheel packages (Python 3.10)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_31_x86_64.whl
           path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_31_x86_64.whl
           if-no-files-found: warn
 
       - name: Upload Wheel packages (Python 3.11)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_31_x86_64.whl
           path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_31_x86_64.whl
           if-no-files-found: warn
 
+      - name: Upload Wheel packages (Python 3.12)
+        uses: actions/upload-artifact@v4
+        with:
+          name: triton_library-${{ env.package-version }}-cp312-cp312-manylinux_2_31_x86_64.whl
+          path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp312-cp312-manylinux_2_31_x86_64.whl
+          if-no-files-found: warn
+
+      - name: Upload Wheel packages (Python 3.13)
+        uses: actions/upload-artifact@v4
+        with:
+          name: triton_library-${{ env.package-version }}-cp313-cp313-manylinux_2_31_x86_64.whl
+          path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp313-cp313-manylinux_2_31_x86_64.whl
+          if-no-files-found: warn
 
   build-windows:
     runs-on: windows-latest
@@ -84,10 +97,10 @@ jobs:
             pylib: python313.lib
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -140,7 +153,7 @@ jobs:
           delvewheel repair --add-path ${{ github.workspace }}\z3-4.12.2-x64-win\bin --wheel-dir ${{ github.workspace }}\wheelhouse\windows_x86_64 -v ${{ github.workspace }}\wheelhouse\windows_x86_64_tmp\triton_library-${{ env.package-version }}-${{ matrix.pycp }}-win_amd64.whl
 
       - name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: triton_library-${{ env.package-version }}-${{ matrix.pycp }}-win_amd64.whl
           path: ${{ github.workspace }}\wheelhouse\windows_x86_64\triton_library-${{ env.package-version }}-${{ matrix.pycp }}-win_amd64.whl
@@ -167,15 +180,15 @@ jobs:
           #   pycp: cp312-cp312
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1.6.1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: "14.0"
           directory: ${{ runner.temp }}/llvm
@@ -187,10 +200,6 @@ jobs:
       - name: Install build package
         run: |
           sudo python -m pip install build
-
-      - name: Install Ninja
-        run: |
-          brew install ninja
 
       - name: Install Meson
         run: |
@@ -263,7 +272,7 @@ jobs:
           deactivate
 
       - name: Upload wheel package
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: triton_library-${{ env.package-version }}-${{ matrix.pycp }}-macosx_12_0_x86_64.whl
           path: ${{ github.workspace }}/wheelhouse/repaired_x86_64/triton_library-${{ env.package-version }}-${{ matrix.pycp }}-macosx_12_0_x86_64.whl
