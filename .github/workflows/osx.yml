@@ -12,32 +12,24 @@ jobs:
         python-version: ['3.8', '3.9', '3.10']
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: "14.0"
           directory: ${{ runner.temp }}/llvm
-
-      - name: Install dependencies
-        run: |
-          brew install boost
 
       - name: Install Z3
         run: |
           wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-osx-10.16.zip
           unzip z3-4.8.17-x64-osx-10.16.zip
           sudo python -m pip install z3-solver==4.8.17.0
-
-      - name: Install Ninja
-        run: |
-          brew install ninja
 
       - name: Install Meson
         run: |

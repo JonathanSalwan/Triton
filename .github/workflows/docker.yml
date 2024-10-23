@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set Timestamp Variable
       run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
     - name: Build the Docker image
