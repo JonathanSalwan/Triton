@@ -128,7 +128,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND GCOV)
         COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target test-python
         COMMAND ctest --output-on-failure
         COMMAND lcov --no-checksum --directory $<TARGET_FILE_DIR:triton> --capture --output-file coverage.info
-        COMMAND lcov --remove coverage.info '/usr*' --remove coverage.info 'pintools*' --remove coverage.info 'examples*' -o coverage.info
+        COMMAND lcov --ignore-errors unused --remove coverage.info '/usr*' --remove coverage.info 'pintools*' --remove coverage.info 'examples*' -o coverage.info
         COMMAND genhtml coverage.info -o coverage
         COMMAND ${CMAKE_COMMAND} -E echo "-- Report generated in ${CMAKE_CURRENT_BINARY_DIR}/coverage/index.html"
     )
@@ -187,13 +187,13 @@ if(LLVM_INTERFACE)
         find_package(LLVM REQUIRED CONFIG)
         message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
         message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
-        include_directories(${LLVM_INCLUDE_DIRS})
         if(LLVM_LINK_LLVM_DYLIB)
             set(LLVM_LIBRARIES LLVM)
         else()
             set(LLVM_LIBRARIES ${LLVM_AVAILABLE_LIBS})
         endif()
     endif()
+    include_directories(${LLVM_INCLUDE_DIRS})
     set(TRITON_LLVM_INTERFACE ON)
 endif()
 

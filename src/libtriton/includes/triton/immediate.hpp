@@ -50,6 +50,9 @@ namespace triton {
         //! Constructor.
         TRITON_EXPORT Immediate(triton::uint64 value, triton::uint32 size /* bytes*/);
 
+        //! Constructor.
+        TRITON_EXPORT Immediate(double value, triton::uint32 size /* bytes */, triton::arch::endianness_e platform_endianness);
+
         //! Constructor by copy.
         TRITON_EXPORT Immediate(const Immediate& other);
 

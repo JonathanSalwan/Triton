@@ -71,6 +71,24 @@ export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; prin
 
 $PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 
+# Build Triton Python wheel package for Python 3.12.
+echo "[+] Build Triton wheel package for Python 3.12"
+cd $SOURCE_DIR
+export PYTHON_BINARY=/opt/_internal/cpython-3.12.*/bin/python
+export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+
+$PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
+
+# Build Triton Python wheel package for Python 3.13.
+echo "[+] Build Triton wheel package for Python 3.13"
+cd $SOURCE_DIR
+export PYTHON_BINARY=/opt/_internal/cpython-3.13.0/bin/python
+export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+
+$PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
+
 # Repair wheels.
 echo "[+] Repair wheel packages"
 cd $SOURCE_DIR
