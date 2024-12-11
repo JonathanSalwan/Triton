@@ -7,6 +7,10 @@
 #
 # $ docker pull quay.io/pypa/manylinux_2_28_x86_64
 # $ ./src/scripts/docker/build-docker-image.sh
+# $ cd /tmp
+# $ wget https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.0/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+# $ tar xf clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+# $ cd -
 # $ docker run \
 #       --rm \
 #       -v $(pwd):/src \
@@ -83,7 +87,7 @@ $PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 # Build Triton Python wheel package for Python 3.13.
 echo "[+] Build Triton wheel package for Python 3.13"
 cd $SOURCE_DIR
-export PYTHON_BINARY=/opt/_internal/cpython-3.13.0/bin/python
+export PYTHON_BINARY=/opt/_internal/cpython-3.13.1/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
