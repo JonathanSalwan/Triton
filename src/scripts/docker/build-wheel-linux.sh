@@ -1,14 +1,14 @@
 #! /usr/bin/env bash
 
 # This file is meant to be used inside the docker image build by the
-# `build-docker-image.sh` script. This file build triton-library for Python 3.8,
-# 3.9, 3.10 and 3.11. It is used by the Build Python Package Github workflow but can
-# also be used locally by running:
+# `build-docker-image.sh` script. This file build triton-library for Python
+# 3.8, 3.9, 3.10, 3.11, 3.12, and 3.13. It is used by the Build Python
+# Package Github workflow but can also be used locally by running:
 #
 # $ docker pull quay.io/pypa/manylinux_2_28_x86_64
 # $ ./src/scripts/docker/build-docker-image.sh
 # $ cd /tmp
-# $ wget https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.0/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+# $ wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.0/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
 # $ tar xf clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
 # $ cd -
 # $ docker run \
@@ -17,7 +17,7 @@
 #       -v /tmp/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04:/llvm \
 #       build-triton-linux-x86_64 bash /src/src/scripts/docker/build-wheel-linux.sh
 #
-# You'll find the .whl packages in the wheel-final folder.
+# You'll find the .whl packages in the wheelhouse folder.
 
 set -e
 # set -x  # Debugging
@@ -42,6 +42,8 @@ export CMAKE_PREFIX_PATH=$LLVM_DIR
 # Build Triton Python wheel package for Python 3.8.
 echo "[+] Build Triton wheel package for Python 3.8"
 cd $SOURCE_DIR
+rm -rf $SOURCE_DIR/build
+rm -rf $SOURCE_DIR/triton_library.egg-info
 export PYTHON_BINARY=/opt/_internal/cpython-3.8.*/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
@@ -51,6 +53,8 @@ $PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 # Build Triton Python wheel package for Python 3.9.
 echo "[+] Build Triton wheel package for Python 3.9"
 cd $SOURCE_DIR
+rm -rf $SOURCE_DIR/build
+rm -rf $SOURCE_DIR/triton_library.egg-info
 export PYTHON_BINARY=/opt/_internal/cpython-3.9.*/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
@@ -60,6 +64,8 @@ $PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 # Build Triton Python wheel package for Python 3.10.
 echo "[+] Build Triton wheel package for Python 3.10"
 cd $SOURCE_DIR
+rm -rf $SOURCE_DIR/build
+rm -rf $SOURCE_DIR/triton_library.egg-info
 export PYTHON_BINARY=/opt/_internal/cpython-3.10.*/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
@@ -69,6 +75,8 @@ $PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 # Build Triton Python wheel package for Python 3.11.
 echo "[+] Build Triton wheel package for Python 3.11"
 cd $SOURCE_DIR
+rm -rf $SOURCE_DIR/build
+rm -rf $SOURCE_DIR/triton_library.egg-info
 export PYTHON_BINARY=/opt/_internal/cpython-3.11.*/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
@@ -78,6 +86,8 @@ $PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 # Build Triton Python wheel package for Python 3.12.
 echo "[+] Build Triton wheel package for Python 3.12"
 cd $SOURCE_DIR
+rm -rf $SOURCE_DIR/build
+rm -rf $SOURCE_DIR/triton_library.egg-info
 export PYTHON_BINARY=/opt/_internal/cpython-3.12.*/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
@@ -87,6 +97,8 @@ $PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 # Build Triton Python wheel package for Python 3.13.
 echo "[+] Build Triton wheel package for Python 3.13"
 cd $SOURCE_DIR
+rm -rf $SOURCE_DIR/build
+rm -rf $SOURCE_DIR/triton_library.egg-info
 export PYTHON_BINARY=/opt/_internal/cpython-3.13.1/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
