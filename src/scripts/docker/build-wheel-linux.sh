@@ -5,7 +5,7 @@
 # 3.8, 3.9, 3.10, 3.11, 3.12, and 3.13. It is used by the Build Python
 # Package Github workflow but can also be used locally by running:
 #
-# $ docker pull quay.io/pypa/manylinux_2_28_x86_64
+# $ docker pull quay.io/pypa/manylinux_2_34_x86_64
 # $ ./src/scripts/docker/build-docker-image.sh
 # $ cd /tmp
 # $ wget -q https://github.com/llvm/llvm-project/releases/download/llvmorg-14.0.0/clang+llvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
@@ -109,7 +109,7 @@ $PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 echo "[+] Repair wheel packages"
 cd $SOURCE_DIR
 for whl in $WHEEL_DIR/linux_x86_64/*.whl; do
-    auditwheel repair --plat manylinux_2_31_x86_64 "$whl" --wheel-dir $WHEEL_DIR/manylinux_2_31_x86_64
+    auditwheel repair --plat manylinux_2_34_x86_64 "$whl" --wheel-dir $WHEEL_DIR/manylinux_2_34_x86_64
 done
 
 echo "[+] Remove build directory"
