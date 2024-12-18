@@ -1,4 +1,4 @@
-ARG BASE_IMG=quay.io/pypa/manylinux_2_28_x86_64
+ARG BASE_IMG=quay.io/pypa/manylinux_2_34_x86_64
 
 FROM $BASE_IMG
 
