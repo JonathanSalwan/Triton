@@ -70,7 +70,7 @@ jobs:
 
       - name: Install Unicorn
         run: |
-          python -m pip install unicorn==2.0.1
+          python -m pip install unicorn
 
       - name: Install LIEF
         run: |

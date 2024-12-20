@@ -39,7 +39,7 @@ RUN python3 -m pip install --upgrade pip && \
         lief \
         meson \
         setuptools \
-        unicorn==2.0.0 \
+        unicorn \
         z3-solver
 
 # libcapstone >= 5.0.x

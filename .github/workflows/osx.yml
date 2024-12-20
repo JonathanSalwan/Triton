@@ -27,8 +27,8 @@ jobs:
 
       - name: Install Z3
         run: |
-          wget https://github.com/Z3Prover/z3/releases/download/z3-4.13.3/z3-4.13.3-arm64-osx-13.7.zip
-          unzip z3-4.13.3-arm64-osx-13.7.zip
+          wget -q https://github.com/Z3Prover/z3/releases/download/z3-4.13.3/z3-4.13.3-arm64-osx-13.7.zip
+          unzip -q z3-4.13.3-arm64-osx-13.7.zip
           sudo python -m pip install z3-solver==4.13.3.0
 
       - name: Install Deps
@@ -51,7 +51,7 @@ jobs:
 
       - name: Install Capstone
         run: |
-          wget https://github.com/aquynh/capstone/archive/5.0.3.tar.gz
+          wget -q https://github.com/aquynh/capstone/archive/5.0.3.tar.gz
           tar -xf ./5.0.3.tar.gz
           cd ./capstone-5.0.3
           bash ./make.sh
@@ -88,5 +88,5 @@ jobs:
       # NOTE Tests will fail because currently they only pass with Unicorn
       # v2.0.0. However, Unicorn v2.0.0 does not build on the macos-14 runner.
       - name: Unittests
-        run:
+        run: |
           DYLD_LIBRARY_PATH=/usr/local/lib/ ctest --test-dir build --output-on-failure
