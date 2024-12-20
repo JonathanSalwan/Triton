@@ -85,8 +85,8 @@ jobs:
           Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.13.3-arm64-osx-13.7/include
           Z3_LIBRARIES: ${{ github.workspace }}/z3-4.13.3-arm64-osx-13.7/bin/libz3.a
 
-     # NOTE Tests will fail because currently they only pass with Unicorn
-     # v2.0.0. However, Unicorn v2.0.0 does not build on the macos-14 runner.
      - name: Unittests
-       run: |
+       run:
+         # NOTE Tests will fail because currently they only pass with Unicorn
+         # v2.0.0. However, Unicorn v2.0.0 does not build on the macos-14 runner.
          DYLD_LIBRARY_PATH=/usr/local/lib/ ctest --test-dir build --output-on-failure
