@@ -39,17 +39,6 @@ export BITWUZLA_LIBRARIES=$DEPENDENCIES_DIR/bitwuzla/install/lib64/libbitwuzla.s
 export LLVM_INTERFACE=ON
 export CMAKE_PREFIX_PATH=$LLVM_DIR
 
-# Build Triton Python wheel package for Python 3.8.
-echo "[+] Build Triton wheel package for Python 3.8"
-cd $SOURCE_DIR
-rm -rf $SOURCE_DIR/build
-rm -rf $SOURCE_DIR/triton_library.egg-info
-export PYTHON_BINARY=/opt/_internal/cpython-3.8.*/bin/python
-export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
-export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
-
-$PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
-
 # Build Triton Python wheel package for Python 3.9.
 echo "[+] Build Triton wheel package for Python 3.9"
 cd $SOURCE_DIR
