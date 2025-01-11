@@ -322,7 +322,6 @@ def gen_init_file(modules):
     mod_str = """from typing import List, Union, Callable, Tuple, Any
 from typing_extensions import Self
 from enum import IntEnum
-import triton
 {z3}
 
 {modules}
