@@ -28,28 +28,28 @@ The STUBS namespace contains all stubs.
 \section STUBS_py_api Python API - Items of the STUBS namespace
 <hr>
 
-- <b>STUBS.AARCH64.LIBC.code</b><br>
+- **STUBS.AARCH64.LIBC.code**<br>
 The libc stub on AArch64 architecture with the ARM64 ABI calling convention.
 
-- <b>STUBS.AARCH64.LIBC.symbols</b><br>
+- **STUBS.AARCH64.LIBC.symbols**<br>
 The symbols map of the AArch64 libc stub.
 
-- <b>STUBS.I386.SYSTEMV.LIBC.code</b><br>
+- **STUBS.I386.SYSTEMV.LIBC.code**<br>
 The libc stub on i386 architecture with the SystemV ABI calling convention.
 
-- <b>STUBS.I386.SYSTEMV.LIBC.symbols</b><br>
+- **STUBS.I386.SYSTEMV.LIBC.symbols**<br>
 The symbols map of the i386-systemv libc stub.
 
-- <b>STUBS.X8664.MS.LIBC.code</b><br>
+- **STUBS.X8664.MS.LIBC.code**<br>
 The libc stub on x8664 architecture with the MS ABI calling convention.
 
-- <b>STUBS.X8664.MS.LIBC.symbols</b><br>
+- **STUBS.X8664.MS.LIBC.symbols**<br>
 The symbols map of the x8664-ms libc stub.
 
-- <b>STUBS.X8664.SYSTEMV.LIBC.code</b><br>
+- **STUBS.X8664.SYSTEMV.LIBC.code**<br>
 The libc stub on x8664 architecture with the SystemV ABI calling convention.
 
-- <b>STUBS.X8664.SYSTEMV.LIBC.symbols</b><br>
+- **STUBS.X8664.SYSTEMV.LIBC.symbols**<br>
 The symbols map of the x8664-systemv libc stub.
 
 */
