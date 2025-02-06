@@ -36,7 +36,11 @@ namespace triton {
       auto vars = triton::ast::search(node, triton::ast::VARIABLE_NODE);
 
       //! Sort symbolic variables
-      std::sort(vars.begin(), vars.end());
+      std::sort(vars.begin(), vars.end(), [](const triton::ast::SharedAbstractNode& a, const triton::ast::SharedAbstractNode& b) {
+        auto varA = reinterpret_cast<triton::ast::VariableNode*>(a.get())->getSymbolicVariable();
+        auto varB = reinterpret_cast<triton::ast::VariableNode*>(b.get())->getSymbolicVariable();
+        return *varA < *varB;
+      });
 
       // Each symbolic variable is a function argument
       std::vector<llvm::Type*> argsType;
