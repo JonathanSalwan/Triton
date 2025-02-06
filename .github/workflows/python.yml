@@ -29,57 +29,47 @@ jobs:
                 --volume ${{env.LLVM_PATH}}:/llvm \
                 build-triton-linux-x86_64 bash /src/src/scripts/docker/build-wheel-linux.sh
 
-      - name: Upload Wheel packages (Python 3.8)
-        uses: actions/upload-artifact@v4
-        with:
-          name: triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_31_x86_64.whl
-          path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_31_x86_64.whl
-          if-no-files-found: warn
-
       - name: Upload Wheel packages (Python 3.9)
         uses: actions/upload-artifact@v4
         with:
-          name: triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_31_x86_64.whl
-          path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_31_x86_64.whl
+          name: triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_34_x86_64.whl
+          path: wheelhouse/manylinux_2_34_x86_64/triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_34_x86_64.whl
           if-no-files-found: warn
 
       - name: Upload Wheel packages (Python 3.10)
         uses: actions/upload-artifact@v4
         with:
-          name: triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_31_x86_64.whl
-          path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_31_x86_64.whl
+          name: triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_34_x86_64.whl
+          path: wheelhouse/manylinux_2_34_x86_64/triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_34_x86_64.whl
           if-no-files-found: warn
 
       - name: Upload Wheel packages (Python 3.11)
         uses: actions/upload-artifact@v4
         with:
-          name: triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_31_x86_64.whl
-          path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_31_x86_64.whl
+          name: triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_34_x86_64.whl
+          path: wheelhouse/manylinux_2_34_x86_64/triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_34_x86_64.whl
           if-no-files-found: warn
 
       - name: Upload Wheel packages (Python 3.12)
         uses: actions/upload-artifact@v4
         with:
-          name: triton_library-${{ env.package-version }}-cp312-cp312-manylinux_2_31_x86_64.whl
-          path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp312-cp312-manylinux_2_31_x86_64.whl
+          name: triton_library-${{ env.package-version }}-cp312-cp312-manylinux_2_34_x86_64.whl
+          path: wheelhouse/manylinux_2_34_x86_64/triton_library-${{ env.package-version }}-cp312-cp312-manylinux_2_34_x86_64.whl
           if-no-files-found: warn
 
       - name: Upload Wheel packages (Python 3.13)
         uses: actions/upload-artifact@v4
         with:
-          name: triton_library-${{ env.package-version }}-cp313-cp313-manylinux_2_31_x86_64.whl
-          path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp313-cp313-manylinux_2_31_x86_64.whl
+          name: triton_library-${{ env.package-version }}-cp313-cp313-manylinux_2_34_x86_64.whl
+          path: wheelhouse/manylinux_2_34_x86_64/triton_library-${{ env.package-version }}-cp313-cp313-manylinux_2_34_x86_64.whl
           if-no-files-found: warn
 
   build-windows:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
         include:
-          - python-version: 3.8
-            pycp: cp38-cp38
-            pylib: python38.lib
           - python-version: 3.9
             pycp: cp39-cp39
             pylib: python39.lib
