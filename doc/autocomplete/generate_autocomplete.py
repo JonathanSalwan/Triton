@@ -17,7 +17,7 @@ NAMESPACE_PREFIX = 'n'
 list_pattern      = r'\[(.*?)(?:,(?: ?...)?)?\]'
 type_pattern      = r'(?P<type>List\[.*?\]|[\w\.]+)'
 obj_doc_re        = re.compile(r'-\s<b>(?P<sig>.*?)<\/b><br>\r?\n(?P<desc>.*?)\r?\n\r?\n', flags=re.DOTALL)
-name_doc_pattern  = r'- \*\*(?P<member>.*?)\*\*'
+name_doc_pattern  = r'- (\*\*|<b>)(?P<member>.*?)(\*\*|</b>)'
 ref_re            = re.compile(r'\\ref\spy_(.*?)_page')
 sig_re            = re.compile(r'(?P<return>{}) (?P<name>\w+)\s?\((?P<args>.*?)\)'.format(type_pattern))
 list_re           = re.compile(list_pattern)
