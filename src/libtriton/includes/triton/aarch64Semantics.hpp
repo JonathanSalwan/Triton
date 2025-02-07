@@ -204,8 +204,32 @@ namespace triton {
             //! The BLR semantics.
             void blr_s(triton::arch::Instruction& inst);
 
+            //! The BLRAA semantics.
+            void blraa_s(triton::arch::Instruction& inst);
+
+            //! The BLRAAZ semantics.
+            void blraaz_s(triton::arch::Instruction& inst);
+
+            //! The BLRAB semantics.
+            void blrab_s(triton::arch::Instruction& inst);
+
+            //! The BLRABZ semantics.
+            void blrabz_s(triton::arch::Instruction& inst);
+
             //! The BR semantics.
             void br_s(triton::arch::Instruction& inst);
+
+            //! The BRAA semantics.
+            void braa_s(triton::arch::Instruction& inst);
+
+            //! The BRAAZ semantics.
+            void braaz_s(triton::arch::Instruction& inst);
+
+            //! The BRAB semantics.
+            void brab_s(triton::arch::Instruction& inst);
+
+            //! The BRABZ semantics.
+            void brabz_s(triton::arch::Instruction& inst);
 
             //! The BRK semantics.
             void brk_s(triton::arch::Instruction& inst);
@@ -249,6 +273,12 @@ namespace triton {
             //! The CSINV semantics
             void csinv_s(triton::arch::Instruction& inst);
 
+            //! The DMB semantics
+            void dmb_s(triton::arch::Instruction& inst);
+
+            //! The DSB semantics
+            void dsb_s(triton::arch::Instruction& inst);
+
             //! The EON semantics.
             void eon_s(triton::arch::Instruction& inst);
 
@@ -257,9 +287,12 @@ namespace triton {
 
             //! The EXTR semantics.
             void extr_s(triton::arch::Instruction& inst);
-            
+
             //! The FMOV semantics.
             void fmov_s(triton::arch::Instruction& inst);
+
+            //! The ISB semantics.
+            void isb_s(triton::arch::Instruction& inst);
 
             //! The LD3 semantics.
             void ld3_s(triton::arch::Instruction& inst);
@@ -419,6 +452,18 @@ namespace triton {
 
             //! The ORR semantics.
             void orr_s(triton::arch::Instruction& inst);
+
+            //! The PACIA semantics.
+            void pacia_s(triton::arch::Instruction& inst);
+
+            //! The PACIB semantics.
+            void pacib_s(triton::arch::Instruction& inst);
+
+            //! The PACIZA semantics.
+            void paciza_s(triton::arch::Instruction& inst);
+
+            //! The PACIZB semantics.
+            void pacizb_s(triton::arch::Instruction& inst);
 
             //! The RBIT semantics.
             void rbit_s(triton::arch::Instruction& inst);

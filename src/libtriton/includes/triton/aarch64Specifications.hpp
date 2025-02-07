@@ -111,7 +111,15 @@ namespace triton {
           ID_INS_BIT, //!< bit
           ID_INS_BL, //!< bl
           ID_INS_BLR, //!< blr
+          ID_INS_BLRAA, //!< blraa
+          ID_INS_BLRAAZ, //!< blraaz
+          ID_INS_BLRAB, //!< blrab
+          ID_INS_BLRABZ, //!< blrabz
           ID_INS_BR, //!< br
+          ID_INS_BRAA, //!< braa
+          ID_INS_BRAAZ, //!< braaz
+          ID_INS_BRAB, //!< brab
+          ID_INS_BRABZ, //!< brabz
           ID_INS_BRK, //!< brk
           ID_INS_BSL, //!< bsl
           ID_INS_CBNZ, //!< cbnz
@@ -130,7 +138,6 @@ namespace triton {
           ID_INS_CMLT, //!< cmlt
           ID_INS_CMTST, //!< cmtst
           ID_INS_CNT, //!< cnt
-          ID_INS_MOV, //!< mov
           ID_INS_CRC32B, //!< crc32b
           ID_INS_CRC32CB, //!< crc32cb
           ID_INS_CRC32CH, //!< crc32ch
@@ -153,8 +160,8 @@ namespace triton {
           ID_INS_EON, //!< eon
           ID_INS_EOR, //!< eor
           ID_INS_ERET, //!< eret
-          ID_INS_EXTR, //!< extr
           ID_INS_EXT, //!< ext
+          ID_INS_EXTR, //!< extr
           ID_INS_FABD, //!< fabd
           ID_INS_FABS, //!< fabs
           ID_INS_FACGE, //!< facge
@@ -171,17 +178,17 @@ namespace triton {
           ID_INS_FCMP, //!< fcmp
           ID_INS_FCMPE, //!< fcmpe
           ID_INS_FCSEL, //!< fcsel
+          ID_INS_FCVT, //!< fcvt
           ID_INS_FCVTAS, //!< fcvtas
           ID_INS_FCVTAU, //!< fcvtau
-          ID_INS_FCVT, //!< fcvt
           ID_INS_FCVTL, //!< fcvtl
           ID_INS_FCVTL2, //!< fcvtl2
           ID_INS_FCVTMS, //!< fcvtms
           ID_INS_FCVTMU, //!< fcvtmu
-          ID_INS_FCVTNS, //!< fcvtns
-          ID_INS_FCVTNU, //!< fcvtnu
           ID_INS_FCVTN, //!< fcvtn
           ID_INS_FCVTN2, //!< fcvtn2
+          ID_INS_FCVTNS, //!< fcvtns
+          ID_INS_FCVTNU, //!< fcvtnu
           ID_INS_FCVTPS, //!< fcvtps
           ID_INS_FCVTPU, //!< fcvtpu
           ID_INS_FCVTXN, //!< fcvtxn
@@ -233,49 +240,50 @@ namespace triton {
           ID_INS_ISB, //!< isb
           ID_INS_LD1, //!< ld1
           ID_INS_LD1R, //!< ld1r
-          ID_INS_LD2R, //!< ld2r
           ID_INS_LD2, //!< ld2
-          ID_INS_LD3R, //!< ld3r
+          ID_INS_LD2R, //!< ld2r
           ID_INS_LD3, //!< ld3
+          ID_INS_LD3R, //!< ld3r
           ID_INS_LD4, //!< ld4
           ID_INS_LD4R, //!< ld4r
+          ID_INS_LDAR, //!< ldar
           ID_INS_LDARB, //!< ldarb
           ID_INS_LDARH, //!< ldarh
-          ID_INS_LDAR, //!< ldar
           ID_INS_LDAXP, //!< ldaxp
+          ID_INS_LDAXR, //!< ldaxr
           ID_INS_LDAXRB, //!< ldaxrb
           ID_INS_LDAXRH, //!< ldaxrh
-          ID_INS_LDAXR, //!< ldaxr
           ID_INS_LDNP, //!< ldnp
           ID_INS_LDP, //!< ldp
           ID_INS_LDPSW, //!< ldpsw
-          ID_INS_LDRB, //!< ldrb
           ID_INS_LDR, //!< ldr
+          ID_INS_LDRB, //!< ldrb
           ID_INS_LDRH, //!< ldrh
           ID_INS_LDRSB, //!< ldrsb
           ID_INS_LDRSH, //!< ldrsh
           ID_INS_LDRSW, //!< ldrsw
+          ID_INS_LDTR, //!< ldtr
           ID_INS_LDTRB, //!< ldtrb
           ID_INS_LDTRH, //!< ldtrh
           ID_INS_LDTRSB, //!< ldtrsb
           ID_INS_LDTRSH, //!< ldtrsh
           ID_INS_LDTRSW, //!< ldtrsw
-          ID_INS_LDTR, //!< ldtr
-          ID_INS_LDURB, //!< ldurb
           ID_INS_LDUR, //!< ldur
+          ID_INS_LDURB, //!< ldurb
           ID_INS_LDURH, //!< ldurh
           ID_INS_LDURSB, //!< ldursb
           ID_INS_LDURSH, //!< ldursh
           ID_INS_LDURSW, //!< ldursw
           ID_INS_LDXP, //!< ldxp
+          ID_INS_LDXR, //!< ldxr
           ID_INS_LDXRB, //!< ldxrb
           ID_INS_LDXRH, //!< ldxrh
-          ID_INS_LDXR, //!< ldxr
           ID_INS_LSL, //!< lsl
           ID_INS_LSR, //!< lsr
           ID_INS_MADD, //!< madd
           ID_INS_MLA, //!< mla
           ID_INS_MLS, //!< mls
+          ID_INS_MOV, //!< mov
           ID_INS_MOVI, //!< movi
           ID_INS_MOVK, //!< movk
           ID_INS_MOVN, //!< movn
@@ -289,37 +297,52 @@ namespace triton {
           ID_INS_NOT, //!< not
           ID_INS_ORN, //!< orn
           ID_INS_ORR, //!< orr
-          ID_INS_PMULL2, //!< pmull2
-          ID_INS_PMULL, //!< pmull
+          ID_INS_PACDA, //!< pacda
+          ID_INS_PACDB, //!< pacdb
+          ID_INS_PACDZA, //!< pacdza
+          ID_INS_PACDZB, //!< pacdzb
+          ID_INS_PACGA, //!< pacga
+          ID_INS_PACIA, //!< pacia
+          ID_INS_PACIA1716, //!< pacia1716
+          ID_INS_PACIASP, //!< paciasp
+          ID_INS_PACIAZ, //!< paciaz
+          ID_INS_PACIB, //!< pacib
+          ID_INS_PACIB1716, //!< pacib1716
+          ID_INS_PACIBSP, //!< pacibsp
+          ID_INS_PACIBZ, //!< pacibz
+          ID_INS_PACIZA, //!< paciza
+          ID_INS_PACIZB, //!< pacizb
           ID_INS_PMUL, //!< pmul
+          ID_INS_PMULL, //!< pmull
+          ID_INS_PMULL2, //!< pmull2
           ID_INS_PRFM, //!< prfm
           ID_INS_PRFUM, //!< prfum
           ID_INS_RADDHN, //!< raddhn
           ID_INS_RADDHN2, //!< raddhn2
           ID_INS_RBIT, //!< rbit
           ID_INS_RET, //!< ret
+          ID_INS_REV, //!< rev
           ID_INS_REV16, //!< rev16
           ID_INS_REV32, //!< rev32
           ID_INS_REV64, //!< rev64
-          ID_INS_REV, //!< rev
           ID_INS_ROR, //!< ror
-          ID_INS_RSHRN2, //!< rshrn2
           ID_INS_RSHRN, //!< rshrn
+          ID_INS_RSHRN2, //!< rshrn2
           ID_INS_RSUBHN, //!< rsubhn
           ID_INS_RSUBHN2, //!< rsubhn2
-          ID_INS_SABAL2, //!< sabal2
-          ID_INS_SABAL, //!< sabal
           ID_INS_SABA, //!< saba
-          ID_INS_SABDL2, //!< sabdl2
-          ID_INS_SABDL, //!< sabdl
+          ID_INS_SABAL, //!< sabal
+          ID_INS_SABAL2, //!< sabal2
           ID_INS_SABD, //!< sabd
+          ID_INS_SABDL, //!< sabdl
+          ID_INS_SABDL2, //!< sabdl2
           ID_INS_SADALP, //!< sadalp
+          ID_INS_SADDL, //!< saddl
+          ID_INS_SADDL2, //!< saddl2
           ID_INS_SADDLP, //!< saddlp
           ID_INS_SADDLV, //!< saddlv
-          ID_INS_SADDL2, //!< saddl2
-          ID_INS_SADDL, //!< saddl
-          ID_INS_SADDW2, //!< saddw2
           ID_INS_SADDW, //!< saddw
+          ID_INS_SADDW2, //!< saddw2
           ID_INS_SBC, //!< sbc
           ID_INS_SBFM, //!< sbfm
           ID_INS_SCVTF, //!< scvtf
@@ -330,35 +353,35 @@ namespace triton {
           ID_INS_SHA1P, //!< sha1p
           ID_INS_SHA1SU0, //!< sha1su0
           ID_INS_SHA1SU1, //!< sha1su1
-          ID_INS_SHA256H2, //!< sha256h2
           ID_INS_SHA256H, //!< sha256h
+          ID_INS_SHA256H2, //!< sha256h2
           ID_INS_SHA256SU0, //!< sha256su0
           ID_INS_SHA256SU1, //!< sha256su1
           ID_INS_SHADD, //!< shadd
-          ID_INS_SHLL2, //!< shll2
-          ID_INS_SHLL, //!< shll
           ID_INS_SHL, //!< shl
-          ID_INS_SHRN2, //!< shrn2
+          ID_INS_SHLL, //!< shll
+          ID_INS_SHLL2, //!< shll2
           ID_INS_SHRN, //!< shrn
+          ID_INS_SHRN2, //!< shrn2
           ID_INS_SHSUB, //!< shsub
           ID_INS_SLI, //!< sli
           ID_INS_SMADDL, //!< smaddl
+          ID_INS_SMAX, //!< smax
           ID_INS_SMAXP, //!< smaxp
           ID_INS_SMAXV, //!< smaxv
-          ID_INS_SMAX, //!< smax
           ID_INS_SMC, //!< smc
+          ID_INS_SMIN, //!< smin
           ID_INS_SMINP, //!< sminp
           ID_INS_SMINV, //!< sminv
-          ID_INS_SMIN, //!< smin
-          ID_INS_SMLAL2, //!< smlal2
           ID_INS_SMLAL, //!< smlal
-          ID_INS_SMLSL2, //!< smlsl2
+          ID_INS_SMLAL2, //!< smlal2
           ID_INS_SMLSL, //!< smlsl
+          ID_INS_SMLSL2, //!< smlsl2
           ID_INS_SMOV, //!< smov
           ID_INS_SMSUBL, //!< smsubl
           ID_INS_SMULH, //!< smulh
-          ID_INS_SMULL2, //!< smull2
           ID_INS_SMULL, //!< smull
+          ID_INS_SMULL2, //!< smull2
           ID_INS_SQABS, //!< sqabs
           ID_INS_SQADD, //!< sqadd
           ID_INS_SQDMLAL, //!< sqdmlal
@@ -375,104 +398,104 @@ namespace triton {
           ID_INS_SQRSHRN2, //!< sqrshrn2
           ID_INS_SQRSHRUN, //!< sqrshrun
           ID_INS_SQRSHRUN2, //!< sqrshrun2
-          ID_INS_SQSHLU, //!< sqshlu
           ID_INS_SQSHL, //!< sqshl
+          ID_INS_SQSHLU, //!< sqshlu
           ID_INS_SQSHRN, //!< sqshrn
           ID_INS_SQSHRN2, //!< sqshrn2
           ID_INS_SQSHRUN, //!< sqshrun
           ID_INS_SQSHRUN2, //!< sqshrun2
           ID_INS_SQSUB, //!< sqsub
-          ID_INS_SQXTN2, //!< sqxtn2
           ID_INS_SQXTN, //!< sqxtn
-          ID_INS_SQXTUN2, //!< sqxtun2
+          ID_INS_SQXTN2, //!< sqxtn2
           ID_INS_SQXTUN, //!< sqxtun
+          ID_INS_SQXTUN2, //!< sqxtun2
           ID_INS_SRHADD, //!< srhadd
           ID_INS_SRI, //!< sri
           ID_INS_SRSHL, //!< srshl
           ID_INS_SRSHR, //!< srshr
           ID_INS_SRSRA, //!< srsra
-          ID_INS_SSHLL2, //!< sshll2
-          ID_INS_SSHLL, //!< sshll
           ID_INS_SSHL, //!< sshl
+          ID_INS_SSHLL, //!< sshll
+          ID_INS_SSHLL2, //!< sshll2
           ID_INS_SSHR, //!< sshr
           ID_INS_SSRA, //!< ssra
-          ID_INS_SSUBL2, //!< ssubl2
           ID_INS_SSUBL, //!< ssubl
-          ID_INS_SSUBW2, //!< ssubw2
+          ID_INS_SSUBL2, //!< ssubl2
           ID_INS_SSUBW, //!< ssubw
+          ID_INS_SSUBW2, //!< ssubw2
           ID_INS_ST1, //!< st1
           ID_INS_ST2, //!< st2
           ID_INS_ST3, //!< st3
           ID_INS_ST4, //!< st4
+          ID_INS_STLR, //!< stlr
           ID_INS_STLRB, //!< stlrb
           ID_INS_STLRH, //!< stlrh
-          ID_INS_STLR, //!< stlr
           ID_INS_STLXP, //!< stlxp
+          ID_INS_STLXR, //!< stlxr
           ID_INS_STLXRB, //!< stlxrb
           ID_INS_STLXRH, //!< stlxrh
-          ID_INS_STLXR, //!< stlxr
           ID_INS_STNP, //!< stnp
           ID_INS_STP, //!< stp
-          ID_INS_STRB, //!< strb
           ID_INS_STR, //!< str
+          ID_INS_STRB, //!< strb
           ID_INS_STRH, //!< strh
+          ID_INS_STTR, //!< sttr
           ID_INS_STTRB, //!< sttrb
           ID_INS_STTRH, //!< sttrh
-          ID_INS_STTR, //!< sttr
-          ID_INS_STURB, //!< sturb
           ID_INS_STUR, //!< stur
+          ID_INS_STURB, //!< sturb
           ID_INS_STURH, //!< sturh
           ID_INS_STXP, //!< stxp
+          ID_INS_STXR, //!< stxr
           ID_INS_STXRB, //!< stxrb
           ID_INS_STXRH, //!< stxrh
-          ID_INS_STXR, //!< stxr
+          ID_INS_SUB, //!< sub
           ID_INS_SUBHN, //!< subhn
           ID_INS_SUBHN2, //!< subhn2
-          ID_INS_SUB, //!< sub
           ID_INS_SUQADD, //!< suqadd
           ID_INS_SVC, //!< svc
-          ID_INS_SYSL, //!< sysl
           ID_INS_SYS, //!< sys
+          ID_INS_SYSL, //!< sysl
           ID_INS_TBL, //!< tbl
           ID_INS_TBNZ, //!< tbnz
           ID_INS_TBX, //!< tbx
           ID_INS_TBZ, //!< tbz
           ID_INS_TRN1, //!< trn1
           ID_INS_TRN2, //!< trn2
-          ID_INS_UABAL2, //!< uabal2
-          ID_INS_UABAL, //!< uabal
           ID_INS_UABA, //!< uaba
-          ID_INS_UABDL2, //!< uabdl2
-          ID_INS_UABDL, //!< uabdl
+          ID_INS_UABAL, //!< uabal
+          ID_INS_UABAL2, //!< uabal2
           ID_INS_UABD, //!< uabd
+          ID_INS_UABDL, //!< uabdl
+          ID_INS_UABDL2, //!< uabdl2
           ID_INS_UADALP, //!< uadalp
+          ID_INS_UADDL, //!< uaddl
+          ID_INS_UADDL2, //!< uaddl2
           ID_INS_UADDLP, //!< uaddlp
           ID_INS_UADDLV, //!< uaddlv
-          ID_INS_UADDL2, //!< uaddl2
-          ID_INS_UADDL, //!< uaddl
-          ID_INS_UADDW2, //!< uaddw2
           ID_INS_UADDW, //!< uaddw
+          ID_INS_UADDW2, //!< uaddw2
           ID_INS_UBFM, //!< ubfm
           ID_INS_UCVTF, //!< ucvtf
           ID_INS_UDIV, //!< udiv
           ID_INS_UHADD, //!< uhadd
           ID_INS_UHSUB, //!< uhsub
           ID_INS_UMADDL, //!< umaddl
+          ID_INS_UMAX, //!< umax
           ID_INS_UMAXP, //!< umaxp
           ID_INS_UMAXV, //!< umaxv
-          ID_INS_UMAX, //!< umax
+          ID_INS_UMIN, //!< umin
           ID_INS_UMINP, //!< uminp
           ID_INS_UMINV, //!< uminv
-          ID_INS_UMIN, //!< umin
-          ID_INS_UMLAL2, //!< umlal2
           ID_INS_UMLAL, //!< umlal
-          ID_INS_UMLSL2, //!< umlsl2
+          ID_INS_UMLAL2, //!< umlal2
           ID_INS_UMLSL, //!< umlsl
+          ID_INS_UMLSL2, //!< umlsl2
           ID_INS_UMOV, //!< umov
           ID_INS_UMSUBL, //!< umsubl
           ID_INS_UMULH, //!< umulh
-          ID_INS_UMULL2, //!< umull2
           ID_INS_UMULL, //!< umull
+          ID_INS_UMULL2, //!< umull2
           ID_INS_UQADD, //!< uqadd
           ID_INS_UQRSHL, //!< uqrshl
           ID_INS_UQRSHRN, //!< uqrshrn
@@ -481,28 +504,31 @@ namespace triton {
           ID_INS_UQSHRN, //!< uqshrn
           ID_INS_UQSHRN2, //!< uqshrn2
           ID_INS_UQSUB, //!< uqsub
-          ID_INS_UQXTN2, //!< uqxtn2
           ID_INS_UQXTN, //!< uqxtn
+          ID_INS_UQXTN2, //!< uqxtn2
           ID_INS_URECPE, //!< urecpe
           ID_INS_URHADD, //!< urhadd
           ID_INS_URSHL, //!< urshl
           ID_INS_URSHR, //!< urshr
           ID_INS_URSQRTE, //!< ursqrte
           ID_INS_URSRA, //!< ursra
-          ID_INS_USHLL2, //!< ushll2
-          ID_INS_USHLL, //!< ushll
           ID_INS_USHL, //!< ushl
+          ID_INS_USHLL, //!< ushll
+          ID_INS_USHLL2, //!< ushll2
           ID_INS_USHR, //!< ushr
           ID_INS_USQADD, //!< usqadd
           ID_INS_USRA, //!< usra
-          ID_INS_USUBL2, //!< usubl2
           ID_INS_USUBL, //!< usubl
-          ID_INS_USUBW2, //!< usubw2
+          ID_INS_USUBL2, //!< usubl2
           ID_INS_USUBW, //!< usubw
+          ID_INS_USUBW2, //!< usubw2
           ID_INS_UZP1, //!< uzp1
           ID_INS_UZP2, //!< uzp2
-          ID_INS_XTN2, //!< xtn2
+          ID_INS_XPACD, //!< xpacd
+          ID_INS_XPACI, //!< xpaci
+          ID_INS_XPACLRI, //!< xpaclri
           ID_INS_XTN, //!< xtn
+          ID_INS_XTN2, //!< xtn2
           ID_INS_ZIP1, //!< zip1
           ID_INS_ZIP2, //!< zip2
 

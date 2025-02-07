@@ -42,7 +42,15 @@ BIC                           | Bitwise Bit Clear
 BICS                          | Bitwise Bit Clear, setting flags
 BL                            | Branch with Link
 BLR                           | Branch with Link to Register
+BLRAA                         | Branch with Link to Register, with pointer authentication.
+BLRAAZ                        | Branch with Link to Register, with pointer authentication.
+BLRAB                         | Branch with Link to Register, with pointer authentication.
+BLRABZ                        | Branch with Link to Register, with pointer authentication.
 BR                            | Branch to Register
+BRAA                          | Branch to Register, with pointer authentication.
+BRAAZ                         | Branch to Register, with pointer authentication.
+BRAB                          | Branch to Register, with pointer authentication.
+BRABZ                         | Branch to Register, with pointer authentication.
 BRK                           | Breakpoint instruction
 CBNZ                          | Compare and Branch on Nonzero
 CBZ                           | Compare and Branch on Zero
@@ -62,11 +70,14 @@ CSET                          | Conditional Set: an alias of CSINC
 CSINC                         | Conditional Select Increment
 CSINV                         | Conditional Select Inversion
 CSNEG                         | Conditional Select Negation
+DMB                           | Data Memory Barrier
+DSB                           | Data Synchronization Barrier
 EON (shifted register)        | Bitwise Exclusive OR NOT (shifted register)
 EOR (immediate)               | Bitwise Exclusive OR (immediate)
 EOR (shifted register)        | Bitwise Exclusive OR (shifted register)
 EXTR                          | EXTR: Extract register
 FMOV                          | Floating-point Move register without conversion.
+ISB                           | Instruction Synchronization Barrier
 LD3 (multiple structure)      | Load multiple 3-element structures to three registers.
 LD3R                          | Load single 3-element structure and Replicate to all lanes of three registers.
 LD4 (multiple structure)      | Load multiple 4-element structures to four registers.
@@ -133,6 +144,10 @@ NOP                           | No Operation
 ORN                           | Bitwise OR NOT (shifted register)
 ORR (immediate)               | Bitwise OR (immediate)
 ORR (shifted register)        | Bitwise OR (shifted register)
+PACIA                         | Pointer Authentication Code for Instruction address, using key A
+PACIB                         | Pointer Authentication Code for Instruction address, using key B
+PACIZA                        | Pointer Authentication Code for Instruction address, using key A and a zero diversifier
+PACIZB                        | Pointer Authentication Code for Instruction address, using key B and a zero diversifier
 RBIT                          | Reverse Bits
 RET                           | Return from subroutine
 REV                           | Reverse Bytes
@@ -244,7 +259,15 @@ namespace triton {
             case ID_INS_BIC:       this->bic_s(inst);           break;
             case ID_INS_BL:        this->bl_s(inst);            break;
             case ID_INS_BLR:       this->blr_s(inst);           break;
+            case ID_INS_BLRAA:     this->blraa_s(inst);         break;
+            case ID_INS_BLRAAZ:    this->blraaz_s(inst);        break;
+            case ID_INS_BLRAB:     this->blrab_s(inst);         break;
+            case ID_INS_BLRABZ:    this->blrabz_s(inst);        break;
             case ID_INS_BR:        this->br_s(inst);            break;
+            case ID_INS_BRAA:      this->braa_s(inst);          break;
+            case ID_INS_BRAAZ:     this->braaz_s(inst);         break;
+            case ID_INS_BRAB:      this->brab_s(inst);          break;
+            case ID_INS_BRABZ:     this->brabz_s(inst);         break;
             case ID_INS_BRK:       this->brk_s(inst);           break;
             case ID_INS_CBNZ:      this->cbnz_s(inst);          break;
             case ID_INS_CBZ:       this->cbz_s(inst);           break;
@@ -259,10 +282,13 @@ namespace triton {
             case ID_INS_CSINC:     this->csinc_s(inst);         break;
             case ID_INS_CSNEG:     this->csneg_s(inst);         break;
             case ID_INS_CSINV:     this->csinv_s(inst);         break;
+            case ID_INS_DMB:       this->dmb_s(inst);           break;
+            case ID_INS_DSB:       this->dsb_s(inst);           break;
             case ID_INS_EON:       this->eon_s(inst);           break;
             case ID_INS_EOR:       this->eor_s(inst);           break;
             case ID_INS_EXTR:      this->extr_s(inst);          break;
             case ID_INS_FMOV:      this->fmov_s(inst);          break;
+            case ID_INS_ISB:       this->isb_s(inst);           break;
             case ID_INS_LD3:       this->ld3_s(inst);           break;
             case ID_INS_LD3R:      this->ld3r_s(inst);          break;
             case ID_INS_LD4:       this->ld4_s(inst);           break;
@@ -316,6 +342,10 @@ namespace triton {
             case ID_INS_NOP:       this->nop_s(inst);           break;
             case ID_INS_ORN:       this->orn_s(inst);           break;
             case ID_INS_ORR:       this->orr_s(inst);           break;
+            case ID_INS_PACIA:     this->pacia_s(inst);         break;
+            case ID_INS_PACIB:     this->pacib_s(inst);         break;
+            case ID_INS_PACIZA:    this->paciza_s(inst);        break;
+            case ID_INS_PACIZB:    this->pacizb_s(inst);        break;
             case ID_INS_RBIT:      this->rbit_s(inst);          break;
             case ID_INS_RET:       this->ret_s(inst);           break;
             case ID_INS_REV16:     this->rev16_s(inst);         break;
@@ -1336,6 +1366,105 @@ namespace triton {
         }
 
 
+        void AArch64Semantics::blraa_s(triton::arch::Instruction& inst) {
+          auto  dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_X30));
+          auto  dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+          auto& src  = inst.operands[0];
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->bv(inst.getNextAddress(), dst1.getBitSize());
+          auto node2 = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "BLRAA operation - Link Register");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BLRAA operation - Program Counter");
+
+          /* Spread taint */
+          expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
+          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Set condition flag */
+          inst.setConditionTaken(true);
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr2);
+        }
+
+
+        void AArch64Semantics::blraaz_s(triton::arch::Instruction& inst) {
+          auto  dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_X30));
+          auto  dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+          auto& src  = inst.operands[0];
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->bv(inst.getNextAddress(), dst1.getBitSize());
+          auto node2 = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "BLRAAZ operation - Link Register");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BLRAAZ operation - Program Counter");
+
+          /* Spread taint */
+          expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
+          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Set condition flag */
+          inst.setConditionTaken(true);
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr2);
+        }
+
+
+        void AArch64Semantics::blrab_s(triton::arch::Instruction& inst) {
+          auto  dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_X30));
+          auto  dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+          auto& src  = inst.operands[0];
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->bv(inst.getNextAddress(), dst1.getBitSize());
+          auto node2 = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "BLRAB operation - Link Register");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BLRAB operation - Program Counter");
+
+          /* Spread taint */
+          expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
+          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Set condition flag */
+          inst.setConditionTaken(true);
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr2);
+        }
+
+
+        void AArch64Semantics::blrabz_s(triton::arch::Instruction& inst) {
+          auto  dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_X30));
+          auto  dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+          auto& src  = inst.operands[0];
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->bv(inst.getNextAddress(), dst1.getBitSize());
+          auto node2 = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "BLRABZ operation - Link Register");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BLRABZ operation - Program Counter");
+
+          /* Spread taint */
+          expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
+          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+          /* Set condition flag */
+          inst.setConditionTaken(true);
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr2);
+        }
+
         void AArch64Semantics::br_s(triton::arch::Instruction& inst) {
           auto  dst = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
           auto& src = inst.operands[0];
@@ -1345,6 +1474,90 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "BR operation - Program Counter");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Set condition flag */
+          inst.setConditionTaken(true);
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr);
+        }
+
+
+        void AArch64Semantics::braa_s(triton::arch::Instruction& inst) {
+          auto  dst = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+          auto& src = inst.operands[0];
+
+          /* Create the semantics */
+          auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "BRAA operation - Program Counter");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Set condition flag */
+          inst.setConditionTaken(true);
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr);
+        }
+
+
+        void AArch64Semantics::braaz_s(triton::arch::Instruction& inst) {
+          auto  dst = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+          auto& src = inst.operands[0];
+
+          /* Create the semantics */
+          auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "BRAAZ operation - Program Counter");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Set condition flag */
+          inst.setConditionTaken(true);
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr);
+        }
+
+
+        void AArch64Semantics::brab_s(triton::arch::Instruction& inst) {
+          auto  dst = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+          auto& src = inst.operands[0];
+
+          /* Create the semantics */
+          auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "BRAB operation - Program Counter");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Set condition flag */
+          inst.setConditionTaken(true);
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr);
+        }
+
+
+        void AArch64Semantics::brabz_s(triton::arch::Instruction& inst) {
+          auto  dst = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+          auto& src = inst.operands[0];
+
+          /* Create the semantics */
+          auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "BRABZ operation - Program Counter");
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
@@ -1782,6 +1995,7 @@ namespace triton {
           this->controlFlow_s(inst);
         }
 
+
         void AArch64Semantics::csinv_s(triton::arch::Instruction& inst) {
           auto& dst  = inst.operands[0];
           auto& src1 = inst.operands[1];
@@ -1804,6 +2018,17 @@ namespace triton {
           this->controlFlow_s(inst);
         }
 
+
+        void AArch64Semantics::dsb_s(triton::arch::Instruction& inst) {
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::dmb_s(triton::arch::Instruction& inst) {
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
 
 
         void AArch64Semantics::eon_s(triton::arch::Instruction& inst) {
@@ -1897,6 +2122,13 @@ namespace triton {
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
         }
+
+
+        void AArch64Semantics::isb_s(triton::arch::Instruction& inst) {
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
 
         void AArch64Semantics::ld3_s(triton::arch::Instruction& inst) {
           std::list<triton::ast::SharedAbstractNode> vec0;
@@ -4018,8 +4250,11 @@ namespace triton {
               break;
             }
 
-            default:
-              throw triton::exceptions::Semantics("AArch64Semantics::movi_s(): Invalid VAS encoding.");
+            default: {
+              // Probably a 64-bit scalar register.
+              vec.push_front(imm);
+              break;
+            }
           }
 
           /* Create the semantics */
@@ -4316,6 +4551,48 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::pacia_s(triton::arch::Instruction& inst) {
+          auto& src = inst.operands[1];
+
+          /* Link the diversifier to the instruction */
+          this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Do not care about the PAC, we just keep the same pointer */
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::pacib_s(triton::arch::Instruction& inst) {
+          auto& src = inst.operands[1];
+
+          /* Link the diversifier to the instruction */
+          this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Do not care about the PAC, we just keep the same pointer */
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::paciza_s(triton::arch::Instruction& inst) {
+          /* Do not care about the PAC, we just keep the same pointer */
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::pacizb_s(triton::arch::Instruction& inst) {
+          /* Do not care about the PAC, we just keep the same pointer */
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);

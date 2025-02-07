@@ -546,6 +546,11 @@ namespace triton {
                   break;
                 }
 
+                case triton::extlibs::capstone::ARM64_OP_BARRIER: {
+                  /* we do not care about barrier operand */
+                  break;
+                }
+
                 default:
                   /* NOTE: CIMM, and missing one are not supported yet. */
                   throw triton::exceptions::Disassembly("AArch64Cpu::disassembly(): Invalid operand.");
