@@ -295,10 +295,10 @@ Lifts a symbolic expression and all its references to Python format. If `icommen
 - <b>string liftToSMT(\ref py_SymbolicExpression_page expr, bool assert_=False, bool icomment=False)</b><br>
 Lifts a symbolic expression and all its references to SMT format. If `assert_` is true, then (assert <expr>). If `icomment` is true, then print instructions assembly in expression comments.
 
-- <b>\ref py_SymbolicExpression_page newSymbolicExpression(\ref py_AstNode_page node, string comment)</b><br>
+- <b>\ref py_SymbolicExpression_page newSymbolicExpression(\ref py_AstNode_page node, string comment="")</b><br>
 Returns a new symbolic expression. Note that if there are simplification passes recorded, simplifications will be applied.
 
-- <b>\ref py_SymbolicVariable_page newSymbolicVariable(integer varSize, string alias)</b><br>
+- <b>\ref py_SymbolicVariable_page newSymbolicVariable(integer varSize, string alias="")</b><br>
 Returns a new symbolic variable.
 
 - <b>void popPathConstraint(void)</b><br>
@@ -380,13 +380,13 @@ Performs a dead store elimination simplification on a given block. If `padding` 
 - <b>dict sliceExpressions(\ref py_SymbolicExpression_page expr)</b><br>
 Slices expressions from a given one (backward slicing) and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
 
-- <b>\ref py_SymbolicVariable_page symbolizeExpression(integer symExprId, integer symVarSize, string symVarAlias)</b><br>
+- <b>\ref py_SymbolicVariable_page symbolizeExpression(integer symExprId, integer symVarSize, string symVarAlias="")</b><br>
 Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits. This function returns the new symbolic variable created.
 
-- <b>\ref py_SymbolicVariable_page symbolizeMemory(\ref py_MemoryAccess_page mem, string symVarAlias)</b><br>
+- <b>\ref py_SymbolicVariable_page symbolizeMemory(\ref py_MemoryAccess_page mem, string symVarAlias="")</b><br>
 Converts a symbolic memory expression to a symbolic variable. This function returns the new symbolic variable created.
 
-- <b>\ref py_SymbolicVariable_page symbolizeRegister(\ref py_Register_page reg, string symVarAlias)</b><br>
+- <b>\ref py_SymbolicVariable_page symbolizeRegister(\ref py_Register_page reg, string symVarAlias="")</b><br>
 Converts a symbolic register expression to a symbolic variable. This function returns the new symbolic variable created.
 
 - <b>\ref py_AstNode_page synthesize(\ref py_AstNode_page node, bool constant=True, bool subexpr=True, bool opaque=False)</b><br>

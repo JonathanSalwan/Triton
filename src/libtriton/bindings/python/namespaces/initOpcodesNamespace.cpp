@@ -2188,7 +2188,6 @@ According to the CPU architecture, the OPCODE namespace contains all kinds of op
 - **OPCODE.RV64.ADDW**<br>
 - **OPCODE.RV64.AND**<br>
 - **OPCODE.RV64.ANDI**<br>
-- **OPCODE.RV64.AND**<br>
 - **OPCODE.RV64.AUIPC**<br>
 - **OPCODE.RV64.BEQ**<br>
 - **OPCODE.RV64.BGE**<br>
@@ -2284,7 +2283,6 @@ According to the CPU architecture, the OPCODE namespace contains all kinds of op
 - **OPCODE.RV32.ADDI**<br>
 - **OPCODE.RV32.AND**<br>
 - **OPCODE.RV32.ANDI**<br>
-- **OPCODE.RV32.AND**<br>
 - **OPCODE.RV32.AUIPC**<br>
 - **OPCODE.RV32.BEQ**<br>
 - **OPCODE.RV32.BGE**<br>
@@ -4535,7 +4533,6 @@ namespace triton {
         xPyDict_SetItemString(riscv64OpcodesDict, "ADDW",   PyLong_FromUint32(triton::arch::riscv::ID_INS_ADDW));
         xPyDict_SetItemString(riscv64OpcodesDict, "AND",    PyLong_FromUint32(triton::arch::riscv::ID_INS_AND));
         xPyDict_SetItemString(riscv64OpcodesDict, "ANDI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_ANDI));
-        xPyDict_SetItemString(riscv64OpcodesDict, "AND",    PyLong_FromUint32(triton::arch::riscv::ID_INS_AND));
         xPyDict_SetItemString(riscv64OpcodesDict, "AUIPC",  PyLong_FromUint32(triton::arch::riscv::ID_INS_AUIPC));
         xPyDict_SetItemString(riscv64OpcodesDict, "BEQ",    PyLong_FromUint32(triton::arch::riscv::ID_INS_BEQ));
         xPyDict_SetItemString(riscv64OpcodesDict, "BGE",    PyLong_FromUint32(triton::arch::riscv::ID_INS_BGE));
@@ -4636,7 +4633,6 @@ namespace triton {
         xPyDict_SetItemString(riscv32OpcodesDict, "ADDI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_ADDI));
         xPyDict_SetItemString(riscv32OpcodesDict, "AND",    PyLong_FromUint32(triton::arch::riscv::ID_INS_AND));
         xPyDict_SetItemString(riscv32OpcodesDict, "ANDI",   PyLong_FromUint32(triton::arch::riscv::ID_INS_ANDI));
-        xPyDict_SetItemString(riscv32OpcodesDict, "AND",    PyLong_FromUint32(triton::arch::riscv::ID_INS_AND));
         xPyDict_SetItemString(riscv32OpcodesDict, "AUIPC",  PyLong_FromUint32(triton::arch::riscv::ID_INS_AUIPC));
         xPyDict_SetItemString(riscv32OpcodesDict, "BEQ",    PyLong_FromUint32(triton::arch::riscv::ID_INS_BEQ));
         xPyDict_SetItemString(riscv32OpcodesDict, "BGE",    PyLong_FromUint32(triton::arch::riscv::ID_INS_BGE));
