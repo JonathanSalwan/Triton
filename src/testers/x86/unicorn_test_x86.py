@@ -17,7 +17,7 @@ HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 
 CODE  = [
-    (None, [], b"\x48\xb8\xaf\xbe\xad\xde\x00\x00\x00\x00",   "mov rax, 0xdeadbeaf"),
+    (None, [], b"\x48\xb8\x44\x33\x22\x11\x00\x00\x00\x00",   "mov rax, 0x11223344"),
     (None, [], b"\x48\xff\xc0",                               "inc rax"),
     (None, [], b"\x48\xc7\xc3\x00\x00\x20\x00",               "mov rbx, 0x200000"),
     (None, [], b"\x0f\x28\x0b",                               "movaps xmm1, [rbx]"),
