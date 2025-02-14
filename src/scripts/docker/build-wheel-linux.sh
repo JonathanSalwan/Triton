@@ -27,6 +27,9 @@ LLVM_DIR=/llvm
 SOURCE_DIR=/src
 WHEEL_DIR=$SOURCE_DIR/wheelhouse
 
+# Show Python versions.
+ls -al /opt/_internal/
+
 # Set environment variables for building Triton.
 echo "[+] Setup environment variables"
 export Z3_INCLUDE_DIRS=$DEPENDENCIES_DIR/z3-4.12.2-x64-glibc-2.31/include
@@ -88,7 +91,7 @@ echo "[+] Build Triton wheel package for Python 3.13"
 cd $SOURCE_DIR
 rm -rf $SOURCE_DIR/build
 rm -rf $SOURCE_DIR/triton_library.egg-info
-export PYTHON_BINARY=/opt/_internal/cpython-3.13.1/bin/python
+export PYTHON_BINARY=/opt/_internal/cpython-3.13.2/bin/python
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
