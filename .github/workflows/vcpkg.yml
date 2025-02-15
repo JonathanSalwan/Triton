@@ -80,7 +80,7 @@ jobs:
     - name: Test
       run: |
         ${{ matrix.python-executable }} --version
-        ${{ matrix.python-executable }} -m pip install lief==0.15.1 unicorn==2.0.1.post1 z3-solver
+        ${{ matrix.python-executable }} -m pip install lief==0.15.1 unicorn z3-solver
         ctest --preset test-${{ matrix.cmake-preset }} -C Release --output-on-failure
 
     - name: Install
