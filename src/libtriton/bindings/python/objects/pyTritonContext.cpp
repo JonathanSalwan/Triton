@@ -229,6 +229,9 @@ Returns the list of all tainted registers.
 - <b>[\ref py_SymbolicExpression_page, ...] getTaintedSymbolicExpressions(void)</b><br>
 Returns the list of all tainted symbolic expressions.
 
+- <b>void initLeaAst(\ref py_MemoryAccess_page mem)</b><br>
+Initializes the load effective address of a given memory access.
+
 - <b>bool isArchitectureValid(void)</b><br>
 Returns true if the architecture is valid.
 
@@ -1988,6 +1991,26 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_initLeaAst(PyObject* self, PyObject* mem) {
+        try {
+          if (PyMemoryAccess_Check(mem)) {
+            PyTritonContext_AsTritonContext(self)->getSymbolicEngine()->initLeaAst(*PyMemoryAccess_AsMemoryAccess(mem), true);
+          }
+          else
+            return PyErr_Format(PyExc_TypeError, "TritonContext::initLeaAst(): Expects a MemoryAccess as argument.");
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* TritonContext_isArchitectureValid(PyObject* self, PyObject* noarg) {
         try {
           if (PyTritonContext_AsTritonContext(self)->isArchitectureValid() == true)
@@ -3611,6 +3634,7 @@ namespace triton {
         {"getTaintedMemory",                    (PyCFunction)TritonContext_getTaintedMemory,                                            METH_NOARGS,                   ""},
         {"getTaintedRegisters",                 (PyCFunction)TritonContext_getTaintedRegisters,                                         METH_NOARGS,                   ""},
         {"getTaintedSymbolicExpressions",       (PyCFunction)TritonContext_getTaintedSymbolicExpressions,                               METH_NOARGS,                   ""},
+        {"initLeaAst",                          (PyCFunction)TritonContext_initLeaAst,                                                  METH_O,                        ""},
         {"isArchitectureValid",                 (PyCFunction)TritonContext_isArchitectureValid,                                         METH_NOARGS,                   ""},
         {"isConcreteMemoryValueDefined",        (PyCFunction)TritonContext_isConcreteMemoryValueDefined,                                METH_VARARGS,                  ""},
         {"isFlag",                              (PyCFunction)TritonContext_isFlag,                                                      METH_O,                        ""},
