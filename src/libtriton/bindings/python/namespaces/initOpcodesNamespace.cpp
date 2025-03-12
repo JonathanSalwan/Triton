@@ -2179,6 +2179,41 @@ According to the CPU architecture, the OPCODE namespace contains all kinds of op
 - **OPCODE.AARCH64.XTN**<br>
 - **OPCODE.AARCH64.ZIP1**<br>
 - **OPCODE.AARCH64.ZIP2**<br>
+- **OPCODE.AARCH64.MNEG**<br>
+- **OPCODE.AARCH64.UMNEGL**<br>
+- **OPCODE.AARCH64.SMNEGL**<br>
+- **OPCODE.AARCH64.NOP**<br>
+- **OPCODE.AARCH64.YIELD**<br>
+- **OPCODE.AARCH64.WFE**<br>
+- **OPCODE.AARCH64.WFI**<br>
+- **OPCODE.AARCH64.SEV**<br>
+- **OPCODE.AARCH64.SEVL**<br>
+- **OPCODE.AARCH64.NGC**<br>
+- **OPCODE.AARCH64.SBFIZ**<br>
+- **OPCODE.AARCH64.UBFIZ**<br>
+- **OPCODE.AARCH64.SBFX**<br>
+- **OPCODE.AARCH64.UBFX**<br>
+- **OPCODE.AARCH64.BFI**<br>
+- **OPCODE.AARCH64.BFXIL**<br>
+- **OPCODE.AARCH64.CMN**<br>
+- **OPCODE.AARCH64.MVN**<br>
+- **OPCODE.AARCH64.TST**<br>
+- **OPCODE.AARCH64.CSET**<br>
+- **OPCODE.AARCH64.CINC**<br>
+- **OPCODE.AARCH64.CSETM**<br>
+- **OPCODE.AARCH64.CINV**<br>
+- **OPCODE.AARCH64.CNEG**<br>
+- **OPCODE.AARCH64.SXTB**<br>
+- **OPCODE.AARCH64.SXTH**<br>
+- **OPCODE.AARCH64.SXTW**<br>
+- **OPCODE.AARCH64.CMP**<br>
+- **OPCODE.AARCH64.UXTB**<br>
+- **OPCODE.AARCH64.UXTH**<br>
+- **OPCODE.AARCH64.UXTW**<br>
+- **OPCODE.AARCH64.IC**<br>
+- **OPCODE.AARCH64.DC**<br>
+- **OPCODE.AARCH64.AT**<br>
+- **OPCODE.AARCH64.TLBI**<br>
 
 \subsection OPCODE_riscv64_py_api RV64
 
@@ -4081,6 +4116,41 @@ namespace triton {
         xPyDict_SetItemString(Aarch64OpcodesDict, "XTN", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_XTN));
         xPyDict_SetItemString(Aarch64OpcodesDict, "ZIP1", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_ZIP1));
         xPyDict_SetItemString(Aarch64OpcodesDict, "ZIP2", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_ZIP2));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "MNEG", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_MNEG));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "UMNEGL", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_UMNEGL));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "SMNEGL", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_SMNEGL));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "NOP", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_NOP));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "YIELD", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_YIELD));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "WFE", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_WFE));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "WFI", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_WFI));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "SEV", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_SEV));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "SEVL", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_SEVL));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "NGC", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_NGC));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "SBFIZ", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_SBFIZ));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "UBFIZ", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_UBFIZ));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "SBFX", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_SBFX));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "UBFX", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_UBFX));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "BFI", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_BFI));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "BFXIL", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_BFXIL));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "CMN", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_CMN));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "MVN", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_MVN));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "TST", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_TST));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "CSET", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_CSET));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "CINC", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_CINC));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "CSETM", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_CSETM));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "CINV", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_CINV));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "CNEG", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_CNEG));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "SXTB", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_SXTB));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "SXTH", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_SXTH));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "SXTW", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_SXTW));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "CMP", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_CMP));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "UXTB", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_UXTB));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "UXTH", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_UXTH));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "UXTW", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_UXTW));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "IC", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_IC));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "DC", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_DC));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "AT", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_AT));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "TLBI", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_TLBI));
 
         PyObject* Aarch64OpcodesDictClass = xPyClass_New(nullptr, Aarch64OpcodesDict, xPyString_FromString("AARCH64"));
         xPyDict_SetItemString(opcodesDict, "AARCH64", Aarch64OpcodesDictClass);
