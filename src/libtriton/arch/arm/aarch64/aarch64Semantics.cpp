@@ -256,6 +256,7 @@ namespace triton {
             case ID_INS_CNEG:      this->cneg_s(inst);          break;
             case ID_INS_CSEL:      this->csel_s(inst);          break;
             case ID_INS_CSET:      this->cset_s(inst);          break;
+            case ID_INS_CSETM:     this->csetm_s(inst);         break;
             case ID_INS_CSINC:     this->csinc_s(inst);         break;
             case ID_INS_CSNEG:     this->csneg_s(inst);         break;
             case ID_INS_CSINV:     this->csinv_s(inst);         break;
@@ -1725,6 +1726,28 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CSET operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->setTaint(dst, this->getCodeConditionTainteSate(inst));
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::csetm_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+
+          /* Create symbolic operands */ 
+          triton::uint512 temp = 1;
+          auto op1 = this->astCtxt->bv((temp << dst.getBitSize()) - 1, dst.getBitSize());
+          auto op2 = this->astCtxt->bv(0, dst.getBitSize());
+
+          /* Create the semantics */
+          auto node = this->getCodeConditionAst(inst, op1, op2);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CSETM operation");
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->setTaint(dst, this->getCodeConditionTainteSate(inst));
