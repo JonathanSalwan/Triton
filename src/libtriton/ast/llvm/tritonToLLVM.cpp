@@ -6,7 +6,6 @@
 */
 
 #include <algorithm>
-#include <list>
 #include <map>
 #include <vector>
 
@@ -17,6 +16,10 @@
 #include <triton/tritonToLLVM.hpp>
 #include <triton/tritonTypes.hpp>
 
+#include <llvm/IR/PassManager.h>
+#include <llvm/Analysis/LoopAnalysisManager.h>
+#include <llvm/Analysis/CGSCCPassManager.h>
+#include <llvm/Passes/PassBuilder.h>
 
 
 namespace triton {
@@ -104,12 +107,21 @@ namespace triton {
 
       /* Apply LLVM optimizations (-03 -Oz) if enabled */
       if (optimize) {
-        llvm::legacy::PassManager pm;
-        llvm::PassManagerBuilder pmb;
-        pmb.OptLevel = 3;
-        pmb.SizeLevel = 2;
-        pmb.populateModulePassManager(pm);
-        pm.run(*this->llvmModule);
+        llvm::LoopAnalysisManager lam;
+        llvm::FunctionAnalysisManager fam;
+        llvm::CGSCCAnalysisManager cgam;
+        llvm::ModuleAnalysisManager mam;
+
+        llvm::PassBuilder pb;
+
+        pb.registerModuleAnalyses(mam);
+        pb.registerCGSCCAnalyses(cgam);
+        pb.registerFunctionAnalyses(fam);
+        pb.registerLoopAnalyses(lam);
+        pb.crossRegisterProxies(lam, fam, cgam, mam);
+
+        llvm::ModulePassManager pm = pb.buildPerModuleDefaultPipeline(llvm::OptimizationLevel::O3);
+        pm.run(*this->llvmModule, mam);
       }
 
       return this->llvmModule;
@@ -314,12 +326,12 @@ namespace triton {
           return results->at(reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression()->getAst());
 
         case triton::ast::SELECT_NODE: {
-          auto* ptr = this->llvmIR.CreateIntToPtr(children[1], llvm::Type::getInt8PtrTy(this->llvmContext));
+          auto* ptr = this->llvmIR.CreateIntToPtr(children[1], llvm::Type::getInt8Ty(this->llvmContext)->getPointerTo());
           return this->llvmIR.CreateLoad(llvm::Type::getInt8Ty(this->llvmContext), ptr);
         }
 
         case triton::ast::STORE_NODE: {
-          auto* ptr = this->llvmIR.CreateIntToPtr(children[1], llvm::Type::getInt8PtrTy(this->llvmContext));
+          auto* ptr = this->llvmIR.CreateIntToPtr(children[1], llvm::Type::getInt8Ty(this->llvmContext)->getPointerTo());
           return this->llvmIR.CreateStore(children[2], ptr);
         }
 

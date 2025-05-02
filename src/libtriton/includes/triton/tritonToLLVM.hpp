@@ -10,8 +10,6 @@
 
 #include <map>
 #include <memory>
-#include <ostream>
-#include <string>
 #include <unordered_map>
 
 #include <triton/ast.hpp>
@@ -19,9 +17,7 @@
 
 #include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/LLVMContext.h>
-#include <llvm/IR/LegacyPassManager.h>
 #include <llvm/IR/Module.h>
-#include <llvm/Transforms/IPO/PassManagerBuilder.h>
 
 
 
