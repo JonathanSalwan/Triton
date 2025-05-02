@@ -260,7 +260,7 @@ namespace triton {
 
             //! The EXTR semantics.
             void extr_s(triton::arch::Instruction& inst);
-            
+
             //! The FMOV semantics.
             void fmov_s(triton::arch::Instruction& inst);
 
