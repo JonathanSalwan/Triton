@@ -1994,7 +1994,7 @@ namespace triton {
       static PyObject* TritonContext_initLeaAst(PyObject* self, PyObject* mem) {
         try {
           if (PyMemoryAccess_Check(mem)) {
-            PyTritonContext_AsTritonContext(self)->getSymbolicEngine()->initLeaAst(*PyMemoryAccess_AsMemoryAccess(mem), true);
+            PyTritonContext_AsTritonContext(self)->initLeaAst(*PyMemoryAccess_AsMemoryAccess(mem), true);
           }
           else
             return PyErr_Format(PyExc_TypeError, "TritonContext::initLeaAst(): Expects a MemoryAccess as argument.");

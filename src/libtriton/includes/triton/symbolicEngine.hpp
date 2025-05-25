@@ -127,7 +127,7 @@ namespace triton {
           inline void addBitvectorMemory(triton::uint64 mem, const SharedSymbolicExpression& expr);
 
           //! Returns the AST corresponding to the extend operation. Mainly used for AArch64 operands.
-          triton::ast::SharedAbstractNode getExtendAst(const triton::arch::arm::ArmOperandProperties& extend, const triton::ast::SharedAbstractNode& node);
+          triton::ast::SharedAbstractNode getExtendAst(const triton::arch::arm::ArmOperandProperties& extend, const triton::ast::SharedAbstractNode& node) const;
 
           //! Returns the parent AST after inserting the subregister (node) in its AST.
           triton::ast::SharedAbstractNode insertSubRegisterInParent(const triton::arch::Register& reg, const triton::ast::SharedAbstractNode& node, bool zxForAssign=true);
@@ -221,16 +221,16 @@ namespace triton {
           TRITON_EXPORT triton::ast::SharedAbstractNode getMemoryAst(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem);
 
           //! Returns the AST corresponding to the register.
-          TRITON_EXPORT triton::ast::SharedAbstractNode getRegisterAst(const triton::arch::Register& reg);
+          TRITON_EXPORT triton::ast::SharedAbstractNode getRegisterAst(const triton::arch::Register& reg) const;
 
           //! Returns the AST corresponding to the register and defines the register as input of the instruction.
-          TRITON_EXPORT triton::ast::SharedAbstractNode getRegisterAst(triton::arch::Instruction& inst, const triton::arch::Register& reg);
+          TRITON_EXPORT triton::ast::SharedAbstractNode getRegisterAst(triton::arch::Instruction& inst, const triton::arch::Register& reg) const;
 
           //! Returns the AST corresponding to the shift operation. Mainly used for Arm32 operands.
-          triton::ast::SharedAbstractNode getShiftAst(const triton::arch::arm::ArmOperandProperties& shift, const triton::ast::SharedAbstractNode& node);
+          triton::ast::SharedAbstractNode getShiftAst(const triton::arch::arm::ArmOperandProperties& shift, const triton::ast::SharedAbstractNode& node) const;
 
           //! Returns the AST corresponding to the VAS vector index operation. Mainly used for Arm Neon vector operands.
-          triton::ast::SharedAbstractNode getIndexAst(const triton::arch::arm::ArmOperandProperties& vas_index, const triton::ast::SharedAbstractNode& node);
+          triton::ast::SharedAbstractNode getIndexAst(const triton::arch::arm::ArmOperandProperties& vas_index, const triton::ast::SharedAbstractNode& node) const;
 
           //! Returns the new symbolic expression and links this expression to the instruction.
           TRITON_EXPORT const SharedSymbolicExpression& createSymbolicExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::OperandWrapper& dst, const std::string& comment="");
@@ -302,7 +302,7 @@ namespace triton {
           TRITON_EXPORT bool isRegisterSymbolized(const triton::arch::Register& reg) const;
 
           //! Initializes the effective address of a memory access.
-          TRITON_EXPORT void initLeaAst(triton::arch::MemoryAccess& mem, bool force=true);
+          TRITON_EXPORT void initLeaAst(triton::arch::MemoryAccess& mem, bool force=true) const;
 
           //! Gets the concrete value of a symbolic variable.
           TRITON_EXPORT triton::uint512 getConcreteVariableValue(const SharedSymbolicVariable& symVar) const;
