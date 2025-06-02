@@ -1,47 +1,90 @@
-FROM --platform=linux/amd64 ubuntu:20.04
-ARG DEBIAN_FRONTEND=noninteractive
+FROM --platform=linux/amd64 ubuntu:24.04
 
 COPY . /Triton
 
-# libboost >= 1.68
-# libpython >= 3.6
-# llvm >= 12
+RUN apt update && \
+    apt upgrade -y
+
+# libboost >= 1.83
+# libpython >= 3.12
+# llvm >= 16.0
+RUN DEBIAN_FRONTEND="noninteractive" \
+    apt install -y --no-install-suggests --no-install-recommends \
+        build-essential \
+        clang \
+        curl \
+        git \
+        libboost-all-dev \
+        libgmp-dev \
+        libpython3-dev \
+        libpython3-stdlib \
+        llvm-16 \
+        llvm-16-dev \
+        ninja-build \
+        pkg-config \
+        python3-pip \
+        python3-venv \
+        tar && \
+    apt clean
+
+ENV VIRTUAL_ENV=/Triton-venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
 # cmake >= 3.20
-RUN apt update && apt upgrade -y && apt install -y build-essential clang curl git libboost-all-dev libgmp-dev libpython3-dev libpython3-stdlib llvm-12 llvm-12-dev python3-pip tar ninja-build pkg-config && apt-get clean && pip install --upgrade pip && pip3 install Cython lief cmake meson
+# libz3 >= 4.13.0
+RUN python3 -m pip install --upgrade pip && \
+    python3 -m pip install \
+        cmake \
+        lief \
+        meson \
+        setuptools \
+        unicorn \
+        z3-solver
 
 # libcapstone >= 5.0.x
-RUN cd /tmp && \
-    curl -o cap.tgz -L https://github.com/aquynh/capstone/archive/5.0.1.tar.gz && \
-    tar xvf cap.tgz && cd capstone-5.0.1/ && CAPSTONE_ARCHS="arm aarch64 riscv x86" ./make.sh && \
-    make install && rm -rf /tmp/cap* \
-    && ln -s /usr/lib/libcapstone.so.5 /usr/lib/x86_64-linux-gnu/libcapstone.so
+RUN echo "[+] Download, build and install Capstone" && \
+    cd /tmp && \
+    curl -s -o capstone-5.0.1.tar.gz -L https://github.com/aquynh/capstone/archive/5.0.1.tar.gz && \
+    tar xf capstone-5.0.1.tar.gz && \
+    cd ./capstone-5.0.1 && \
+    CAPSTONE_ARCHS="arm aarch64 riscv x86" ./make.sh && \
+    make install
 
 # libbitwuzla >= 0.4.0
-RUN cd /tmp && \
+RUN echo "[+] Download, build and install Bitwuzla" && \
+    cd /tmp && \
     git clone https://github.com/bitwuzla/bitwuzla.git && \
     cd bitwuzla && \
     git checkout -b 0.4.0 0.4.0 && \
     python3 ./configure.py --shared && \
     cd build && \
-    ninja install && \
-    ldconfig
+    ninja -j$(nproc) install
 
-# To test pre-releases 'pip install' the corresponding .whl from https://github.com/Z3Prover/z3/releases/tag/Nightly
-# libz3 >= 4.6.0
-RUN pip3 install z3-solver==4.8.14
-
-RUN PYV=`python3 -c "import platform;print(platform.python_version()[:3])"` && \
+RUN echo "[+] Build and install Triton" && \
+    Z3_PATH=$(python -c "import site; print(f'{site.getsitepackages()[0]}/z3')") && \
     # Triton (LLVM for lifting; z3 or bitwuzla as SMT solver)
-    cd /Triton && mkdir /tmp/triton-build && cd /tmp/triton-build && cmake -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=$(/usr/lib/llvm-12/bin/llvm-config --prefix) -DZ3_INTERFACE=ON -DZ3_INCLUDE_DIRS=/usr/local/lib/python$PYV/dist-packages/z3/include/ -DZ3_LIBRARIES=/usr/local/lib/python$PYV/dist-packages/z3/lib/libz3.so -DBITWUZLA_INTERFACE=ON  -DBITWUZLA_INCLUDE_DIRS=/usr/local/include -DBITWUZLA_LIBRARIES=/usr/local/lib/x86_64-linux-gnu/libbitwuzla.so /Triton && make -j$(nproc) && make install
+    cd /Triton && \
+    mkdir /tmp/triton-build && \
+    cd /tmp/triton-build && \
+    cmake \
+        -DLLVM_INTERFACE=ON \
+        -DCMAKE_PREFIX_PATH=$(llvm-config-16 --prefix) \
+        -DZ3_INTERFACE=ON \
+        -DZ3_INCLUDE_DIRS=$Z3_PATH/include/ \
+        -DZ3_LIBRARIES=$Z3_PATH/lib/libz3.so \
+        -DBITWUZLA_INTERFACE=ON \
+        -DBITWUZLA_INCLUDE_DIRS=/usr/local/include \
+        -DBITWUZLA_LIBRARIES=/usr/local/lib/x86_64-linux-gnu/libbitwuzla.so \
+        /Triton && \
+    make -j$(nproc) && \
+    make install
 
-RUN PYV=`python3 -c "import platform;print(platform.python_version()[:3])"` && \
-    PYP="/usr/lib/python$PYV/site-packages" && \
-    echo export PYTHONPATH="$PYP:\$PYTHONPATH" >> /etc/bash.bashrc && \
+RUN echo "[+] Check Triton build" && \
+    echo export "PATH=$VIRTUAL_ENV/bin:$PATH" >> /etc/bash.bashrc && \
+    # Print z3 version.
     python3 -c "import z3; print('Z3 version:', z3.get_version_string())" && \
-    # Next command fails if Triton has no z3 or bitwuzla support
-    PYTHONPATH="$PYP" python3 -c "from triton import *; ctx=TritonContext(ARCH.X86_64); ctx.setSolver(SOLVER.Z3); ctx.setSolver(SOLVER.BITWUZLA);"
-
-# Dependencies required for testing
-RUN pip install unicorn==2.0.0 lief
+    # Next command fails if Triton has no z3 or bitwuzla support.
+    python3 -c "from triton import *; ctx=TritonContext(ARCH.X86_64); ctx.setSolver(SOLVER.Z3); ctx.setSolver(SOLVER.BITWUZLA);"
 
 ENTRYPOINT /bin/bash

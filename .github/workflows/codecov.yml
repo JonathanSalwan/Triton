@@ -7,13 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.9]
+        python-version: [3.11]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -26,7 +26,7 @@ jobs:
           sudo apt-get install python3-setuptools lcov libboost-dev libgmp-dev
 
       - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: "14.0"
           directory: ${{ runner.temp }}/llvm
@@ -49,7 +49,7 @@ jobs:
         run: |
           git clone https://github.com/bitwuzla/bitwuzla.git
           cd bitwuzla
-          git checkout -b 0.4.0 0.4.0
+          git checkout -b 0.7.0 0.7.0
           python ./configure.py --shared
           cd build
           sudo ninja install
@@ -58,16 +58,16 @@ jobs:
 
       - name: Install Capstone
         run: |
-          wget https://github.com/aquynh/capstone/archive/5.0.1.tar.gz
-          tar -xf ./5.0.1.tar.gz
-          cd ./capstone-5.0.1
+          wget https://github.com/aquynh/capstone/archive/5.0.3.tar.gz
+          tar -xf ./5.0.3.tar.gz
+          cd ./capstone-5.0.3
           bash ./make.sh
           sudo make install
           cd ../
 
       - name: Install Unicorn
         run: |
-          python -m pip install unicorn==2.0.0
+          python -m pip install unicorn
 
       - name: Install LIEF
         run: |

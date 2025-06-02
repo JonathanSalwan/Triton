@@ -149,6 +149,15 @@ info = get_paths()
 print(info)
 ```
 
+#### Python Autocompletion
+
+If Python autocompletion is not working, follow these steps:
+
+1. Execute the [script](doc/autocomplete/generate_autocomplete.py)
+2. Place the generated triton.pyi file in the same directory as the Triton shared object you want to provide hints for (for example, `/usr/lib/python3.13/`).
+
+Your IDE must support parsing .pyi files.
+
 ### Windows
 
 You can use cmake to generate the .sln file of libTriton.

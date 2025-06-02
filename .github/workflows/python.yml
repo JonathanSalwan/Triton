@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create Docker image
         run: bash ./src/scripts/docker/build-docker-image.sh
 
       - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: "14.0"
           directory: ${{ runner.temp }}/llvm
@@ -29,44 +29,47 @@ jobs:
                 --volume ${{env.LLVM_PATH}}:/llvm \
                 build-triton-linux-x86_64 bash /src/src/scripts/docker/build-wheel-linux.sh
 
-      - name: Upload Wheel packages (Python 3.8)
-        uses: actions/upload-artifact@v3
-        with:
-          name: triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_31_x86_64.whl
-          path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_31_x86_64.whl
-          if-no-files-found: warn
-
       - name: Upload Wheel packages (Python 3.9)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_31_x86_64.whl
-          path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_31_x86_64.whl
+          name: triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_34_x86_64.whl
+          path: wheelhouse/manylinux_2_34_x86_64/triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_34_x86_64.whl
           if-no-files-found: warn
 
       - name: Upload Wheel packages (Python 3.10)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_31_x86_64.whl
-          path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_31_x86_64.whl
+          name: triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_34_x86_64.whl
+          path: wheelhouse/manylinux_2_34_x86_64/triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_34_x86_64.whl
           if-no-files-found: warn
 
       - name: Upload Wheel packages (Python 3.11)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_31_x86_64.whl
-          path: wheelhouse/manylinux_2_31_x86_64/triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_31_x86_64.whl
+          name: triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_34_x86_64.whl
+          path: wheelhouse/manylinux_2_34_x86_64/triton_library-${{ env.package-version }}-cp311-cp311-manylinux_2_34_x86_64.whl
           if-no-files-found: warn
 
+      - name: Upload Wheel packages (Python 3.12)
+        uses: actions/upload-artifact@v4
+        with:
+          name: triton_library-${{ env.package-version }}-cp312-cp312-manylinux_2_34_x86_64.whl
+          path: wheelhouse/manylinux_2_34_x86_64/triton_library-${{ env.package-version }}-cp312-cp312-manylinux_2_34_x86_64.whl
+          if-no-files-found: warn
+
+      - name: Upload Wheel packages (Python 3.13)
+        uses: actions/upload-artifact@v4
+        with:
+          name: triton_library-${{ env.package-version }}-cp313-cp313-manylinux_2_34_x86_64.whl
+          path: wheelhouse/manylinux_2_34_x86_64/triton_library-${{ env.package-version }}-cp313-cp313-manylinux_2_34_x86_64.whl
+          if-no-files-found: warn
 
   build-windows:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
         include:
-          - python-version: 3.8
-            pycp: cp38-cp38
-            pylib: python38.lib
           - python-version: 3.9
             pycp: cp39-cp39
             pylib: python39.lib
@@ -84,10 +87,10 @@ jobs:
             pylib: python313.lib
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -115,10 +118,10 @@ jobs:
 
       - name: Download and build Capstone
         run: |
-          wget -UseBasicParsing https://github.com/capstone-engine/capstone/archive/refs/tags/5.0.1.zip -O capstone-5.0.1.zip
-          tar -xf capstone-5.0.1.zip
-          mkdir -p capstone-5.0.1/build
-          cd capstone-5.0.1/build
+          wget -UseBasicParsing https://github.com/capstone-engine/capstone/archive/refs/tags/5.0.3.zip -O capstone-5.0.3.zip
+          tar -xf capstone-5.0.3.zip
+          mkdir -p capstone-5.0.3/build
+          cd capstone-5.0.3/build
           ../nmake.bat
         shell: powershell
 
@@ -130,8 +133,8 @@ jobs:
           PYTHON_LIBRARY: ${{ env.pythonLocation }}\libs\${{ matrix.pylib }}
           Z3_INCLUDE_DIRS: ${{ github.workspace }}\z3-4.12.2-x64-win\include
           Z3_LIBRARIES: ${{ github.workspace }}\z3-4.12.2-x64-win\bin\libz3.lib
-          CAPSTONE_INCLUDE_DIRS: ${{ github.workspace }}\capstone-5.0.1\include
-          CAPSTONE_LIBRARIES: ${{ github.workspace }}\capstone-5.0.1\build\capstone.lib
+          CAPSTONE_INCLUDE_DIRS: ${{ github.workspace }}\capstone-5.0.3\include
+          CAPSTONE_LIBRARIES: ${{ github.workspace }}\capstone-5.0.3\build\capstone.lib
 
       - name: Repair wheel package
         run: |
@@ -140,131 +143,127 @@ jobs:
           delvewheel repair --add-path ${{ github.workspace }}\z3-4.12.2-x64-win\bin --wheel-dir ${{ github.workspace }}\wheelhouse\windows_x86_64 -v ${{ github.workspace }}\wheelhouse\windows_x86_64_tmp\triton_library-${{ env.package-version }}-${{ matrix.pycp }}-win_amd64.whl
 
       - name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: triton_library-${{ env.package-version }}-${{ matrix.pycp }}-win_amd64.whl
           path: ${{ github.workspace }}\wheelhouse\windows_x86_64\triton_library-${{ env.package-version }}-${{ matrix.pycp }}-win_amd64.whl
           if-no-files-found: warn
 
+  # NOTE Temporarily disabled until issues with macos-14 get resolved.
+  # build-macos:
+  #   # macos-13 = x86
+  #   # macos-14 = arm (M1)
+  #   runs-on: macos-12
+  #   strategy:
+  #     matrix:
+  #       python-version: ['3.8', '3.9', '3.10']
+  #       include:
+  #         - python-version: 3.8
+  #           pycp: cp38-cp38
+  #         - python-version: 3.9
+  #           pycp: cp39-cp39
+  #         - python-version: 3.10
+  #           pycp: cp310-cp310
+  #         # - python-version: 3.11
+  #         #   pycp: cp311-cp311
+  #         # - python-version: 3.12
+  #         #   pycp: cp312-cp312
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-  build-macos:
-    # macos-13 = x86
-    # macos-14 = arm (M1)
-    runs-on: macos-12
-    strategy:
-      matrix:
-        python-version: ['3.8', '3.9', '3.10']
-        include:
-          - python-version: 3.8
-            pycp: cp38-cp38
-          - python-version: 3.9
-            pycp: cp39-cp39
-          - python-version: 3.10
-            pycp: cp310-cp310
-          # - python-version: 3.11
-          #   pycp: cp311-cp311
-          # - python-version: 3.12
-          #   pycp: cp312-cp312
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+  #     - name: Set up Python ${{ matrix.python-version }}
+  #       uses: actions/setup-python@v5
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
+  #     - name: Install LLVM and Clang
+  #       uses: KyleMayes/install-llvm-action@v2
+  #       with:
+  #         version: "14.0"
+  #         directory: ${{ runner.temp }}/llvm
 
-      - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1.6.1
-        with:
-          version: "14.0"
-          directory: ${{ runner.temp }}/llvm
+  #     - name: Upgrade pip version
+  #       run: |
+  #         sudo python -m pip install -U pip
 
-      - name: Upgrade pip version
-        run: |
-          sudo python -m pip install -U pip
+  #     - name: Install build package
+  #       run: |
+  #         sudo python -m pip install build
 
-      - name: Install build package
-        run: |
-          sudo python -m pip install build
+  #     - name: Install Meson
+  #       run: |
+  #         python -m pip install meson
 
-      - name: Install Ninja
-        run: |
-          brew install ninja
+  #     - name: Install Bitwuzla
+  #       run: |
+  #         git clone https://github.com/bitwuzla/bitwuzla.git
+  #         cd bitwuzla
+  #         git checkout -b 0.4.0 0.4.0
+  #         python ./configure.py --shared --prefix $(pwd)/install
+  #         cd build
+  #         sudo ninja install
 
-      - name: Install Meson
-        run: |
-          python -m pip install meson
+  #     - name: Download Z3
+  #       run: |
+  #         wget -q https://github.com/Z3Prover/z3/releases/download/z3-4.12.2/z3-4.12.2-x64-osx-10.16.zip -O z3-4.12.2-x64-osx-10.16.zip
+  #         unzip z3-4.12.2-x64-osx-10.16.zip
 
-      - name: Install Bitwuzla
-        run: |
-          git clone https://github.com/bitwuzla/bitwuzla.git
-          cd bitwuzla
-          git checkout -b 0.4.0 0.4.0
-          python ./configure.py --shared --prefix $(pwd)/install
-          cd build
-          sudo ninja install
+  #     - name: Install Capstone
+  #       run: |
+  #         wget -q https://github.com/capstone-engine/capstone/archive/refs/tags/5.0.1.tar.gz -O capstone-5.0.1.tar.gz
+  #         tar xf capstone-5.0.1.tar.gz
+  #         cd ./capstone-5.0.1
+  #         ./make.sh
+  #         sudo make install
 
-      - name: Download Z3
-        run: |
-          wget -q https://github.com/Z3Prover/z3/releases/download/z3-4.12.2/z3-4.12.2-x64-osx-10.16.zip -O z3-4.12.2-x64-osx-10.16.zip
-          unzip z3-4.12.2-x64-osx-10.16.zip
+  #     - name: Build Triton Python package
+  #       run: python -m build --wheel --outdir wheelhouse/default_x86_64
+  #       env:
+  #         Z3_INTERFACE: On
+  #         Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.12.2-x64-osx-10.16/include
+  #         Z3_LIBRARIES: ${{ github.workspace }}/z3-4.12.2-x64-osx-10.16/bin/libz3.a
+  #         BITWUZLA_INTERFACE: On
+  #         BITWUZLA_INCLUDE_DIRS: ${{ github.workspace }}/bitwuzla/install/include
+  #         BITWUZLA_LIBRARIES: ${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.dylib
+  #         CAPSTONE_INCLUDE_DIRS: /usr/local/include
+  #         CAPSTONE_LIBRARIES: /usr/local/lib/libcapstone.a
+  #         LLVM_INTERFACE: On
+  #         CMAKE_PREFIX_PATH: ${{env.LLVM_PATH}}
+  #         BOOST_INTERFACE: Off
 
-      - name: Install Capstone
-        run: |
-          wget -q https://github.com/capstone-engine/capstone/archive/refs/tags/5.0.1.tar.gz -O capstone-5.0.1.tar.gz
-          tar xf capstone-5.0.1.tar.gz
-          cd ./capstone-5.0.1
-          ./make.sh
-          sudo make install
+  #     - name: Repair wheel package
+  #       run: |
+  #         pip install delocate==0.10.4
 
-      - name: Build Triton Python package
-        run: python -m build --wheel --outdir wheelhouse/default_x86_64
-        env:
-          Z3_INTERFACE: On
-          Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.12.2-x64-osx-10.16/include
-          Z3_LIBRARIES: ${{ github.workspace }}/z3-4.12.2-x64-osx-10.16/bin/libz3.a
-          BITWUZLA_INTERFACE: On
-          BITWUZLA_INCLUDE_DIRS: ${{ github.workspace }}/bitwuzla/install/include
-          BITWUZLA_LIBRARIES: ${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.dylib
-          CAPSTONE_INCLUDE_DIRS: /usr/local/include
-          CAPSTONE_LIBRARIES: /usr/local/lib/libcapstone.a
-          LLVM_INTERFACE: On
-          CMAKE_PREFIX_PATH: ${{env.LLVM_PATH}}
-          BOOST_INTERFACE: Off
+  #         python ${{ github.workspace }}/src/scripts/macos/delocate-wheel-custom.py \
+  #           --verbose \
+  #           --wheel-dir wheelhouse/repaired_x86_64 \
+  #           ${{ github.workspace }}/wheelhouse/default_x86_64/triton_library-${{ env.package-version }}-${{ matrix.pycp }}-macosx_12_0_x86_64.whl
 
-      - name: Repair wheel package
-        run: |
-          pip install delocate==0.10.4
+  #     - name: Test wheel package
+  #       run: |
+  #         pip install virtualenv
 
-          python ${{ github.workspace }}/src/scripts/macos/delocate-wheel-custom.py \
-            --verbose \
-            --wheel-dir wheelhouse/repaired_x86_64 \
-            ${{ github.workspace }}/wheelhouse/default_x86_64/triton_library-${{ env.package-version }}-${{ matrix.pycp }}-macosx_12_0_x86_64.whl
+  #         virtualenv test-venv
+  #         source test-venv/bin/activate
 
-      - name: Test wheel package
-        run: |
-          pip install virtualenv
+  #         pip install ${{ github.workspace }}/wheelhouse/repaired_x86_64/triton_library-${{ env.package-version }}-${{ matrix.pycp }}-macosx_12_0_x86_64.whl
 
-          virtualenv test-venv
-          source test-venv/bin/activate
+  #         python -c "import triton"
 
-          pip install ${{ github.workspace }}/wheelhouse/repaired_x86_64/triton_library-${{ env.package-version }}-${{ matrix.pycp }}-macosx_12_0_x86_64.whl
+  #         pip install capstone
+  #         pip install lief
+  #         pip install unicorn==2.0.0
+  #         pip install z3-solver==4.12.2
 
-          python -c "import triton"
+  #         cd ${{ github.workspace }}/src/testers
+  #         python -m unittest discover -b -v unittests
+  #         deactivate
 
-          pip install capstone
-          pip install lief
-          pip install unicorn==2.0.0
-          pip install z3-solver==4.12.2
-
-          cd ${{ github.workspace }}/src/testers
-          python -m unittest discover -b -v unittests
-          deactivate
-
-      - name: Upload wheel package
-        uses: actions/upload-artifact@v3
-        with:
-          name: triton_library-${{ env.package-version }}-${{ matrix.pycp }}-macosx_12_0_x86_64.whl
-          path: ${{ github.workspace }}/wheelhouse/repaired_x86_64/triton_library-${{ env.package-version }}-${{ matrix.pycp }}-macosx_12_0_x86_64.whl
-          if-no-files-found: warn
+  #     - name: Upload wheel package
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: triton_library-${{ env.package-version }}-${{ matrix.pycp }}-macosx_12_0_x86_64.whl
+  #         path: ${{ github.workspace }}/wheelhouse/repaired_x86_64/triton_library-${{ env.package-version }}-${{ matrix.pycp }}-macosx_12_0_x86_64.whl
+  #         if-no-files-found: warn

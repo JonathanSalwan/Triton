@@ -6,38 +6,34 @@ jobs:
   build:
     # macos-13 = x86
     # macos-14 = arm (M1)
-    runs-on: macos-12
+    runs-on: macos-14
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1
+        uses: KyleMayes/install-llvm-action@v2
         with:
           version: "14.0"
           directory: ${{ runner.temp }}/llvm
 
-      - name: Install dependencies
-        run: |
-          brew install boost
-
       - name: Install Z3
         run: |
-          wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-osx-10.16.zip
-          unzip z3-4.8.17-x64-osx-10.16.zip
-          sudo python -m pip install z3-solver==4.8.17.0
+          wget -q https://github.com/Z3Prover/z3/releases/download/z3-4.13.3/z3-4.13.3-arm64-osx-13.7.zip
+          unzip -q z3-4.13.3-arm64-osx-13.7.zip
+          sudo python -m pip install z3-solver==4.13.3.0
 
-      - name: Install Ninja
+      - name: Install Deps
         run: |
-          brew install ninja
+          brew install gmp pkgconfig ninja
 
       - name: Install Meson
         run: |
@@ -47,7 +43,7 @@ jobs:
         run: |
           git clone https://github.com/bitwuzla/bitwuzla.git
           cd bitwuzla
-          git checkout -b 0.4.0 0.4.0
+          git checkout -b 0.7.0 0.7.0
           python ./configure.py --shared --prefix $(pwd)/install
           cd build
           sudo ninja install
@@ -55,16 +51,16 @@ jobs:
 
       - name: Install Capstone
         run: |
-          wget https://github.com/aquynh/capstone/archive/5.0.1.tar.gz
-          tar -xf ./5.0.1.tar.gz
-          cd ./capstone-5.0.1
+          wget -q https://github.com/aquynh/capstone/archive/5.0.3.tar.gz
+          tar -xf ./5.0.3.tar.gz
+          cd ./capstone-5.0.3
           bash ./make.sh
           sudo make install
           cd ../
 
       - name: Install Unicorn
         run: |
-          sudo python -m pip install unicorn==2.0.1
+          sudo python -m pip install unicorn
 
       - name: Install LIEF
         run: |
@@ -76,8 +72,8 @@ jobs:
           cd ./build
           cmake ..
           cmake -DZ3_INTERFACE=ON \
-                -DZ3_INCLUDE_DIRS=${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/include \
-                -DZ3_LIBRARIES=${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/bin/libz3.a \
+                -DZ3_INCLUDE_DIRS=${{ github.workspace }}/z3-4.13.3-arm64-osx-13.7/include \
+                -DZ3_LIBRARIES=${{ github.workspace }}/z3-4.13.3-arm64-osx-13.7/bin/libz3.a \
                 -DBITWUZLA_INTERFACE=ON \
                 -DBITWUZLA_INCLUDE_DIRS=${{ github.workspace }}/bitwuzla/install/include \
                 -DBITWUZLA_LIBRARIES=${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.dylib \
@@ -86,9 +82,11 @@ jobs:
                 -DBOOST_INTERFACE=OFF ..
           sudo make -j3 install
         env:
-          Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/include
-          Z3_LIBRARIES: ${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/bin/libz3.a
+          Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.13.3-arm64-osx-13.7/include
+          Z3_LIBRARIES: ${{ github.workspace }}/z3-4.13.3-arm64-osx-13.7/bin/libz3.a
 
+      # NOTE Tests will fail because currently they only pass with Unicorn
+      # v2.0.0. However, Unicorn v2.0.0 does not build on the macos-14 runner.
       - name: Unittests
         run: |
-          ctest --test-dir build --output-on-failure
+          DYLD_LIBRARY_PATH=/usr/local/lib/ ctest --test-dir build --output-on-failure

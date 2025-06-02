@@ -32,9 +32,9 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       name: Get vcpkg
       with:
         repository: 'microsoft/vcpkg'
@@ -46,7 +46,7 @@ jobs:
       name: Get CMake
 
     - name: Set up Python 3.11
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
 
@@ -80,7 +80,7 @@ jobs:
     - name: Test
       run: |
         ${{ matrix.python-executable }} --version
-        ${{ matrix.python-executable }} -m pip install lief==0.15.1 unicorn==2.0.1.post1 z3-solver
+        ${{ matrix.python-executable }} -m pip install lief==0.15.1 unicorn z3-solver
         ctest --preset test-${{ matrix.cmake-preset }} -C Release --output-on-failure
 
     - name: Install
@@ -88,7 +88,7 @@ jobs:
         cmake --build --preset build-${{ matrix.cmake-preset }} --config Release --target install
 
     - name: Upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: triton-x64-${{ matrix.platform }}
         path: ${{ github.workspace }}/out/install/${{ matrix.cmake-preset }}
