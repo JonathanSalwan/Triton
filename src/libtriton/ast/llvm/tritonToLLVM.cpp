@@ -267,10 +267,11 @@ namespace triton {
           if (bitSize <= triton::bitsize::qword) {
             return llvm::ConstantInt::get(this->llvmContext, llvm::APInt(bitSize, static_cast<uint64_t>(value), false));
           }
-          else if (bitSize == triton::bitsize::dqword) {
-            uint64_t low = static_cast<uint64_t>(value);
-            uint64_t high = static_cast<uint64_t>(value >> 64);
-            std::array<uint64_t, 2> arr64 = { low, high };
+          else if (bitSize <= triton::bitsize::dqqword) {
+            std::array<uint64_t, 8> arr64;
+            for (uint64_t i = 0; i < bitSize / 64; i++) {
+              arr64[i] = static_cast<uint64_t>(value >> (i * 64));
+            }
             return llvm::ConstantInt::get(this->llvmContext, llvm::APInt(bitSize, arr64));
           }
           else {
