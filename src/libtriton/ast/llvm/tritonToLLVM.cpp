@@ -62,8 +62,11 @@ namespace triton {
           case 64:
             argsType[index] = llvm::Type::getInt64Ty(this->llvmContext);
             break;
+          case 128:
+            argsType[index] = llvm::Type::getInt128Ty(this->llvmContext);
+            break;
           default:
-            throw triton::exceptions::AstLifting("TritonToLLVM::do_convert(): Symbolic variables must be aligned on 8, 16, 32 or 64 bit.");
+            throw triton::exceptions::AstLifting("TritonToLLVM::do_convert(): Symbolic variables must be aligned on 8, 16, 32, 64 or 128 bit.");
         }
       }
 
@@ -149,10 +152,11 @@ namespace triton {
         case triton::ast::BSWAP_NODE: {
           llvm::Function* bswap = nullptr;
           switch (node->getBitvectorSize()) {
-            case triton::bitsize::byte:  bswap = llvm::Intrinsic::getDeclaration(this->llvmModule.get(), llvm::Intrinsic::bswap, llvm::Type::getInt8Ty(this->llvmContext));  break;
-            case triton::bitsize::word:  bswap = llvm::Intrinsic::getDeclaration(this->llvmModule.get(), llvm::Intrinsic::bswap, llvm::Type::getInt16Ty(this->llvmContext)); break;
-            case triton::bitsize::dword: bswap = llvm::Intrinsic::getDeclaration(this->llvmModule.get(), llvm::Intrinsic::bswap, llvm::Type::getInt32Ty(this->llvmContext)); break;
-            case triton::bitsize::qword: bswap = llvm::Intrinsic::getDeclaration(this->llvmModule.get(), llvm::Intrinsic::bswap, llvm::Type::getInt64Ty(this->llvmContext)); break;
+            case triton::bitsize::byte:   bswap = llvm::Intrinsic::getDeclaration(this->llvmModule.get(), llvm::Intrinsic::bswap, llvm::Type::getInt8Ty(this->llvmContext));  break;
+            case triton::bitsize::word:   bswap = llvm::Intrinsic::getDeclaration(this->llvmModule.get(), llvm::Intrinsic::bswap, llvm::Type::getInt16Ty(this->llvmContext)); break;
+            case triton::bitsize::dword:  bswap = llvm::Intrinsic::getDeclaration(this->llvmModule.get(), llvm::Intrinsic::bswap, llvm::Type::getInt32Ty(this->llvmContext)); break;
+            case triton::bitsize::qword:  bswap = llvm::Intrinsic::getDeclaration(this->llvmModule.get(), llvm::Intrinsic::bswap, llvm::Type::getInt64Ty(this->llvmContext)); break;
+            case triton::bitsize::dqword: bswap = llvm::Intrinsic::getDeclaration(this->llvmModule.get(), llvm::Intrinsic::bswap, llvm::Type::getInt128Ty(this->llvmContext)); break;
             default:
               throw triton::exceptions::AstLifting("TritonToLLVM::do_convert(): Invalid bswap size.");
           }
@@ -257,8 +261,22 @@ namespace triton {
         case triton::ast::BVXOR_NODE:
           return this->llvmIR.CreateXor(children[0], children[1]);
 
-        case triton::ast::BV_NODE:
-          return llvm::ConstantInt::get(this->llvmContext, llvm::APInt(node->getBitvectorSize(), static_cast<uint64_t>(node->evaluate()), false));
+        case triton::ast::BV_NODE: {
+          auto value = node->evaluate();
+          auto bitSize = node->getBitvectorSize();
+          if (bitSize <= triton::bitsize::qword) {
+            return llvm::ConstantInt::get(this->llvmContext, llvm::APInt(bitSize, static_cast<uint64_t>(value), false));
+          }
+          else if (bitSize == triton::bitsize::dqword) {
+            uint64_t low = static_cast<uint64_t>(value);
+            uint64_t high = static_cast<uint64_t>(value >> 64);
+            std::array<uint64_t, 2> arr64 = { low, high };
+            return llvm::ConstantInt::get(this->llvmContext, llvm::APInt(bitSize, arr64));
+          }
+          else {
+            throw triton::exceptions::AstLifting("TritonToLLVM::do_convert(): Invalid bv size.");
+          }
+        }
 
         case triton::ast::CONCAT_NODE: {
           auto dstSize   = node->getBitvectorSize();
