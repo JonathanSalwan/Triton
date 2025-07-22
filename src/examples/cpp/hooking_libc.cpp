@@ -37,7 +37,7 @@ triton::uint64 strlenHandler(triton::Context& ctx) {
     if constexpr (DEBUG) {
         std::cout << "[+] Strlen hooked" << std::endl;
     }
-    auto arg1 = getMemoryString(ctx, ctx.getConcreteRegisterValue(ctx.registers.x86_rdi).convert_to<triton::uint64>());
+    auto arg1 = getMemoryString(ctx, static_cast<triton::uint64>(ctx.getConcreteRegisterValue(ctx.registers.x86_rdi)));
     return arg1.length();
 }
 
@@ -47,7 +47,7 @@ triton::uint64 printfHandler(triton::Context& ctx) {
     if constexpr (DEBUG) {
         std::cout << "[+] printf hooked" << std::endl;
     }
-    auto format_str = getFormatString(ctx, ctx.getConcreteRegisterValue(ctx.registers.x86_rdi).convert_to<triton::uint64>());
+    auto format_str = getFormatString(ctx, static_cast<triton::uint64>(ctx.getConcreteRegisterValue(ctx.registers.x86_rdi)));
     auto arg1 = ctx.getConcreteRegisterValue(ctx.registers.x86_rsi);
 
     std::stringstream ss;
@@ -73,7 +73,7 @@ triton::uint64 libcMainHandler(triton::Context& ctx) {
     ctx.setConcreteRegisterValue(ctx.registers.x86_rsp,
         ctx.getConcreteRegisterValue(ctx.registers.x86_rsp) - 8);
 
-    auto ret2main = triton::arch::MemoryAccess(ctx.getConcreteRegisterValue(ctx.registers.x86_rsp).convert_to<triton::uint64>(), 8);
+    auto ret2main = triton::arch::MemoryAccess(static_cast<triton::uint64>(ctx.getConcreteRegisterValue(ctx.registers.x86_rsp)), 8);
     ctx.setConcreteMemoryValue(ret2main, main);
 
     ctx.concretizeRegister(ctx.registers.x86_rdi);
@@ -123,7 +123,7 @@ void hookingHandler(triton::Context& ctx) {
             ctx.setConcreteRegisterValue(ctx.registers.x86_rax, ret_value);
 
             auto ret_addr = ctx.getConcreteMemoryValue(triton::arch::MemoryAccess(
-                ctx.getConcreteRegisterValue(ctx.registers.x86_rsp).convert_to<triton::uint64>(), 8));
+                static_cast<triton::uint64>(ctx.getConcreteRegisterValue(ctx.registers.x86_rsp)), 8));
 
             ctx.setConcreteRegisterValue(ctx.registers.x86_rip, ret_addr);
             ctx.setConcreteRegisterValue(ctx.registers.x86_rsp,
@@ -155,7 +155,7 @@ void emulate(triton::Context& ctx, triton::uint64 pc) {
 
         hookingHandler(ctx);
 
-        pc = ctx.getConcreteRegisterValue(ctx.registers.x86_rip).convert_to<triton::uint64>();
+        pc = static_cast<triton::uint64>(ctx.getConcreteRegisterValue(ctx.registers.x86_rip));
     }
     if constexpr (DEBUG) {
         std::cout << "[+] Emulation done." << std::endl;
