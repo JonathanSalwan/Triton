@@ -11,7 +11,7 @@ jobs:
       matrix:
         os:
           - macOS-latest
-          - ubuntu-20.04
+          - ubuntu-latest
           - windows-2022
         include:
           - os: windows-2022
@@ -19,7 +19,7 @@ jobs:
             vcpkg-triplet: x64-windows-static-release-md
             cmake-preset: windows-x64
             python-executable: python
-          - os: ubuntu-20.04
+          - os: ubuntu-latest
             platform: linux
             vcpkg-triplet: x64-linux-release
             cmake-preset: linux-x64
@@ -38,7 +38,7 @@ jobs:
       name: Get vcpkg
       with:
         repository: 'microsoft/vcpkg'
-        ref: '2024.05.24'
+        ref: '2025.06.13'
         path: '${{ github.workspace }}/_vcpkg'
         fetch-depth: 0
 
