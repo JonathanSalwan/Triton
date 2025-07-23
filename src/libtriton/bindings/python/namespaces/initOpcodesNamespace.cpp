@@ -2551,6 +2551,8 @@ namespace triton {
         xPyDict_SetItemString(x86OpcodesDict, "RET", PyLong_FromUint32(triton::arch::x86::ID_INS_RET));
         xPyDict_SetItemString(x86OpcodesDict, "ENCLS", PyLong_FromUint32(triton::arch::x86::ID_INS_ENCLS));
         xPyDict_SetItemString(x86OpcodesDict, "ENCLU", PyLong_FromUint32(triton::arch::x86::ID_INS_ENCLU));
+        xPyDict_SetItemString(x86OpcodesDict, "ENDBR32", PyLong_FromUint32(triton::arch::x86::ID_INS_ENDBR32));
+        xPyDict_SetItemString(x86OpcodesDict, "ENDBR64", PyLong_FromUint32(triton::arch::x86::ID_INS_ENDBR64));
         xPyDict_SetItemString(x86OpcodesDict, "ENTER", PyLong_FromUint32(triton::arch::x86::ID_INS_ENTER));
         xPyDict_SetItemString(x86OpcodesDict, "EXTRACTPS", PyLong_FromUint32(triton::arch::x86::ID_INS_EXTRACTPS));
         xPyDict_SetItemString(x86OpcodesDict, "EXTRQ", PyLong_FromUint32(triton::arch::x86::ID_INS_EXTRQ));
