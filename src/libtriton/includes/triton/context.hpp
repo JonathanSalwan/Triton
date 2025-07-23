@@ -397,10 +397,10 @@ namespace triton {
         TRITON_EXPORT triton::ast::SharedAbstractNode getMemoryAst(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem);
 
         //! [**symbolic api**] - Returns the AST corresponding to the register.
-        TRITON_EXPORT triton::ast::SharedAbstractNode getRegisterAst(const triton::arch::Register& reg);
+        TRITON_EXPORT triton::ast::SharedAbstractNode getRegisterAst(const triton::arch::Register& reg) const;
 
         //! [**symbolic api**] - Returns the AST corresponding to the register and defines the register as input of the instruction.
-        TRITON_EXPORT triton::ast::SharedAbstractNode getRegisterAst(triton::arch::Instruction& inst, const triton::arch::Register& reg);
+        TRITON_EXPORT triton::ast::SharedAbstractNode getRegisterAst(triton::arch::Instruction& inst, const triton::arch::Register& reg) const;
 
         //! [**symbolic api**] - Returns a new symbolic expression. Note that if there are simplification passes recorded, simplification will be applied.
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression newSymbolicExpression(const triton::ast::SharedAbstractNode& node, const std::string& comment="");
@@ -512,6 +512,9 @@ namespace triton {
 
         //! [**symbolic api**] - Concretizes a symbolic register.
         TRITON_EXPORT void concretizeRegister(const triton::arch::Register& reg);
+
+        //! [**symbolic api**] - Initializes the effective address of a memory access.
+        TRITON_EXPORT void initLeaAst(triton::arch::MemoryAccess& mem, bool force=true) const;
 
         //! [**symbolic api**] - Slices all expressions from a given one.
         TRITON_EXPORT std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> sliceExpressions(const triton::engines::symbolic::SharedSymbolicExpression& expr);

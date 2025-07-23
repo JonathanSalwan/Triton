@@ -345,7 +345,7 @@ namespace triton {
         TRITON_EXPORT void updateVariable(const std::string& name, const triton::uint512& value);
 
         //! Gets a variable node from its name.
-        SharedAbstractNode getVariableNode(const std::string& name);
+        TRITON_EXPORT SharedAbstractNode getVariableNode(const std::string& name);
 
         //! Returns the address space used for the ABV logic.
         TRITON_EXPORT triton::uint16 getArraySize(void) const;
