@@ -8,6 +8,7 @@
 #ifndef TRITON_MODES_HPP
 #define TRITON_MODES_HPP
 
+#include <cstdint>
 
 
 //! The Triton namespace
