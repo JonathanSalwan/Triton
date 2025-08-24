@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import ARCH, MemoryAccess, OPERAND, TritonContext, SHIFT
+from triton import *
 
 
 class TestMemory(unittest.TestCase):
@@ -13,8 +13,8 @@ class TestMemory(unittest.TestCase):
 
     def setUp(self):
         """Define the architecture and memory access to check."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
         self.mem = MemoryAccess(0x400f4d3, 8)
 
     def test_address(self):
@@ -48,20 +48,20 @@ class TestMemory(unittest.TestCase):
 
     def test_base_register(self):
         """Check base register modification."""
-        self.assertFalse(self.Triton.isRegisterValid(self.mem.getBaseRegister()))
-        self.mem.setBaseRegister(self.Triton.registers.rax)
+        self.assertFalse(self.ctx.isRegisterValid(self.mem.getBaseRegister()))
+        self.mem.setBaseRegister(self.ctx.registers.rax)
         self.assertEqual(self.mem.getBaseRegister().getName(), "rax")
 
     def test_index_register(self):
         """Check index register modification."""
-        self.assertFalse(self.Triton.isRegisterValid(self.mem.getIndexRegister()))
-        self.mem.setIndexRegister(self.Triton.registers.rcx)
+        self.assertFalse(self.ctx.isRegisterValid(self.mem.getIndexRegister()))
+        self.mem.setIndexRegister(self.ctx.registers.rcx)
         self.assertEqual(self.mem.getIndexRegister().getName(), "rcx")
 
     def test_segment_register(self):
         """Check segment register modification."""
-        self.assertFalse(self.Triton.isRegisterValid(self.mem.getSegmentRegister()))
-        self.mem.setSegmentRegister(self.Triton.registers.fs)
+        self.assertFalse(self.ctx.isRegisterValid(self.mem.getSegmentRegister()))
+        self.mem.setSegmentRegister(self.ctx.registers.fs)
         self.assertEqual(self.mem.getSegmentRegister().getName(), "fs")
 
     def test_scale(self):
@@ -89,3 +89,19 @@ class TestMemory(unittest.TestCase):
         self.assertFalse(MemoryAccess(0x1000, 4).isOverlapWith(MemoryAccess(0x10000, 4)))
         self.assertFalse(MemoryAccess(0x10000, 4).isOverlapWith(MemoryAccess(0x1000, 4)))
 
+    def test_initLeaAst(self):
+        """Check initLeaAst."""
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rax, 0x1000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbx, 0x20)
+        self.ctx.symbolizeRegister(self.ctx.registers.rax)
+        self.ctx.symbolizeRegister(self.ctx.registers.rbx)
+        self.ctx.setConcreteMemoryValue(MemoryAccess(0x1020, CPUSIZE.DWORD), 0xdeadbeef)
+
+        mem = MemoryAccess(0, CPUSIZE.DWORD)
+        mem.setBaseRegister(self.ctx.registers.rax)
+        mem.setIndexRegister(self.ctx.registers.rbx)
+        mem.setScale(Immediate(1, CPUSIZE.DWORD))
+
+        self.ctx.initLeaAst(mem)
+        self.assertEqual(mem.getLeaAst().evaluate(), 0x1020)
+        self.assertEqual(self.ctx.getConcreteMemoryValue(mem), 0xdeadbeef)

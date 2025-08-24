@@ -44,6 +44,19 @@ namespace triton {
             }
             return node;
           }
+          else if (call->getCalledFunction()->getName().find("llvm.fshl.i") != std::string::npos) {
+            // (X << (Z % BW)) | (Y >> (BW - (Z % BW)))
+            // https://llvm.org/docs/LangRef.html#llvm-fshl-intrinsic
+            auto x  = this->do_convert(call->getArgOperand(0));
+            auto y  = this->do_convert(call->getArgOperand(1));
+            auto z  = this->do_convert(call->getArgOperand(2));
+            auto bw = this->actx->bv(x->getBitvectorSize(), x->getBitvectorSize());
+
+            auto LHS = this->actx->bvshl(x, z);
+            auto RHS = this->actx->bvlshr(y, this->actx->bvsub(bw, z));
+
+            return this->actx->bvor(LHS, RHS);
+          }
           /* We symbolize the return of call */
           return this->var(instruction->getName().str(), instruction->getType()->getScalarSizeInBits());
         }

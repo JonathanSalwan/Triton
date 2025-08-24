@@ -776,13 +776,13 @@ namespace triton {
   }
 
 
-  triton::ast::SharedAbstractNode Context::getRegisterAst(const triton::arch::Register& reg) {
+  triton::ast::SharedAbstractNode Context::getRegisterAst(const triton::arch::Register& reg) const {
     this->checkSymbolic();
     return this->symbolic->getRegisterAst(reg);
   }
 
 
-  triton::ast::SharedAbstractNode Context::getRegisterAst(triton::arch::Instruction& inst, const triton::arch::Register& reg) {
+  triton::ast::SharedAbstractNode Context::getRegisterAst(triton::arch::Instruction& inst, const triton::arch::Register& reg) const {
     this->checkSymbolic();
     return this->symbolic->getRegisterAst(inst, reg);
   }
@@ -1051,6 +1051,12 @@ namespace triton {
   void Context::concretizeRegister(const triton::arch::Register& reg) {
     this->checkSymbolic();
     this->symbolic->concretizeRegister(reg);
+  }
+
+
+  void Context::initLeaAst(triton::arch::MemoryAccess& mem, bool force) const {
+    this->checkSymbolic();
+    this->symbolic->initLeaAst(mem);
   }
 
 

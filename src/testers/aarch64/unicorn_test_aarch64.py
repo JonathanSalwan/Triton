@@ -348,6 +348,9 @@ CODE  = [
     (b"\x20\x08\xc2\xaa", "orr x0, x1, x2, ror #2"),
     (b"\x20\x0c\xc2\xaa", "orr x0, x1, x2, ror #3"),
 
+    (b"\xe0\x03\x9f\xda", "csetm x0, ne"),
+    (b"\xe0\x13\x9f\xda", "csetm x0, eq"),
+
     (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     (b"\x02\x02\x80\xd2", "movz x2, #16"),
     (b"\x25\x00\x40\xf9", "ldr x5, [x1]"),

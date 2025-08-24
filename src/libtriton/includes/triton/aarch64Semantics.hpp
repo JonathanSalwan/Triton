@@ -240,6 +240,9 @@ namespace triton {
             //! The CSET semantics
             void cset_s(triton::arch::Instruction& inst);
 
+            //! The CSETM semantics
+            void csetm_s(triton::arch::Instruction& inst);
+
             //! The CSINC semantics
             void csinc_s(triton::arch::Instruction& inst);
 
@@ -257,7 +260,7 @@ namespace triton {
 
             //! The EXTR semantics.
             void extr_s(triton::arch::Instruction& inst);
-            
+
             //! The FMOV semantics.
             void fmov_s(triton::arch::Instruction& inst);
 

@@ -697,7 +697,7 @@ namespace triton {
       }
 
 
-      triton::ast::SharedAbstractNode SymbolicEngine::getShiftAst(const triton::arch::arm::ArmOperandProperties& shift, const triton::ast::SharedAbstractNode& node) {
+      triton::ast::SharedAbstractNode SymbolicEngine::getShiftAst(const triton::arch::arm::ArmOperandProperties& shift, const triton::ast::SharedAbstractNode& node) const {
         auto imm = shift.getShiftImmediate();
         auto reg = shift.getShiftRegister();
 
@@ -790,7 +790,7 @@ namespace triton {
         }
       }
 
-      triton::ast::SharedAbstractNode SymbolicEngine::getIndexAst(const triton::arch::arm::ArmOperandProperties& vas_index, const triton::ast::SharedAbstractNode& node) {
+      triton::ast::SharedAbstractNode SymbolicEngine::getIndexAst(const triton::arch::arm::ArmOperandProperties& vas_index, const triton::ast::SharedAbstractNode& node) const {
         auto vas_size = vas_index.getVASSize() * triton::bitsize::byte;
 
         auto low = vas_index.getVectorIndex() * vas_size;
@@ -800,7 +800,7 @@ namespace triton {
       }
 
 
-      triton::ast::SharedAbstractNode SymbolicEngine::getExtendAst(const triton::arch::arm::ArmOperandProperties& extend, const triton::ast::SharedAbstractNode& node) {
+      triton::ast::SharedAbstractNode SymbolicEngine::getExtendAst(const triton::arch::arm::ArmOperandProperties& extend, const triton::ast::SharedAbstractNode& node) const {
         triton::uint32 size = extend.getExtendSize();
 
         switch (extend.getExtendType()) {
@@ -925,7 +925,7 @@ namespace triton {
 
 
       /* Returns the AST corresponding to the register */
-      triton::ast::SharedAbstractNode SymbolicEngine::getRegisterAst(const triton::arch::Register& reg) {
+      triton::ast::SharedAbstractNode SymbolicEngine::getRegisterAst(const triton::arch::Register& reg) const {
         triton::ast::SharedAbstractNode node = nullptr;
         triton::uint32 bvSize                = reg.getBitSize();
         triton::uint32 high                  = reg.getHigh();
@@ -957,7 +957,7 @@ namespace triton {
 
 
       /* Returns the AST corresponding to the register and defines the register as input of the instruction */
-      triton::ast::SharedAbstractNode SymbolicEngine::getRegisterAst(triton::arch::Instruction& inst, const triton::arch::Register& reg) {
+      triton::ast::SharedAbstractNode SymbolicEngine::getRegisterAst(triton::arch::Instruction& inst, const triton::arch::Register& reg) const {
         triton::ast::SharedAbstractNode node = this->getRegisterAst(reg);
         inst.setReadRegister(reg, node);
         return node;
@@ -1259,7 +1259,7 @@ namespace triton {
 
 
       /* Initializes the memory access AST (LOAD and STORE) */
-      void SymbolicEngine::initLeaAst(triton::arch::MemoryAccess& mem, bool force) {
+      void SymbolicEngine::initLeaAst(triton::arch::MemoryAccess& mem, bool force) const {
         if (mem.getBitSize() >= bitsize::byte) {
           const triton::arch::Register& base  = mem.getConstBaseRegister();
           const triton::arch::Register& index = mem.getConstIndexRegister();
