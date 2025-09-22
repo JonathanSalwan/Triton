@@ -30,6 +30,7 @@ RUN DEBIAN_FRONTEND="noninteractive" \
 ENV VIRTUAL_ENV=/Triton-venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+RUN . $VIRTUAL_ENV/bin/activate
 
 # cmake >= 3.20
 # libz3 >= 4.13.0
@@ -56,10 +57,9 @@ RUN echo "[+] Download, build and install Bitwuzla" && \
     cd /tmp && \
     git clone https://github.com/bitwuzla/bitwuzla.git && \
     cd bitwuzla && \
-    git checkout -b 0.4.0 0.4.0 && \
     python3 ./configure.py --shared && \
     cd build && \
-    ninja -j$(nproc) install
+    meson install
 
 RUN echo "[+] Build and install Triton" && \
     Z3_PATH=$(python -c "import site; print(f'{site.getsitepackages()[0]}/z3')") && \
@@ -67,18 +67,13 @@ RUN echo "[+] Build and install Triton" && \
     cd /Triton && \
     mkdir /tmp/triton-build && \
     cd /tmp/triton-build && \
-    cmake \
+    cmake -GNinja \
         -DLLVM_INTERFACE=ON \
         -DCMAKE_PREFIX_PATH=$(llvm-config-16 --prefix) \
         -DZ3_INTERFACE=ON \
-        -DZ3_INCLUDE_DIRS=$Z3_PATH/include/ \
-        -DZ3_LIBRARIES=$Z3_PATH/lib/libz3.so \
         -DBITWUZLA_INTERFACE=ON \
-        -DBITWUZLA_INCLUDE_DIRS=/usr/local/include \
-        -DBITWUZLA_LIBRARIES=/usr/local/lib/x86_64-linux-gnu/libbitwuzla.so \
         /Triton && \
-    make -j$(nproc) && \
-    make install
+        ninja install 
 
 RUN echo "[+] Check Triton build" && \
     echo export "PATH=$VIRTUAL_ENV/bin:$PATH" >> /etc/bash.bashrc && \
@@ -87,4 +82,4 @@ RUN echo "[+] Check Triton build" && \
     # Next command fails if Triton has no z3 or bitwuzla support.
     python3 -c "from triton import *; ctx=TritonContext(ARCH.X86_64); ctx.setSolver(SOLVER.Z3); ctx.setSolver(SOLVER.BITWUZLA);"
 
-ENTRYPOINT /bin/bash
+ENTRYPOINT ["/bin/bash"]
