@@ -91,7 +91,7 @@ echo "[+] Build Triton wheel package for Python 3.13"
 cd $SOURCE_DIR
 rm -rf $SOURCE_DIR/build
 rm -rf $SOURCE_DIR/triton_library.egg-info
-export PYTHON_BINARY=$(ls -d /opt/_internal/cpython-3.13*/bin/python | sort | head -n1)
+export PYTHON_BINARY=$(ls -d /opt/_internal/cpython-3.13.*/bin/python | sort | head -n1)
 export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
 
