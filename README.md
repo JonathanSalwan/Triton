@@ -91,8 +91,15 @@ from triton import *
 '0xdead'
 ```
 
+## Install using pip
 
-## Install
+Triton can be installed using `pip`:
+
+```console
+pip install triton-library
+```
+
+## Install from source
 
 Triton relies on the following dependencies:
 
@@ -104,7 +111,6 @@ Triton relies on the following dependencies:
 * libbitwuzla   (optional)   >= 0.4.x   https://github.com/bitwuzla/bitwuzla
 * llvm          (optional)   >= 12
 ```
-
 
 ### Linux and MacOS
 
