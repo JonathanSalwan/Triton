@@ -231,13 +231,61 @@ namespace triton {
       }
 
 
+      static PyObject* triton_AstNode(PyObject* self, PyObject* args) {
+        return PyErr_Format(PyExc_TypeError, "AstNode(): AstNode cannot be directly constructed. Use AstContext instead.");
+      }
+
+
+      static PyObject* triton_AstContext(PyObject* self, PyObject* args) {
+        return PyErr_Format(PyExc_TypeError, "AstContext(): AstContext cannot be directly constructed. Use TritonContext.getAstContext() instead.");
+      }
+
+
+      static PyObject* triton_SymbolicExpression(PyObject* self, PyObject* args) {
+        return PyErr_Format(PyExc_TypeError, "SymbolicExpression(): SymbolicExpression cannot be directly constructed.");
+      }
+
+
+      static PyObject* triton_SymbolicVariable(PyObject* self, PyObject* args) {
+        return PyErr_Format(PyExc_TypeError, "SymbolicVariable(): SymbolicVariable cannot be directly constructed. Use TritonContext.newSymbolicVariable() instead.");
+      }
+
+
+      static PyObject* triton_PathConstraint(PyObject* self, PyObject* args) {
+        return PyErr_Format(PyExc_TypeError, "PathConstraint(): PathConstraint cannot be directly constructed.");
+      }
+
+
+      static PyObject* triton_SolverModel(PyObject* self, PyObject* args) {
+        return PyErr_Format(PyExc_TypeError, "SolverModel(): SolverModel cannot be directly constructed.");
+      }
+
+
+      static PyObject* triton_Register(PyObject* self, PyObject* args) {
+        return PyErr_Format(PyExc_TypeError, "Register(): Register cannot be directly constructed. Use TritonContext.getRegister() instead.");
+      }
+
+
+      static PyObject* triton_BitsVector(PyObject* self, PyObject* args) {
+        return PyErr_Format(PyExc_TypeError, "BitsVector(): BitsVector cannot be directly constructed.");
+      }
+
+
       PyMethodDef tritonCallbacks[] = {
-        {"BasicBlock",      (PyCFunction)triton_BasicBlock,       METH_VARARGS,   ""},
-        {"Immediate",       (PyCFunction)triton_Immediate,        METH_VARARGS,   ""},
-        {"Instruction",     (PyCFunction)triton_Instruction,      METH_VARARGS,   ""},
-        {"MemoryAccess",    (PyCFunction)triton_MemoryAccess,     METH_VARARGS,   ""},
-        {"TritonContext",   (PyCFunction)triton_TritonContext,    METH_VARARGS,   ""},
-        {nullptr,           nullptr,                              0,              nullptr}
+        {"AstContext",          (PyCFunction)triton_AstContext,           METH_VARARGS,   ""},
+        {"AstNode",             (PyCFunction)triton_AstNode,              METH_VARARGS,   ""},
+        {"BasicBlock",          (PyCFunction)triton_BasicBlock,           METH_VARARGS,   ""},
+        {"BitsVector",          (PyCFunction)triton_BitsVector,           METH_VARARGS,   ""},
+        {"Immediate",           (PyCFunction)triton_Immediate,            METH_VARARGS,   ""},
+        {"Instruction",         (PyCFunction)triton_Instruction,          METH_VARARGS,   ""},
+        {"MemoryAccess",        (PyCFunction)triton_MemoryAccess,         METH_VARARGS,   ""},
+        {"PathConstraint",      (PyCFunction)triton_PathConstraint,       METH_VARARGS,   ""},
+        {"Register",            (PyCFunction)triton_Register,             METH_VARARGS,   ""},
+        {"SolverModel",         (PyCFunction)triton_SolverModel,          METH_VARARGS,   ""},
+        {"SymbolicExpression",  (PyCFunction)triton_SymbolicExpression,   METH_VARARGS,   ""},
+        {"SymbolicVariable",    (PyCFunction)triton_SymbolicVariable,     METH_VARARGS,   ""},
+        {"TritonContext",       (PyCFunction)triton_TritonContext,        METH_VARARGS,   ""},
+        {nullptr,               nullptr,                                  0,              nullptr}
       };
 
     }; /* python namespace */
