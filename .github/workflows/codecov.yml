@@ -49,7 +49,6 @@ jobs:
         run: |
           git clone https://github.com/bitwuzla/bitwuzla.git
           cd bitwuzla
-          git checkout -b 0.7.0 0.7.0
           python ./configure.py --shared
           cd build
           sudo ninja install
