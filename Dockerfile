@@ -56,7 +56,6 @@ RUN echo "[+] Download, build and install Bitwuzla" && \
     cd /tmp && \
     git clone https://github.com/bitwuzla/bitwuzla.git && \
     cd bitwuzla && \
-    git checkout -b 0.4.0 0.4.0 && \
     python3 ./configure.py --shared && \
     cd build && \
     ninja -j$(nproc) install
