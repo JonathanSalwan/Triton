@@ -1336,7 +1336,7 @@ namespace triton {
           triton::uint32 size            = symVar->getSize() / bitsize::byte;
           triton::arch::MemoryAccess mem = triton::arch::MemoryAccess(addr, size);
 
-          this->architecture->setConcreteMemoryValue(mem, value);
+          this->architecture->setConcreteMemoryValue(mem, value, false);
         }
       }
 
