@@ -4,17 +4,18 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-    # macos-26 = arm64
-    runs-on: macos-26
+    runs-on: macos-latest
+    permissions:
+      contents: write # Grants write permission for git operations
     strategy:
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -30,9 +31,10 @@ jobs:
           unzip -q z3-4.13.3-arm64-osx-13.7.zip
           sudo python -m pip install z3-solver==4.13.3.0
 
-      - name: Install Deps
+      - name: Fix Homebre git installation
         run: |
-          brew install gmp pkgconfig ninja
+          brew update
+          brew reinstall git
 
       - name: Install Meson
         run: |
@@ -45,7 +47,8 @@ jobs:
           cd bitwuzla-0.8.2
           python ./configure.py --shared --prefix $(pwd)/install
           cd build
-          sudo ninja install
+          ninja install
+          find . -name "libcadical*.dylib" -exec cp {} ../install/lib/ \;
           cd ..
 
       - name: Install Capstone
@@ -74,8 +77,8 @@ jobs:
                 -DZ3_INCLUDE_DIRS=${{ github.workspace }}/z3-4.13.3-arm64-osx-13.7/include \
                 -DZ3_LIBRARIES=${{ github.workspace }}/z3-4.13.3-arm64-osx-13.7/bin/libz3.a \
                 -DBITWUZLA_INTERFACE=ON \
-                -DBITWUZLA_INCLUDE_DIRS=${{ github.workspace }}/bitwuzla/install/include \
-                -DBITWUZLA_LIBRARIES=${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.dylib \
+                -DBITWUZLA_INCLUDE_DIRS=${{ github.workspace }}/bitwuzla-0.8.2/install/include \
+                -DBITWUZLA_LIBRARIES=${{ github.workspace }}/bitwuzla-0.8.2/install/lib/libbitwuzla.dylib \
                 -DLLVM_INTERFACE=ON \
                 -DCMAKE_PREFIX_PATH=${{env.LLVM_PATH}} \
                 -DBOOST_INTERFACE=OFF ..
@@ -88,4 +91,4 @@ jobs:
       # v2.0.0. However, Unicorn v2.0.0 does not build on the macos-14 runner.
       - name: Unittests
         run: |
-          DYLD_LIBRARY_PATH=/usr/local/lib/ ctest --test-dir build --output-on-failure
+          DYLD_LIBRARY_PATH=/opt/homebrew/lib:/usr/local/lib ctest --test-dir build --output-on-failure

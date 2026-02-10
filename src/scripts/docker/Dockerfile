@@ -17,13 +17,6 @@ RUN yum install -y \
         libzstd-devel \
         ncurses-devel
 
-ENV VIRTUAL_ENV=/Triton-venv
-RUN python3.10 -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
-RUN . $VIRTUAL_ENV/bin/activate && \
-    pip install --upgrade pip
-
 RUN python3.10 -m pip install meson
 
 ENV DEPENDENCIES_DIR=/tmp/triton-dependencies
@@ -42,20 +35,21 @@ RUN echo "[+] Download, build and install GMP" && \
     make -j$(nproc) && \
     make install
 
-
-RUN echo "[+] Download, build and install mpfr" && \
+# Download, build and install MPFR.
+RUN echo "[+] Download, build and install MPFR" && \
     cd $DEPENDENCIES_DIR && \
     curl -LO https://ftp.gnu.org/gnu/mpfr/mpfr-4.2.1.tar.xz && \
     tar xf mpfr-4.2.1.tar.xz && \
     cd mpfr-4.2.1 && \
     ./configure && \
     make -j$(nproc) && make install
-    
+
 # Download, build and install Bitwuzla.
 RUN echo "[+] Download, build and install Bitwuzla" && \
     cd $DEPENDENCIES_DIR && \
     git clone https://github.com/bitwuzla/bitwuzla.git && \
     cd bitwuzla && \
+    git checkout -b 0.9.0 0.9.0 && \
     export PY310_PATH=$(python3.10 -c 'import sys, os; print(os.path.dirname(sys.executable))') && \
     CC=clang CXX=clang++ PATH=$PATH:$PY310_PATH python3.10 ./configure.py --shared --prefix $(pwd)/install && \
     cd build && \

@@ -2,7 +2,7 @@
 
 # This file is meant to be used inside the docker image build by the
 # `build-docker-image.sh` script. This file build triton-library for Python
-# 3.8, 3.9, 3.10, 3.11, 3.12, and 3.13. It is used by the Build Python
+# 3.9, 3.10, 3.11, 3.12, 3.13, and 3.14. It is used by the Build Python
 # Package Github workflow but can also be used locally by running:
 #
 # $ docker pull quay.io/pypa/manylinux_2_34_x86_64
@@ -26,9 +26,6 @@ DEPENDENCIES_DIR=/tmp/triton-dependencies
 LLVM_DIR=/llvm
 SOURCE_DIR=/src
 WHEEL_DIR=$SOURCE_DIR/wheelhouse
-
-# Show Python versions.
-ls -al /opt/_internal/
 
 # Set environment variables for building Triton.
 echo "[+] Setup environment variables"
@@ -97,11 +94,22 @@ export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; prin
 
 $PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 
+# Build Triton Python wheel package for Python 3.14.
+echo "[+] Build Triton wheel package for Python 3.14"
+cd $SOURCE_DIR
+rm -rf $SOURCE_DIR/build
+rm -rf $SOURCE_DIR/triton_library.egg-info
+export PYTHON_BINARY=$(ls -d /opt/_internal/cpython-3.14.*/bin/python | sort | head -n1)
+export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
+
+$PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
+
 # Repair wheels.
 echo "[+] Repair wheel packages"
 cd $SOURCE_DIR
 for whl in $WHEEL_DIR/linux_x86_64/*.whl; do
-    auditwheel repair --plat manylinux_2_34_x86_64 "$whl" --wheel-dir $WHEEL_DIR/manylinux_2_34_x86_64
+    LD_LIBRARY_PATH=$DEPENDENCIES_DIR/bitwuzla/build/subprojects/cadical-rel-1.7.4/src auditwheel repair --plat manylinux_2_34_x86_64 "$whl" --wheel-dir $WHEEL_DIR/manylinux_2_34_x86_64
 done
 
 echo "[+] Remove build directory"
