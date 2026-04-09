@@ -109,7 +109,7 @@ $PYTHON_BINARY -m build --wheel --outdir $WHEEL_DIR/linux_x86_64
 echo "[+] Repair wheel packages"
 cd $SOURCE_DIR
 for whl in $WHEEL_DIR/linux_x86_64/*.whl; do
-    LD_LIBRARY_PATH=$DEPENDENCIES_DIR/bitwuzla/build/subprojects/cadical-rel-1.7.4/src auditwheel repair --plat manylinux_2_34_x86_64 "$whl" --wheel-dir $WHEEL_DIR/manylinux_2_34_x86_64
+    auditwheel repair --plat manylinux_2_34_x86_64 "$whl" --wheel-dir $WHEEL_DIR/manylinux_2_34_x86_64
 done
 
 echo "[+] Remove build directory"
