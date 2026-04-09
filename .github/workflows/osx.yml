@@ -5,8 +5,6 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build:
     runs-on: macos-latest
-    permissions:
-      contents: write # Grants write permission for git operations
     strategy:
       matrix:
         python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
@@ -31,7 +29,7 @@ jobs:
           unzip -q z3-4.13.3-arm64-osx-13.7.zip
           sudo python -m pip install z3-solver==4.13.3.0
 
-      - name: Fix Homebre git installation
+      - name: Fix Homebrew git installation
         run: |
           brew update
           brew reinstall git
@@ -62,17 +60,16 @@ jobs:
 
       - name: Install Unicorn
         run: |
-          sudo python -m pip install unicorn
+          python -m pip install unicorn
 
       - name: Install LIEF
         run: |
-          sudo python -m pip install lief
+          python -m pip install lief
 
       - name: Compile Triton
         run: |
           mkdir ./build
           cd ./build
-          cmake ..
           cmake -DZ3_INTERFACE=ON \
                 -DZ3_INCLUDE_DIRS=${{ github.workspace }}/z3-4.13.3-arm64-osx-13.7/include \
                 -DZ3_LIBRARIES=${{ github.workspace }}/z3-4.13.3-arm64-osx-13.7/bin/libz3.a \
