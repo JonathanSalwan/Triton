@@ -257,6 +257,13 @@ configure_file(
     IMMEDIATE @ONLY
 )
 
+# Endianness of the target, for triton/config.hpp. CMAKE_CXX_BYTE_ORDER exists
+# since CMake 3.20, which is already the minimum required version. Everything
+# Triton currently builds for is little-endian, so absence means little-endian.
+if(CMAKE_CXX_BYTE_ORDER STREQUAL "BIG_ENDIAN")
+    set(TRITON_BIG_ENDIAN ON)
+endif()
+
 # We generate the config header based on configuation of CMake
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/includes/triton/config.hpp.in

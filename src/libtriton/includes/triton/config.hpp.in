@@ -13,4 +13,7 @@
 #cmakedefine TRITON_LLVM_INTERFACE
 #cmakedefine TRITON_Z3_INTERFACE
 
+/* Set when the target is big-endian; absent means little-endian. */
+#cmakedefine TRITON_BIG_ENDIAN
+
 #endif // TRITON_CONFIG_HPP

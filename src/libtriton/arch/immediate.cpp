@@ -10,11 +10,20 @@
 #include <triton/exceptions.hpp>
 #include <triton/softfloat.hpp>
 #include <triton/coreUtils.hpp>
+#include <triton/config.hpp>
 
-#ifdef LITTLE_ENDIAN // provided by CMake
-constexpr auto sys_endianness = triton::arch::LE_ENDIANNESS;
-#else
+/*
+ * Note: this used to test `#ifdef LITTLE_ENDIAN`, which never worked as an
+ * endianness check. POSIX <endian.h> defines LITTLE_ENDIAN and BIG_ENDIAN as
+ * *named constants* (1234 and 4321), so the macro is always defined there
+ * regardless of the actual byte order, and it is never defined under MSVC --
+ * which made every Windows build take the big-endian branch and byte-swap
+ * every floating-point immediate.
+ */
+#ifdef TRITON_BIG_ENDIAN
 constexpr auto sys_endianness = triton::arch::BE_ENDIANNESS;
+#else
+constexpr auto sys_endianness = triton::arch::LE_ENDIANNESS;
 #endif
 
 
