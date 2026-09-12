@@ -1,3 +1,15 @@
+add_executable(test_ast_lifetime unittests/test_ast_lifetime.cpp)
+target_link_libraries(test_ast_lifetime PRIVATE triton)
+set_property(TARGET test_ast_lifetime PROPERTY CXX_STANDARD 17)
+if(WIN32)
+    set_property(TARGET test_ast_lifetime PROPERTY RUNTIME_OUTPUT_DIRECTORY "$<TARGET_FILE_DIR:triton>")
+endif()
+if(MSVC AND MSVC_STATIC)
+    set_property(TARGET test_ast_lifetime PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+add_test(NAME AstLifetime COMMAND test_ast_lifetime)
+add_dependencies(check test_ast_lifetime)
+
 # These following tests are used to test our semantics. It relies on Unicorn emulator.
 # Windows is included: unicorn and lief both publish win_amd64 wheels, none of
 # these scripts are platform specific, and running them there caught a real
