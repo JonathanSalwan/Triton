@@ -13956,12 +13956,7 @@ namespace triton {
 
       void x86Semantics::push_s(triton::arch::Instruction& inst) {
         auto& src           = inst.operands[0];
-        auto stack          = this->architecture->getStackPointer();
-        triton::uint32 size = stack.getSize();
-
-        /* If it's an immediate source, the memory access is always based on the arch size */
-        if (src.getType() != triton::arch::OP_IMM)
-          size = src.getSize();
+        triton::uint32 size = src.getSize();
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, src);
