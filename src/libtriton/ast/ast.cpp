@@ -42,6 +42,13 @@ namespace triton {
 
 
     AbstractNode::~AbstractNode() {
+      /* Expired weak parents retain control blocks until they are removed. */
+      for (const auto& child : this->children) {
+        if (child) {
+          /* Remove every occurrence of this parent, including repeated init(). */
+          child->parents.erase(this);
+        }
+      }
       /* See #828: Release ownership before calling container destructor */
       this->children.clear();
     }
