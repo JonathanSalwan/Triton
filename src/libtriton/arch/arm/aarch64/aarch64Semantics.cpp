@@ -211,6 +211,7 @@ UMULH                         | Unsigned Multiply High
 UMULL                         | Unsigned Multiply Long: an alias of UMADDL
 UXTB                          | Unsigned Extend Byte: an alias of UBFM
 UXTH                          | Unsigned Extend Halfword: an alias of UBFM
+XTN                           | Extract Narrow
 
 */
 
@@ -395,6 +396,7 @@ namespace triton {
             case ID_INS_UMULL:     this->umull_s(inst);         break;
             case ID_INS_UXTB:      this->uxtb_s(inst);          break;
             case ID_INS_UXTH:      this->uxth_s(inst);          break;
+            case ID_INS_XTN:       this->xtn_s(inst);           break;
             default:
               this->exception = triton::arch::FAULT_UD;
               break;
@@ -6167,6 +6169,39 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "UXTH operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::xtn_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+          triton::uint32 elementSize;
+
+          switch (src.getConstRegister().getVASType()) {
+            case triton::arch::arm::ID_VAS_8H: elementSize = 8;  break;
+            case triton::arch::arm::ID_VAS_4S: elementSize = 16; break;
+            case triton::arch::arm::ID_VAS_2D: elementSize = 32; break;
+            default:
+              this->exception = triton::arch::FAULT_UD;
+              return;
+          }
+
+          /* Keep the low half of each source element. */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+          auto node = this->astCtxt->extract(elementSize - 1, 0, op);
+          for (triton::uint32 low = elementSize * 2; low < triton::bitsize::dqword; low += elementSize * 2) {
+            node = this->astCtxt->concat(this->astCtxt->extract(low + elementSize - 1, low, op), node);
+          }
+          node = this->astCtxt->zx(triton::bitsize::qword, node);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "XTN operation");
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);

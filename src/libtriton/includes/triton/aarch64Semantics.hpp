@@ -617,6 +617,9 @@ namespace triton {
 
             //! The UXTH semantics.
             void uxth_s(triton::arch::Instruction& inst);
+
+            //! The XTN semantics.
+            void xtn_s(triton::arch::Instruction& inst);
         };
 
       /*! @} End of aarch64 namespace */
