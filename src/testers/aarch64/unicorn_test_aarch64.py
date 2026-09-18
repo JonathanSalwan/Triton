@@ -2169,6 +2169,13 @@ CODE  = [
     (b"\x03\x10\x2e\x1e", "fmov s3, #1.0"),
     (b"\x01\x90\x61\x1e", "fmov d1, #3.5"),
     #(b"\x04\x90\xe0\x1e", "fmov h4, #2.5"), # unicorn not implement f16 ops
+
+    (b"\x00\x28\x21\x0e", "xtn v0.8b, v0.8h"),
+    (b"\x00\x28\x61\x0e", "xtn v0.4h, v0.4s"),
+    (b"\x00\x28\xa1\x0e", "xtn v0.2s, v0.2d"),
+    (b"\x20\x28\x21\x0e", "xtn v0.8b, v1.8h"),
+    (b"\x20\x28\x61\x0e", "xtn v0.4h, v1.4s"),
+    (b"\x20\x28\xa1\x0e", "xtn v0.2s, v1.2d"),
 ]
 
 def emu_with_unicorn(opcode, istate):
