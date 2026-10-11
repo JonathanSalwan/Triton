@@ -271,8 +271,8 @@ Returns true if the register is tainted.
 - <b>bool isRegisterValid(\ref py_Register_page reg)</b><br>
 Returns true if the register is valid.
 
-- <b>bool isSat(\ref py_AstNode_page node)</b><br>
-Returns true if an expression is satisfiable.
+- <b>bool isSat(\ref py_AstNode_page node, integer timeout=0)</b><br>
+Returns true if an expression is satisfiable. The timeout is in milliseconds; zero uses the configured solver timeout.
 
 - <b>bool isSymbolicExpressionExists(integer symExprId)</b><br>
 Returns true if the symbolic expression id exists.
@@ -2206,12 +2206,28 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_isSat(PyObject* self, PyObject* node) {
+      static PyObject* TritonContext_isSat(PyObject* self, PyObject* args, PyObject* kwargs) {
+        PyObject* node = nullptr;
+        PyObject* timeout = nullptr;
+
+        static char* keywords[] = {
+          (char*)"node",
+          (char*)"timeout",
+          nullptr
+        };
+
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "O|O", keywords, &node, &timeout) == false)
+          return PyErr_Format(PyExc_TypeError, "TritonContext::isSat(): Invalid keyword argument.");
+
         if (!PyAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "TritonContext::isSat(): Expects a AstNode as argument.");
 
+        if (timeout != nullptr && !PyLong_Check(timeout) && !PyInt_Check(timeout))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::isSat(): Expects an integer as timeout keyword.");
+
         try {
-          if (PyTritonContext_AsTritonContext(self)->isSat(PyAstNode_AsAstNode(node)) == true)
+          triton::uint32 timeout_c = timeout != nullptr ? PyLong_AsUint32(timeout) : 0;
+          if (PyTritonContext_AsTritonContext(self)->isSat(PyAstNode_AsAstNode(node), nullptr, timeout_c) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -3645,7 +3661,7 @@ namespace triton {
         {"isRegisterSymbolized",                (PyCFunction)TritonContext_isRegisterSymbolized,                                        METH_O,                        ""},
         {"isRegisterTainted",                   (PyCFunction)TritonContext_isRegisterTainted,                                           METH_O,                        ""},
         {"isRegisterValid",                     (PyCFunction)TritonContext_isRegisterValid,                                             METH_O,                        ""},
-        {"isSat",                               (PyCFunction)TritonContext_isSat,                                                       METH_O,                        ""},
+        {"isSat",                               (PyCFunction)TritonContext_isSat,                                                       (METH_VARARGS | METH_KEYWORDS),  ""},
         {"isSymbolicExpressionExists",          (PyCFunction)TritonContext_isSymbolicExpressionExists,                                  METH_O,                        ""},
         {"isThumb",                             (PyCFunction)TritonContext_isThumb,                                                     METH_NOARGS,                   ""},
         {"liftToDot",                           (PyCFunction)TritonContext_liftToDot,                                                   METH_O,                        ""},
