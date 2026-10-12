@@ -27,6 +27,15 @@ class TestSolvers(unittest.TestCase):
 
         # Testing isSat()
         self.assertEqual(self.ctx.isSat(constraint), True)
+        self.assertEqual(self.ctx.isSat(constraint, 5000), True)
+        self.assertEqual(self.ctx.isSat(node=constraint, timeout=5000), True)
+        self.assertEqual(self.ctx.isSat(constraint, timeout=0), True)
+        unsat = self.ctx.getAstContext().land([constraint, rcx_expr.getAst() != 0xdead])
+        self.assertEqual(self.ctx.isSat(unsat, timeout=5000), False)
+        with self.assertRaises(TypeError):
+            self.ctx.isSat(constraint, timeout="5000")
+        with self.assertRaises(TypeError):
+            self.ctx.isSat(constraint, timeout=1 << 32)
 
         # Testing getModels() with status and timeout
         models, status, time = self.ctx.getModels(constraint, 10, status=True, timeout=5000)
