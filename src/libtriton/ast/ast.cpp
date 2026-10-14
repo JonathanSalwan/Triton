@@ -3019,6 +3019,7 @@ namespace triton {
     ReferenceNode::ReferenceNode(const triton::engines::symbolic::SharedSymbolicExpression& expr)
       : AbstractNode(REFERENCE_NODE, expr->getAst()->getContext())
       , expr(expr) {
+        this->addChild(expr->getAst());
     }
 
 
