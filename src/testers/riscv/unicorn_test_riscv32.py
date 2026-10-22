@@ -158,6 +158,7 @@ CODE  = [
     (b"\x93\x98\x38\x01", "slli  x17, x17, #19"),
     (b"\x13\x05\xf0\xff", "addi  x10, x0,  #-1"),
     (b"\xb3\xe5\xa8\x02", "rem   x11, x17, x10"), # signed overflow
+    (b"\xb3\x65\x15\x03", "rem   x11, x10, x17"), # -1 rem INT_MIN
 
     # SUB/W
     (b"\xb3\x05\xa0\x40", "sub   x11, x0,  x10"),
