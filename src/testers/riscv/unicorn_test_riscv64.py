@@ -202,6 +202,7 @@ CODE  = [
     (b"\x93\x05\x16\x00", "addi  x11, x12, #1"),
     (b"\x93\x98\x08\x02", "slli  x17, x17, #32"),
     (b"\xb3\xe5\xa8\x02", "rem   x11, x17, x10"),
+    (b"\xb3\x65\x15\x03", "rem   x11, x10, x17"), # -1 rem INT_MIN
 
     # SUB/W
     (b"\xb3\x05\xa0\x40", "sub   x11, x0,  x10"),

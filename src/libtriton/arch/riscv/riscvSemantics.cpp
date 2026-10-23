@@ -2008,8 +2008,8 @@ namespace triton {
                       op1,
                       this->astCtxt->ite( // overflow check
                         this->astCtxt->land(
-                          this->astCtxt->equal(op1, this->astCtxt->bv(-1, size)),
-                          this->astCtxt->equal(op2, this->astCtxt->bv((1 << (size - 1)), size))
+                          this->astCtxt->equal(op1, this->astCtxt->bv(static_cast<triton::uint64>(1) << (size - 1), size)),
+                          this->astCtxt->equal(op2, this->astCtxt->bv(-1, size))
                         ),
                         this->astCtxt->bv(0, size),
                         this->astCtxt->bvsrem(op1, op2)
