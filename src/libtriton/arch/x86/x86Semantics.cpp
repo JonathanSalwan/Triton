@@ -14267,7 +14267,6 @@ namespace triton {
         /* Create symbolic operands */
         auto op1    = this->symbolicEngine->getOperandAst(inst, dst);
         auto op2    = this->symbolicEngine->getOperandAst(inst, src);
-        auto op2bis = this->symbolicEngine->getOperandAst(src);
         auto op3    = this->symbolicEngine->getOperandAst(inst, srcCf);
 
         switch (dst.getBitSize()) {
@@ -14325,8 +14324,8 @@ namespace triton {
         expr2->isTainted = this->taintEngine->taintUnion(dst, srcCf);
 
         /* Update symbolic flags */
-        this->cfRcl_s(inst, expr2, node1, op2bis);
-        this->ofRol_s(inst, expr2, dst, op2bis); /* Same as ROL */
+        this->cfRcl_s(inst, expr2, node1, op2);
+        this->ofRol_s(inst, expr2, dst, op2); /* Same as ROL */
 
         /* Tag undefined flags */
         if (op2->evaluate() > 1) {
@@ -14603,7 +14602,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Update symbolic flags */
-        this->cfRor_s(inst, expr, dst, op2);
+        this->cfRor_s(inst, expr, dst, op2bis);
         this->ofRor_s(inst, expr, dst, op2bis);
 
         /* Tag undefined flags */
