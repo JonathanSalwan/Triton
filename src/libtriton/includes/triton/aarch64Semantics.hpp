@@ -107,7 +107,8 @@ namespace triton {
             void nfCcmp_s(triton::arch::Instruction& inst,
                           const triton::engines::symbolic::SharedSymbolicExpression& parent,
                           triton::arch::OperandWrapper& dst,
-                          triton::ast::SharedAbstractNode& nzcv);
+                          triton::ast::SharedAbstractNode& nzcv,
+                          triton::ast::SharedAbstractNode& cond);
 
             //! The ZF semantics.
             void zf_s(triton::arch::Instruction& inst,
@@ -118,7 +119,8 @@ namespace triton {
             void zfCcmp_s(triton::arch::Instruction& inst,
                           const triton::engines::symbolic::SharedSymbolicExpression& parent,
                           triton::arch::OperandWrapper& dst,
-                          triton::ast::SharedAbstractNode& nzcv);
+                          triton::ast::SharedAbstractNode& nzcv,
+                          triton::ast::SharedAbstractNode& cond);
 
             /* Specific flags computation ------------------------------------ */
 
@@ -142,7 +144,8 @@ namespace triton {
                           triton::arch::OperandWrapper& dst,
                           triton::ast::SharedAbstractNode& op1,
                           triton::ast::SharedAbstractNode& op2,
-                          triton::ast::SharedAbstractNode& nzcv);
+                          triton::ast::SharedAbstractNode& nzcv,
+                          triton::ast::SharedAbstractNode& cond);
 
             //! The VF semantics for the ADDS operation.
             void vfAdd_s(triton::arch::Instruction& inst,
@@ -164,7 +167,8 @@ namespace triton {
                           triton::arch::OperandWrapper& dst,
                           triton::ast::SharedAbstractNode& op1,
                           triton::ast::SharedAbstractNode& op2,
-                          triton::ast::SharedAbstractNode& nzcv);
+                          triton::ast::SharedAbstractNode& nzcv,
+                          triton::ast::SharedAbstractNode& cond);
 
             /* Instruction semantics ----------------------------------------- */
 
