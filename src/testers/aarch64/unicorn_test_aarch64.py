@@ -1698,6 +1698,10 @@ CODE  = [
     (b"\xc2\x88\x83\xd2", "movz x2, #7238"),
     (b"\x41\x14\x82\x9a", "cinc x1, x2, eq"),
     (b"\x41\x04\x82\x9a", "cinc x1, x2, ne"),
+    (b"\x41\x10\x82\xda", "cinv x1, x2, eq"),
+    (b"\x41\x00\x82\xda", "cinv x1, x2, ne"),
+    (b"\x41\x10\x82\x5a", "cinv w1, w2, eq"),
+    (b"\x41\x00\x82\x5a", "cinv w1, w2, ne"),
 
     (b"\x00\x00\x80\xd2", "movz x0, #0"),
     (b"\x00\x04\x00\xd1", "sub x0, x0, #1"),

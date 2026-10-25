@@ -49,6 +49,7 @@ CBZ                           | Compare and Branch on Zero
 CCMP (immediate)              | Conditional Compare (immediate)
 CCMP (register)               | Conditional Compare (register)
 CINC                          | Conditional Increment: an alias of CSINC
+CINV                          | Conditional Invert: an alias of CSINV
 CLZ                           | Count Leading Zeros
 CMN (extended register)       | Compare Negative (extended register): an alias of ADDS (extended register)
 CMN (immediate)               | Compare Negative (immediate): an alias of ADDS (immediate)
@@ -263,6 +264,7 @@ namespace triton {
             case ID_INS_CBZ:       this->cbz_s(inst);           break;
             case ID_INS_CCMP:      this->ccmp_s(inst);          break;
             case ID_INS_CINC:      this->cinc_s(inst);          break;
+            case ID_INS_CINV:      this->cinv_s(inst);          break;
             case ID_INS_CLZ:       this->clz_s(inst);           break;
             case ID_INS_CMN:       this->cmn_s(inst);           break;
             case ID_INS_CMP:       this->cmp_s(inst);           break;
@@ -1515,6 +1517,28 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->setTaint(dst, this->getCodeConditionTainteSate(inst));
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::cinv_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+          auto op2 = this->astCtxt->bvnot(op1);
+
+          /* Create the semantics */
+          auto node = this->getCodeConditionAst(inst, op2, op1);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CINV operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
