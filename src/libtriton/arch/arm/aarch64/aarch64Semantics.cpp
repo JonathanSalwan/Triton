@@ -1269,10 +1269,11 @@ namespace triton {
           auto opSrc = this->symbolicEngine->getOperandAst(inst, src1);
           auto opDst = this->symbolicEngine->getOperandAst(inst, dst);
 
-          auto node = this->astCtxt->concat(
-            this->astCtxt->extract(dst.getBitSize() - 1, width, opDst),
-            this->astCtxt->extract(lsb + width - 1, lsb, opSrc)
-          );
+          /* With lsb 0 and the full register width (bfxil x0, x1, #0, #64) no bit of dst is kept */
+          auto node = this->astCtxt->extract(lsb + width - 1, lsb, opSrc);
+          if (width < dst.getBitSize()) {
+            node = this->astCtxt->concat(this->astCtxt->extract(dst.getBitSize() - 1, width, opDst), node);
+          }
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "BFXIL operation");
