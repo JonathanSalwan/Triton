@@ -2204,6 +2204,20 @@ CODE  = [
     (b"\x20\x28\x21\x0e", "xtn v0.8b, v1.8h"),
     (b"\x20\x28\x61\x0e", "xtn v0.4h, v1.4s"),
     (b"\x20\x28\xa1\x0e", "xtn v0.2s, v1.2d"),
+
+    # extended register operands with a shift: extend first, then shift
+    (b"\x01\x00\x82\xd2", "movz x1, #0x1000"),
+    (b"\x22\x18\x90\xd2", "movz x2, #0x80c1"),
+    (b"\x20\x08\x22\x8b", "add x0, x1, w2, uxtb #2"),
+    (b"\x20\x8c\x22\x8b", "add x0, x1, w2, sxtb #3"),
+    (b"\x20\x30\x22\x8b", "add x0, x1, w2, uxth #4"),
+    (b"\x20\xa4\x22\x8b", "add x0, x1, w2, sxth #1"),
+    (b"\x20\x10\x22\x2b", "adds w0, w1, w2, uxtb #4"),
+    (b"\x20\xa8\x22\xeb", "subs x0, x1, w2, sxth #2"),
+    (b"\x02\x00\x80\x92", "movn x2, #0"),
+    (b"\x20\x48\x22\x8b", "add x0, x1, w2, uxtw #2"),
+    (b"\x20\xd0\x22\xcb", "sub x0, x1, w2, sxtw #4"),
+    (b"\x20\x44\x22\xeb", "subs x0, x1, w2, uxtw #1"),
 ]
 
 def emu_with_unicorn(opcode, istate):
