@@ -717,7 +717,8 @@ namespace triton {
         void AArch64Semantics::nfCcmp_s(triton::arch::Instruction& inst,
                                         const triton::engines::symbolic::SharedSymbolicExpression& parent,
                                         triton::arch::OperandWrapper& dst,
-                                        triton::ast::SharedAbstractNode& nzcv) {
+                                        triton::ast::SharedAbstractNode& nzcv,
+                                        triton::ast::SharedAbstractNode& cond) {
 
           auto nf   = this->architecture->getRegister(ID_REG_AARCH64_N);
           auto high = dst.getHigh();
@@ -728,7 +729,7 @@ namespace triton {
            */
           auto node1 = this->astCtxt->extract(high, high, this->astCtxt->reference(parent));
           auto node2 = this->astCtxt->extract(3, 3, nzcv);
-          auto node3 = this->getCodeConditionAst(inst, node1, node2);
+          auto node3 = this->astCtxt->ite(this->astCtxt->equal(cond, this->astCtxt->bvtrue()), node1, node2);
 
           /* Create the symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, nf, "Negative flag");
@@ -771,7 +772,8 @@ namespace triton {
         void AArch64Semantics::zfCcmp_s(triton::arch::Instruction& inst,
                                         const triton::engines::symbolic::SharedSymbolicExpression& parent,
                                         triton::arch::OperandWrapper& dst,
-                                        triton::ast::SharedAbstractNode& nzcv) {
+                                        triton::ast::SharedAbstractNode& nzcv,
+                                        triton::ast::SharedAbstractNode& cond) {
 
           auto zf     = this->architecture->getRegister(ID_REG_AARCH64_Z);
           auto bvSize = dst.getBitSize();
@@ -791,7 +793,7 @@ namespace triton {
                          this->astCtxt->bv(0, 1)
                        );
           auto node2 = this->astCtxt->extract(2, 2, nzcv);
-          auto node3 = this->getCodeConditionAst(inst, node1, node2);
+          auto node3 = this->astCtxt->ite(this->astCtxt->equal(cond, this->astCtxt->bvtrue()), node1, node2);
 
           /* Create the symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, zf, "Zero flag");
@@ -877,7 +879,8 @@ namespace triton {
                                         triton::arch::OperandWrapper& dst,
                                         triton::ast::SharedAbstractNode& op1,
                                         triton::ast::SharedAbstractNode& op2,
-                                        triton::ast::SharedAbstractNode& nzcv) {
+                                        triton::ast::SharedAbstractNode& nzcv,
+                                        triton::ast::SharedAbstractNode& cond) {
 
           auto cf     = this->architecture->getRegister(ID_REG_AARCH64_C);
           auto bvSize = dst.getBitSize();
@@ -904,7 +907,7 @@ namespace triton {
                          this->astCtxt->bvtrue()
                        );
           auto node2 = this->astCtxt->extract(1, 1, nzcv);
-          auto node3 = this->getCodeConditionAst(inst, node1, node2);
+          auto node3 = this->astCtxt->ite(this->astCtxt->equal(cond, this->astCtxt->bvtrue()), node1, node2);
 
           /* Create the symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, cf, "Carry flag");
@@ -979,7 +982,8 @@ namespace triton {
                                         triton::arch::OperandWrapper& dst,
                                         triton::ast::SharedAbstractNode& op1,
                                         triton::ast::SharedAbstractNode& op2,
-                                        triton::ast::SharedAbstractNode& nzcv) {
+                                        triton::ast::SharedAbstractNode& nzcv,
+                                        triton::ast::SharedAbstractNode& cond) {
 
           auto vf     = this->architecture->getRegister(ID_REG_AARCH64_V);
           auto bvSize = dst.getBitSize();
@@ -1000,7 +1004,7 @@ namespace triton {
                          )
                        );
           auto node2 = this->astCtxt->extract(0, 0, nzcv);
-          auto node3 = this->getCodeConditionAst(inst, node1, node2);
+          auto node3 = this->astCtxt->ite(this->astCtxt->equal(cond, this->astCtxt->bvtrue()), node1, node2);
 
           /* Create the symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, vf, "Overflow flag");
@@ -1474,11 +1478,20 @@ namespace triton {
           /* Spread taint */
           expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
 
+          /*
+           * Evaluate the condition on the incoming flags: each flag below is
+           * updated in turn, so evaluating it per flag would read the flags
+           * already written by this instruction.
+           */
+          auto bvtrue  = this->astCtxt->bvtrue();
+          auto bvfalse = this->astCtxt->bvfalse();
+          auto cond    = this->getCodeConditionAst(inst, bvtrue, bvfalse);
+
           /* Update symbolic flags */
-          this->cfCcmp_s(inst, expr, src1, op1, op2, op3);
-          this->nfCcmp_s(inst, expr, src1, op3);
-          this->vfCcmp_s(inst, expr, src1, op1, op2, op3);
-          this->zfCcmp_s(inst, expr, src1, op3);
+          this->cfCcmp_s(inst, expr, src1, op1, op2, op3, cond);
+          this->nfCcmp_s(inst, expr, src1, op3, cond);
+          this->vfCcmp_s(inst, expr, src1, op1, op2, op3, cond);
+          this->zfCcmp_s(inst, expr, src1, op3, cond);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
