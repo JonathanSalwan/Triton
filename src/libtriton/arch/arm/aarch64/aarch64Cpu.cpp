@@ -404,6 +404,18 @@ namespace triton {
             /* Init the instruction's type */
             inst.setType(this->capstoneInstructionToTritonInstruction(insn[0].id));
 
+            /*
+             * Capstone gives MOVN and MOVZ the MOV id even when it does not print
+             * them as the MOV alias (movn w0, #0xffff or movn x0, #0, lsl #16).
+             * The operands are then the raw imm16 and shift, not the final value.
+             */
+            if (insn[0].id == triton::extlibs::capstone::ARM64_INS_MOV) {
+              if (std::strcmp(insn[0].mnemonic, "movn") == 0)
+                inst.setType(triton::arch::arm::aarch64::ID_INS_MOVN);
+              else if (std::strcmp(insn[0].mnemonic, "movz") == 0)
+                inst.setType(triton::arch::arm::aarch64::ID_INS_MOVZ);
+            }
+
             /* Init the instruction's code codition */
             inst.setCodeCondition(this->capstoneConditionToTritonCondition(detail->arm64.cc));
 
