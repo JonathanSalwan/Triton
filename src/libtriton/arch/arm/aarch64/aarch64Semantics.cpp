@@ -4179,6 +4179,16 @@ namespace triton {
           /* Create the semantics */
           auto node = this->symbolicEngine->getOperandAst(inst, src);
 
+          /*
+           * The source can be wider than the destination: Capstone's MOV aliases of
+           * MOVN, MOVZ and ORR (immediate) carry a 32-bit value sign-extended to 64
+           * bits (mov w0, #-0x80000000), and mov w0, v1.s[0] passes the whole vector
+           * register. Only the low bits that fit in the destination are written.
+           */
+          if (node->getBitvectorSize() > dst.getBitSize()) {
+            node = this->astCtxt->extract(dst.getBitSize() - 1, 0, node);
+          }
+
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOV operation");
 
