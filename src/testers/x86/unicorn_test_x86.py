@@ -2044,6 +2044,12 @@ CODE  = [
     (None, [], b'\x0f(\x0b',                'movaps xmm1, [rbx]'),
     (None, [], b'f\x0fs\xd9\x7f',           'psrldq xmm1, 127'),
 
+    ({"rax": 0x0, "rbx": 0x1},       [], b"\x00\xdc",              "add ah, bl"),
+    ({"rax": 0x0103},                [], b"\xfe\xc4",              "inc ah"),
+    ({"rax": 0x5a01},                [], b"\x30\xe4",              "xor ah, ah"),
+    ({"rax": 0x07, "rbx": 0x0800},   [], b"\x28\xc7",              "sub bh, al"),
+    ({"rax": 0x0103},                [], b"\xd0\xe4",              "shl ah, 1"),
+    ({"rcx": 0x0403},                [], b"\xd0\xed",              "shr ch, 1"),
 ]
 
 
