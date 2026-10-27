@@ -47,6 +47,8 @@ CODE  = [
     (b"\x41\x2c\x46\xb3", "bfxil x1, x2, #6, #6"),
     (b"\x41\x34\x47\xb3", "bfxil x1, x2, #7, #7"),
     (b"\x41\x98\x48\xb3", "bfxil x1, x2, #8, #31"),
+    (b"\x41\xfc\x40\xb3", "bfxil x1, x2, #0, #64"),
+    (b"\x41\x7c\x00\x33", "bfxil w1, w2, #0, #32"),
 
     (b"\x80\x46\x82\xd2", "movz x0, #0x1234"),
     (b"\x80\x46\xa2\xd2", "movz x0, #0x1234, lsl #16"),
