@@ -434,6 +434,15 @@ namespace triton {
               switch(op->type) {
 
                 case triton::extlibs::capstone::ARM64_OP_IMM: {
+                  /*
+                   * A post-index offset is added to the 64-bit base register. The access
+                   * size of a byte load or store is too narrow for it: ldrb w0, [x1], #255
+                   * would get an 8-bit 0xff, which the writeback sign-extends to -1.
+                   */
+                  if (!inst.operands.empty() && inst.operands.back().getType() == triton::arch::OP_MEM) {
+                    size = triton::size::qword;
+                  }
+
                   triton::arch::Immediate imm(op->imm, size ? size : triton::size::qword);
 
                   /*

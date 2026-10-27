@@ -387,6 +387,13 @@ CODE  = [
     (b"\x21\xc8\x00\x91", "add x1, x1, #50"), # HEAP+50 address
     (b"\x29\x24\x5e\x38", "ldrb w9, [x1], #-30"),
     (b"\x2a\x8c\x40\x38", "ldrb w10, [x1, #8]!"),
+    (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    (b"\x2c\xf4\x4f\x38", "ldrb w12, [x1], #255"),
+    (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    (b"\x2c\x04\x88\x38", "ldrsb x12, [x1], #128"),
+    (b"\x2c\x84\xcc\x38", "ldrsb w12, [x1], #200"),
+    (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    (b"\x2c\xf4\x0f\x38", "strb w12, [x1], #255"),
     (b"\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
     (b"\x3f\x10\x00\x91", "add sp, x1, #4"),
     (b"\xeb\x03\x40\x39", "ldrb w11, [sp]"),
