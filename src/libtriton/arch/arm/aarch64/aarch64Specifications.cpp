@@ -2203,6 +2203,14 @@ namespace triton {
               tritonId = triton::arch::arm::aarch64::ID_INS_TLBI;
               break;
 
+            case triton::extlibs::capstone::ARM64_INS_NEGS:
+              tritonId = triton::arch::arm::aarch64::ID_INS_NEGS;
+              break;
+
+            case triton::extlibs::capstone::ARM64_INS_NGCS:
+              tritonId = triton::arch::arm::aarch64::ID_INS_NGCS;
+              break;
+
             default:
               tritonId = triton::arch::arm::aarch64::ID_INS_INVALID;
               break;

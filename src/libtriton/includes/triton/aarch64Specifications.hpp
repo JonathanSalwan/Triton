@@ -554,6 +554,8 @@ namespace triton {
           ID_INS_DC, //!< dc
           ID_INS_AT, //!< at
           ID_INS_TLBI, //!< tlbi
+          ID_INS_NEGS, //!< negs
+          ID_INS_NGCS, //!< ngcs
 
           /* Must be the last item */
           ID_INS_LAST_ITEM //!< must be the last item
