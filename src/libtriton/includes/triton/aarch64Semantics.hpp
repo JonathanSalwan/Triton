@@ -475,6 +475,9 @@ namespace triton {
             //! The SBC semantics.
             void sbc_s(triton::arch::Instruction& inst);
 
+            //! The SBFIZ semantics.
+            void sbfiz_s(triton::arch::Instruction& inst);
+
             //! The SBFX semantics.
             void sbfx_s(triton::arch::Instruction& inst);
 
