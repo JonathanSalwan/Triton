@@ -2813,6 +2813,11 @@ namespace triton {
             this->nf_s(inst, cond, expr, dst);
             this->zf_s(inst, cond, expr, dst);
 
+            /* MOVS with a modified immediate updates the carry flag like the bitwise instructions */
+            if (src.getType() == triton::arch::OP_IMM && dst.getRegister().getId() != ID_REG_ARM32_PC) {
+              this->cfBitwise_s(inst, cond, expr, src);
+            }
+
             /* NOTE: The following if statement was added to properly handle
             * the case when PC is the destination register when the S suffix is
             * present (e.g.: 'movseq pc, r4'). The manual is not clear in this
@@ -4839,25 +4844,32 @@ namespace triton {
           triton::ast::SharedAbstractNode node = nullptr;
           triton::arch::arm::shift_e shiftType = triton::arch::arm::ID_SHIFT_INVALID;
           triton::ast::SharedAbstractNode shiftAmount = nullptr;
+          triton::ast::SharedAbstractNode carry = nullptr;
 
           switch (src.getType()) {
             case triton::arch::OP_IMM: {
               /* For instance, this applies to: AND{S}{<c>}{<q>} {<Rd>,} <Rn>, #<const> */
 
-              /* From the instruction decoding:
-               *    - (imm32, carry) = ARMExpandImm_C(imm12, APSR.C);
-               *
-               * From ARMExpandImm_C():
-               *    - unrotated_value = ZeroExtend(imm12<7:0>, 32);
-               *    - (imm32, carry_out) = Shift_C(unrotated_value, SRType_ROR, 2*UInt(imm12<11:8>), carry_in);
+              /* From ARMExpandImm_C() and ThumbExpandImm_C(): an immediate encoded with a rotation sets the
+               * carry flag to bit 31 of the expanded value, otherwise the carry flag is unchanged. The operand
+               * already holds the expanded value, so the rotation is taken from the encoding: imm12<11:8> in A32,
+               * imm12<11:10> (i:imm3<2>) in a 32-bit T32 instruction; 16-bit T32 immediates are not rotated.
                */
+              const triton::uint8* opcode = inst.getOpcode();
+              bool rotated = false;
 
-              node = this->astCtxt->zx(triton::bitsize::dword-8, this->astCtxt->extract(7, 0, op));
-              shiftType = triton::arch::arm::ID_SHIFT_ROR;
-              shiftAmount = this->astCtxt->bv(
-                              2 * (src.getImmediate().getValue() & 0x00000f00),
-                              node->getBitvectorSize()
-                            );
+              if (this->architecture->isThumb()) {
+                if (inst.getSize() == 4) {
+                  triton::uint32 hw1 = opcode[0] | (opcode[1] << 8);
+                  triton::uint32 hw2 = opcode[2] | (opcode[3] << 8);
+                  rotated = ((hw1 >> 10) & 1) || ((hw2 >> 14) & 1);
+                }
+              }
+              else {
+                rotated = (opcode[1] & 0x0f) != 0;
+              }
+
+              carry = rotated ? this->astCtxt->extract(31, 31, op) : this->symbolicEngine->getOperandAst(cf);
               break;
             }
 
@@ -4895,7 +4907,7 @@ namespace triton {
           }
 
           /* Create the semantics */
-          auto node1 = this->getShiftCAst(node, shiftType, shiftAmount);
+          auto node1 = carry ? carry : this->getShiftCAst(node, shiftType, shiftAmount);
           auto node2 = this->symbolicEngine->getOperandAst(cf);
           auto node3 = this->astCtxt->ite(cond, node1, node2);
 
