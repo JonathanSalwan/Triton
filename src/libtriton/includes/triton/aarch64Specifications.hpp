@@ -111,7 +111,15 @@ namespace triton {
           ID_INS_BIT, //!< bit
           ID_INS_BL, //!< bl
           ID_INS_BLR, //!< blr
+          ID_INS_BLRAA, //!< blraa
+          ID_INS_BLRAAZ, //!< blraaz
+          ID_INS_BLRAB, //!< blrab
+          ID_INS_BLRABZ, //!< blrabz
           ID_INS_BR, //!< br
+          ID_INS_BRAA, //!< braa
+          ID_INS_BRAAZ, //!< braaz
+          ID_INS_BRAB, //!< brab
+          ID_INS_BRABZ, //!< brabz
           ID_INS_BRK, //!< brk
           ID_INS_BSL, //!< bsl
           ID_INS_CBNZ, //!< cbnz
@@ -298,6 +306,21 @@ namespace triton {
           ID_INS_NOT, //!< not
           ID_INS_ORN, //!< orn
           ID_INS_ORR, //!< orr
+          ID_INS_PACDA, //!< pacda
+          ID_INS_PACDB, //!< pacdb
+          ID_INS_PACDZA, //!< pacdza
+          ID_INS_PACDZB, //!< pacdzb
+          ID_INS_PACGA, //!< pacga
+          ID_INS_PACIA, //!< pacia
+          ID_INS_PACIA1716, //!< pacia1716
+          ID_INS_PACIASP, //!< paciasp
+          ID_INS_PACIAZ, //!< paciaz
+          ID_INS_PACIB, //!< pacib
+          ID_INS_PACIB1716, //!< pacib1716
+          ID_INS_PACIBSP, //!< pacibsp
+          ID_INS_PACIBZ, //!< pacibz
+          ID_INS_PACIZA, //!< paciza
+          ID_INS_PACIZB, //!< pacizb
           ID_INS_PMULL2, //!< pmull2
           ID_INS_PMULL, //!< pmull
           ID_INS_PMUL, //!< pmul
@@ -515,6 +538,9 @@ namespace triton {
           ID_INS_UZP2, //!< uzp2
           ID_INS_XTN2, //!< xtn2
           ID_INS_XTN, //!< xtn
+          ID_INS_XPACD, //!< xpacd
+          ID_INS_XPACI, //!< xpaci
+          ID_INS_XPACLRI, //!< xpaclri
           ID_INS_ZIP1, //!< zip1
           ID_INS_ZIP2, //!< zip2
 
