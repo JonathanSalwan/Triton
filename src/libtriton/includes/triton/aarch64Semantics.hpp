@@ -138,6 +138,15 @@ namespace triton {
                          triton::ast::SharedAbstractNode& op1,
                          triton::ast::SharedAbstractNode& op2);
 
+            //! The CF semantics for the CCMN operation.
+            void cfCcmn_s(triton::arch::Instruction& inst,
+                          const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                          triton::arch::OperandWrapper& dst,
+                          triton::ast::SharedAbstractNode& op1,
+                          triton::ast::SharedAbstractNode& op2,
+                          triton::ast::SharedAbstractNode& nzcv,
+                          triton::ast::SharedAbstractNode& cond);
+
             //! The CF semantics for the CCMP operation.
             void cfCcmp_s(triton::arch::Instruction& inst,
                           const triton::engines::symbolic::SharedSymbolicExpression& parent,
@@ -160,6 +169,15 @@ namespace triton {
                          triton::arch::OperandWrapper& dst,
                          triton::ast::SharedAbstractNode& op1,
                          triton::ast::SharedAbstractNode& op2);
+
+            //! The VF semantics for the CCMN operation.
+            void vfCcmn_s(triton::arch::Instruction& inst,
+                          const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                          triton::arch::OperandWrapper& dst,
+                          triton::ast::SharedAbstractNode& op1,
+                          triton::ast::SharedAbstractNode& op2,
+                          triton::ast::SharedAbstractNode& nzcv,
+                          triton::ast::SharedAbstractNode& cond);
 
             //! The VF semantics for the CCMP operation.
             void vfCcmp_s(triton::arch::Instruction& inst,
@@ -219,6 +237,9 @@ namespace triton {
 
             //! The CBZ semantics
             void cbz_s(triton::arch::Instruction& inst);
+
+            //! The CCMN semantics
+            void ccmn_s(triton::arch::Instruction& inst);
 
             //! The CCMP semantics
             void ccmp_s(triton::arch::Instruction& inst);
