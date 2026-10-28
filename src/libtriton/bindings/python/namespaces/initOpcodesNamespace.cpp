@@ -3934,7 +3934,9 @@ namespace triton {
         xPyDict_SetItemString(Aarch64OpcodesDict, "MVN", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_MVN));
         xPyDict_SetItemString(Aarch64OpcodesDict, "MVNI", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_MVNI));
         xPyDict_SetItemString(Aarch64OpcodesDict, "NEG", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_NEG));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "NEGS", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_NEGS));
         xPyDict_SetItemString(Aarch64OpcodesDict, "NGC", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_NGC));
+        xPyDict_SetItemString(Aarch64OpcodesDict, "NGCS", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_NGCS));
         xPyDict_SetItemString(Aarch64OpcodesDict, "NOP", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_NOP));
         xPyDict_SetItemString(Aarch64OpcodesDict, "NOT", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_NOT));
         xPyDict_SetItemString(Aarch64OpcodesDict, "ORN", PyLong_FromUint32(triton::arch::arm::aarch64::ID_INS_ORN));

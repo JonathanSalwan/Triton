@@ -51,6 +51,8 @@ CCMN (register)               | Conditional Compare Negative (register)
 CCMP (immediate)              | Conditional Compare (immediate)
 CCMP (register)               | Conditional Compare (register)
 CINC                          | Conditional Increment: an alias of CSINC
+CINV                          | Conditional Invert: an alias of CSINV
+CLS                           | Count Leading Sign bits
 CLZ                           | Count Leading Zeros
 CMN (extended register)       | Compare Negative (extended register): an alias of ADDS (extended register)
 CMN (immediate)               | Compare Negative (immediate): an alias of ADDS (immediate)
@@ -140,6 +142,9 @@ MSUB                          | Multiply-Subtract
 MUL                           | Multiply: an alias of MADD
 MVN                           | Bitwise NOT: an alias of ORN (shifted register)
 NEG (shifted register)        | Negate (shifted register): an alias of SUB (shifted register)
+NEGS                          | Negate, setting flags: an alias of SUBS (shifted register)
+NGC                           | Negate with Carry: an alias of SBC
+NGCS                          | Negate with Carry, setting flags: an alias of SBCS
 NOP                           | No Operation
 ORN                           | Bitwise OR NOT (shifted register)
 ORR (immediate)               | Bitwise OR (immediate)
@@ -158,6 +163,7 @@ SBCS                          | Subtract with Carry, setting flags
 SBFX                          | Signed Bitfield Extract: an alias of SBFM
 SDIV                          | Signed Divide
 SMADDL                        | Signed Multiply-Add Long
+SMNEGL                        | Signed Multiply-Negate Long: an alias of SMSUBL
 SMSUBL                        | Signed Multiply-Subtract Long
 SMULH                         | Signed Multiply High
 SMULL                         | Signed Multiply Long: an alias of SMADDL
@@ -266,6 +272,8 @@ namespace triton {
             case ID_INS_CCMN:      this->ccmn_s(inst);          break;
             case ID_INS_CCMP:      this->ccmp_s(inst);          break;
             case ID_INS_CINC:      this->cinc_s(inst);          break;
+            case ID_INS_CINV:      this->cinv_s(inst);          break;
+            case ID_INS_CLS:       this->cls_s(inst);           break;
             case ID_INS_CLZ:       this->clz_s(inst);           break;
             case ID_INS_CMN:       this->cmn_s(inst);           break;
             case ID_INS_CMP:       this->cmp_s(inst);           break;
@@ -339,6 +347,9 @@ namespace triton {
             case ID_INS_MUL:       this->mul_s(inst);           break;
             case ID_INS_MVN:       this->mvn_s(inst);           break;
             case ID_INS_NEG:       this->neg_s(inst);           break;
+            case ID_INS_NEGS:      this->neg_s(inst);           break;
+            case ID_INS_NGC:       this->ngc_s(inst);           break;
+            case ID_INS_NGCS:      this->ngc_s(inst);           break;
             case ID_INS_NOP:       this->nop_s(inst);           break;
             case ID_INS_ORN:       this->orn_s(inst);           break;
             case ID_INS_ORR:       this->orr_s(inst);           break;
@@ -353,6 +364,7 @@ namespace triton {
             case ID_INS_SBFX:      this->sbfx_s(inst);          break;
             case ID_INS_SDIV:      this->sdiv_s(inst);          break;
             case ID_INS_SMADDL:    this->smaddl_s(inst);        break;
+            case ID_INS_SMNEGL:    this->smnegl_s(inst);        break;
             case ID_INS_SMSUBL:    this->smsubl_s(inst);        break;
             case ID_INS_SMULH:     this->smulh_s(inst);         break;
             case ID_INS_SMULL:     this->smull_s(inst);         break;
@@ -1632,6 +1644,58 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->setTaint(dst, this->getCodeConditionTainteSate(inst));
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::cinv_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+          auto op2 = this->astCtxt->bvnot(op1);
+
+          /* Create the semantics */
+          auto node = this->getCodeConditionAst(inst, op2, op1);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CINV operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintUnion(dst, src);
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::cls_s(triton::arch::Instruction& inst) {
+          auto& dst    = inst.operands[0];
+          auto& src    = inst.operands[1];
+          auto  bvSize = dst.getBitSize();
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics: CountLeadingZeroBits(op<N-1:1> EOR op<N-2:0>) */
+          auto diff = this->astCtxt->bvxor(this->astCtxt->extract(bvSize-1, 1, op), this->astCtxt->extract(bvSize-2, 0, op));
+          auto node = this->astCtxt->bv(bvSize-1, bvSize);
+          for (triton::uint32 index = 0; index < bvSize-1; index++) {
+            node = this->astCtxt->ite(
+                     this->astCtxt->equal(this->astCtxt->extract(index, index, diff), this->astCtxt->bvtrue()),
+                     this->astCtxt->bv(bvSize-2-index, bvSize),
+                     node
+                   );
+          }
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CLS operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -4616,16 +4680,57 @@ namespace triton {
           auto& src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op = this->symbolicEngine->getOperandAst(inst, src);
+          auto op1 = this->astCtxt->bv(0, dst.getBitSize());
+          auto op2 = this->symbolicEngine->getOperandAst(inst, src);
 
           /* Create the semantics */
-          auto node = this->astCtxt->bvneg(op);
+          auto node = this->astCtxt->bvsub(op1, op2);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MEG operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "NEG(S) operation");
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            this->cfSub_s(inst, expr, dst, op1, op2);
+            this->nf_s(inst, expr, dst);
+            this->vfSub_s(inst, expr, dst, op1, op2);
+            this->zf_s(inst, expr, dst);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::ngc_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+          auto  cf  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_C));
+
+          /* Create symbolic operands */
+          auto op1 = this->astCtxt->bv(0, dst.getBitSize());
+          auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+          auto op3 = this->symbolicEngine->getOperandAst(inst, cf);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->bvadd(this->astCtxt->bvnot(op2), this->astCtxt->zx(dst.getBitSize()-1, op3));
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "NGC(S) operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src) | this->taintEngine->isTainted(cf));
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            this->cfSub_s(inst, expr, dst, op1, op2);
+            this->nf_s(inst, expr, dst);
+            this->vfSub_s(inst, expr, dst, op1, op2);
+            this->zf_s(inst, expr, dst);
+          }
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -4982,6 +5087,34 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void AArch64Semantics::smnegl_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src1 = inst.operands[1];
+          auto& src2 = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+          auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->bvneg(
+                        this->astCtxt->bvmul(
+                          this->astCtxt->sx(triton::bitsize::dword, op1),
+                          this->astCtxt->sx(triton::bitsize::dword, op2)
+                        )
+                      );
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SMNEGL operation");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);

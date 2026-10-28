@@ -247,6 +247,12 @@ namespace triton {
             //! The CINC semantics
             void cinc_s(triton::arch::Instruction& inst);
 
+            //! The CINV semantics
+            void cinv_s(triton::arch::Instruction& inst);
+
+            //! The CLS semantics
+            void cls_s(triton::arch::Instruction& inst);
+
             //! The CLZ semantics
             void clz_s(triton::arch::Instruction& inst);
 
@@ -466,6 +472,9 @@ namespace triton {
             //! The NEG semantics.
             void neg_s(triton::arch::Instruction& inst);
 
+            //! The NGC semantics.
+            void ngc_s(triton::arch::Instruction& inst);
+
             //! The NOP semantics.
             void nop_s(triton::arch::Instruction& inst);
 
@@ -504,6 +513,9 @@ namespace triton {
 
             //! The SMADDL semantics.
             void smaddl_s(triton::arch::Instruction& inst);
+
+            //! The SMNEGL semantics.
+            void smnegl_s(triton::arch::Instruction& inst);
 
             //! The SMSUBL semantics.
             void smsubl_s(triton::arch::Instruction& inst);
