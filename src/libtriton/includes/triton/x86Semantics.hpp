@@ -464,6 +464,9 @@ namespace triton {
           //! The ADD semantics.
           void add_s(triton::arch::Instruction& inst);
 
+          //! The ADOX semantics.
+          void adox_s(triton::arch::Instruction& inst);
+
           //! The AND semantics.
           void and_s(triton::arch::Instruction& inst);
 
@@ -514,6 +517,9 @@ namespace triton {
 
           //! The BTS semantics.
           void bts_s(triton::arch::Instruction& inst);
+
+          //! The BZHI semantics.
+          void bzhi_s(triton::arch::Instruction& inst);
 
           //! The CALL semantics.
           void call_s(triton::arch::Instruction& inst);
@@ -964,6 +970,12 @@ namespace triton {
 
           //! The PCMPGTW semantics.
           void pcmpgtw_s(triton::arch::Instruction& inst);
+
+          //! The PDEP semantics.
+          void pdep_s(triton::arch::Instruction& inst);
+
+          //! The PEXT semantics.
+          void pext_s(triton::arch::Instruction& inst);
 
           //! The PEXTRB semantics.
           void pextrb_s(triton::arch::Instruction& inst);
