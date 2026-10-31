@@ -26,8 +26,8 @@ As **Triton** is a kind of a part-time project, please, **don't blame us** if it
     <img src="https://img.shields.io/github/actions/workflow/status/JonathanSalwan/Triton/linux.yml?branch=master&label=Linux&logo=linux&logoColor=white">
   </a>
   &nbsp;
-  <a href="https://github.com/JonathanSalwan/Triton/actions/workflows/osx.yml/">
-    <img src="https://img.shields.io/github/actions/workflow/status/JonathanSalwan/Triton/osx.yml?branch=master&label=OSX&logo=apple">
+  <a href="https://github.com/JonathanSalwan/Triton/actions/workflows/macos.yml/">
+    <img src="https://img.shields.io/github/actions/workflow/status/JonathanSalwan/Triton/macos.yml?branch=master&label=OSX&logo=apple">
   </a>
   &nbsp;
   <a href="https://github.com/JonathanSalwan/Triton/actions/workflows/vcpkg.yml/">
