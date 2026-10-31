@@ -430,6 +430,9 @@ namespace triton {
             //! The SMLATT semantics.
             void smlatt_s(triton::arch::Instruction& inst);
 
+            //! The SMLAL semantics.
+            void smlal_s(triton::arch::Instruction& inst);
+
             //! The SMULL semantics.
             void smull_s(triton::arch::Instruction& inst);
 
@@ -492,6 +495,12 @@ namespace triton {
 
             //! The UDIV semantics.
             void udiv_s(triton::arch::Instruction& inst);
+
+            //! The UMAAL semantics.
+            void umaal_s(triton::arch::Instruction& inst);
+
+            //! The UMLAL semantics.
+            void umlal_s(triton::arch::Instruction& inst);
 
             //! The UMULL semantics.
             void umull_s(triton::arch::Instruction& inst);
