@@ -4083,6 +4083,24 @@ CODE  = [
     (b"\x92\x03\xd1\xc0", "smullsgt r0, r1, r2, r3"),
     (b"\x92\x03\xd1\xd0", "smullsle r0, r1, r2, r3"),
 
+    # PKH, REVSH, SXTA*, UXTA*, SXTB16, UXTB16 -------------------------------- #
+    (b"\x12\x00\x81\xe6", "pkhbt r0, r1, r2"),
+    (b"\x12\x04\x81\xe6", "pkhbt r0, r1, r2, lsl #8"),
+    (b"\x52\x04\x81\xe6", "pkhtb r0, r1, r2, asr #8"),
+    (b"\xd2\x0f\x81\xe6", "pkhtb r0, r1, r2, asr #31"),
+    (b"\xb1\x0f\xff\xe6", "revsh r0, r1"),
+    (b"\x72\x00\xa1\xe6", "sxtab r0, r1, r2"),
+    (b"\x72\x04\xa1\xe6", "sxtab r0, r1, r2, ror #8"),
+    (b"\x72\x08\xb1\xe6", "sxtah r0, r1, r2, ror #16"),
+    (b"\x72\x00\x81\xe6", "sxtab16 r0, r1, r2"),
+    (b"\x71\x0c\x8f\xe6", "sxtb16 r0, r1, ror #24"),
+    (b"\x72\x0c\xe1\xe6", "uxtab r0, r1, r2, ror #24"),
+    (b"\x72\x00\xf1\xe6", "uxtah r0, r1, r2"),
+    (b"\x72\x04\xc1\xe6", "uxtab16 r0, r1, r2, ror #8"),
+    (b"\x71\x00\xcf\xe6", "uxtb16 r0, r1"),
+    (b"\xb1\x0f\xff\x16", "revshne r0, r1"),
+    (b"\x72\x00\xe1\x06", "uxtabeq r0, r1, r2"),
+  
     # UMLAL -------------------------------------------------------------------- #
     (b"\x92\x03\xa1\xe0", "umlal r0, r1, r2, r3"),
     (b"\x92\x03\xa1\x00", "umlaleq r0, r1, r2, r3"),
