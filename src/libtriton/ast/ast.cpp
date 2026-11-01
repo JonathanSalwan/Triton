@@ -23,6 +23,9 @@
 
 
 
+/* True while AbstractNode::refreshEval() re-inits stale nodes, whose hashes and parents do not change */
+static thread_local bool refreshingValues = false;
+
 namespace triton {
   namespace ast {
 
@@ -176,6 +179,13 @@ namespace triton {
       triton::usize generation = this->ctxt->getEvalGeneration();
       std::vector<std::pair<AbstractNode*, bool>> worklist;
 
+      /* Restores the flag on exit, also when an init() throws or an evaluate() inside it refreshes again */
+      struct Refreshing {
+        bool saved;
+        Refreshing() : saved(refreshingValues) { refreshingValues = true; }
+        ~Refreshing() { refreshingValues = saved; }
+      } refreshing;
+
       /* Iterative to avoid stack overflows on deep ASTs. Unsymbolized nodes never change. */
       worklist.push_back({this, false});
       while (!worklist.empty()) {
@@ -252,6 +262,10 @@ namespace triton {
 
 
     void AbstractNode::setParent(AbstractNode* p) {
+      /* The re-init of a stale node finds its parents already linked */
+      if (refreshingValues)
+        return;
+
       auto it = parents.find(p);
 
       if (it == parents.end()) {
@@ -361,7 +375,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -444,7 +459,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -503,7 +519,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -557,7 +574,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -611,7 +629,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -697,7 +716,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -751,7 +771,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -805,7 +826,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -859,7 +881,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -909,7 +932,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -963,7 +987,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1013,7 +1038,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1067,7 +1093,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1129,7 +1156,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1191,7 +1219,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1258,7 +1287,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1319,7 +1349,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1380,7 +1411,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1434,7 +1466,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1495,7 +1528,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1556,7 +1590,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1621,7 +1656,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1686,7 +1722,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1740,7 +1777,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1798,7 +1836,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1852,7 +1891,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1906,7 +1946,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -1960,7 +2001,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2014,7 +2056,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2072,7 +2115,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2126,7 +2170,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2180,7 +2225,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2241,7 +2287,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2283,7 +2330,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2343,7 +2391,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2393,7 +2442,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2447,7 +2497,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2501,7 +2552,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2565,7 +2617,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2616,7 +2669,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2673,7 +2727,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2710,7 +2765,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2780,7 +2836,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2832,7 +2889,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2884,7 +2942,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2934,7 +2993,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -2986,7 +3046,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -3038,7 +3099,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -3080,7 +3142,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -3147,7 +3210,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -3230,7 +3294,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -3297,7 +3362,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -3360,7 +3426,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -3397,7 +3464,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
@@ -3460,7 +3528,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      if (!refreshingValues)
+        this->initHash();
     }
 
 
