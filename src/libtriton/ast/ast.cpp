@@ -32,6 +32,7 @@ namespace triton {
       this->array       = false;
       this->ctxt        = ctxt;
       this->eval        = 0;
+      this->evalGeneration = ctxt->getEvalGeneration();
       this->hash        = 0;
       this->logical     = false;
       this->level       = 1;
@@ -77,7 +78,7 @@ namespace triton {
 
 
     bool AbstractNode::isSigned(void) const {
-      if ((this->eval >> (this->size-1)) & 1)
+      if ((this->evaluate() >> (this->size-1)) & 1)
         return true;
       return false;
     }
@@ -164,7 +165,48 @@ namespace triton {
 
 
     triton::uint512 AbstractNode::evaluate(void) const {
+      if (this->symbolized && this->evalGeneration != this->ctxt->getEvalGeneration()) {
+        const_cast<AbstractNode*>(this)->refreshEval();
+      }
       return this->eval;
+    }
+
+
+    void AbstractNode::refreshEval(void) {
+      triton::usize generation = this->ctxt->getEvalGeneration();
+      std::vector<std::pair<AbstractNode*, bool>> worklist;
+
+      /* Iterative to avoid stack overflows on deep ASTs. Unsymbolized nodes never change. */
+      worklist.push_back({this, false});
+      while (!worklist.empty()) {
+        AbstractNode* node = worklist.back().first;
+        bool postOrder = worklist.back().second;
+        worklist.pop_back();
+
+        if (node->evalGeneration == generation) {
+          continue;
+        }
+
+        if (postOrder) {
+          node->init();
+          node->evalGeneration = generation;
+          continue;
+        }
+
+        worklist.push_back({node, true});
+        for (const auto& child : node->children) {
+          if (child->symbolized && child->evalGeneration != generation) {
+            worklist.push_back({child.get(), false});
+          }
+        }
+
+        if (node->type == REFERENCE_NODE) {
+          AbstractNode* ast = reinterpret_cast<ReferenceNode*>(node)->getSymbolicExpression()->getAst().get();
+          if (ast->symbolized && ast->evalGeneration != generation) {
+            worklist.push_back({ast, false});
+          }
+        }
+      }
     }
 
 
@@ -3206,6 +3248,7 @@ namespace triton {
 
 
     triton::uint8 StoreNode::select(triton::uint64 addr) const {
+      this->evaluate();
       if (this->memory.find(addr) != this->memory.end()) {
         return this->memory.at(addr);
       }
@@ -3224,6 +3267,7 @@ namespace triton {
 
 
     std::unordered_map<triton::uint64, triton::uint8>& StoreNode::getMemory(void) {
+      this->evaluate();
       return this->memory;
     }
 
