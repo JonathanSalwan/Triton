@@ -77,6 +77,9 @@ namespace triton {
           //! The map of symbolic expressions <id : SymbolicExpression>
           mutable std::unordered_map<triton::usize, WeakSymbolicExpression> symbolicExpressions;
 
+          //! Size of `symbolicExpressions` at which its dead entries are swept next.
+          triton::usize symbolicExpressionsSweepSize;
+
           //! The map of aligned symbolic expressions (used for symbolic optimizations) <<addr : size> : SharedSymbolicExpression>
           std::map<std::pair<triton::uint64, triton::uint32>, SharedSymbolicExpression> alignedBitvectorMemory;
 

@@ -10,6 +10,19 @@ endif()
 add_test(NAME AstLifetime COMMAND test_ast_lifetime)
 add_dependencies(check test_ast_lifetime)
 
+add_executable(test_expression_lifetime unittests/test_expression_lifetime.cpp)
+target_link_libraries(test_expression_lifetime PRIVATE triton)
+set_property(TARGET test_expression_lifetime PROPERTY CXX_STANDARD 17)
+if(WIN32)
+    set_property(TARGET test_expression_lifetime PROPERTY RUNTIME_OUTPUT_DIRECTORY "$<TARGET_FILE_DIR:triton>")
+endif()
+if(MSVC AND MSVC_STATIC)
+    set_property(TARGET test_expression_lifetime PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+add_test(NAME ExpressionLifetime COMMAND test_expression_lifetime)
+set_tests_properties(ExpressionLifetime PROPERTIES SKIP_RETURN_CODE 77)
+add_dependencies(check test_expression_lifetime)
+
 # These following tests are used to test our semantics. It relies on Unicorn emulator.
 # Windows is included: unicorn and lief both publish win_amd64 wheels, none of
 # these scripts are platform specific, and running them there caught a real
