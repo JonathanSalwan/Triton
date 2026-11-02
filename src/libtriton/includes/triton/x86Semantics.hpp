@@ -1388,6 +1388,9 @@ namespace triton {
           //! The VEXTRACTI128 semantics.
           void vextracti128_s(triton::arch::Instruction& inst);
 
+          //! The VINSERTF128 and VINSERTI128 semantics.
+          void vinsertf128_s(triton::arch::Instruction& inst);
+
           //! The VMOVD semantics.
           void vmovd_s(triton::arch::Instruction& inst);
 
@@ -1564,6 +1567,12 @@ namespace triton {
 
           //! The VXORPS semantics.
           void vxorps_s(triton::arch::Instruction& inst);
+
+          //! The VZEROALL semantics.
+          void vzeroall_s(triton::arch::Instruction& inst);
+
+          //! The VZEROUPPER semantics.
+          void vzeroupper_s(triton::arch::Instruction& inst);
 
           //! The WAIT semantics.
           void wait_s(triton::arch::Instruction& inst);

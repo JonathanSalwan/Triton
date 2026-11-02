@@ -351,6 +351,8 @@ UNPCKLPS                     | sse1       | Unpack and Interleave Low Packed Sin
 VERR                         |            | Set ZF=1 if segment specified with r/m16 can be read
 VERW                         |            | Set ZF=1 if segment specified with r/m16 can be written
 VEXTRACTI128                 | avx2       | VEX Extract Packed Integer Values
+VINSERTF128                  | avx        | VEX Insert Packed Floating-Point Values
+VINSERTI128                  | avx2       | VEX Insert Packed Integer Values
 VMOVD                        | avx        | VEX Move Doubleword
 VMOVDQA                      | avx        | VEX Move aligned packed integer values
 VMOVDQU                      | avx        | VEX Move unaligned packed integer values
@@ -410,6 +412,8 @@ VPUNPCKLQDQ                  | avx/avx2   | VEX Unpack Low Data (Unpack and inte
 VPUNPCKLWD                   | avx/avx2   | VEX Unpack Low Data (Unpack and interleave low-order words)
 VPXOR                        | avx/avx2   | VEX Logical XOR
 VXORPS                       | avx        | VEX Bitwise Logical XOR for Single-Precision Floating-Point Values
+VZEROALL                     | avx        | VEX Zero All YMM Registers
+VZEROUPPER                   | avx        | VEX Zero Upper Bits of YMM Registers
 WAIT                         |            | Wait
 WBINVD                       |            | Write Back and Invalidate Cache
 XADD                         |            | Exchange and Add
@@ -772,6 +776,8 @@ namespace triton {
           case ID_INS_VERR:           this->verr_s(inst);         break;
           case ID_INS_VERW:           this->verw_s(inst);         break;
           case ID_INS_VEXTRACTI128:   this->vextracti128_s(inst); break;
+          case ID_INS_VINSERTF128:    this->vinsertf128_s(inst);  break;
+          case ID_INS_VINSERTI128:    this->vinsertf128_s(inst);  break;
           case ID_INS_VMOVD:          this->vmovd_s(inst);        break;
           case ID_INS_VMOVDQA:        this->vmovdqa_s(inst);      break;
           case ID_INS_VMOVDQU:        this->vmovdqu_s(inst);      break;
@@ -831,6 +837,8 @@ namespace triton {
           case ID_INS_VPUNPCKLWD:     this->vpunpcklwd_s(inst);   break;
           case ID_INS_VPXOR:          this->vpxor_s(inst);        break;
           case ID_INS_VXORPS:         this->vxorps_s(inst);       break;
+          case ID_INS_VZEROALL:       this->vzeroall_s(inst);     break;
+          case ID_INS_VZEROUPPER:     this->vzeroupper_s(inst);   break;
           case ID_INS_WAIT:           this->wait_s(inst);         break;
           case ID_INS_WBINVD:         this->wbinvd_s(inst);       break;
           case ID_INS_XADD:           this->xadd_s(inst);         break;
@@ -16712,6 +16720,37 @@ namespace triton {
       }
 
 
+      void x86Semantics::vinsertf128_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+        auto& src3 = inst.operands[3];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src3);
+
+        /* Create the semantics */
+        triton::ast::SharedAbstractNode node;
+        if (op3->evaluate() & 0b00000001) {
+          node = this->astCtxt->concat(op2, this->astCtxt->extract(127, 0, op1));
+        } else {
+          node = this->astCtxt->concat(this->astCtxt->extract(255, 128, op1), op2);
+        }
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VINSERT128 operation");
+
+        /* Spread taint */
+        this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src2);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
       void x86Semantics::vmovd_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
@@ -18878,6 +18917,43 @@ namespace triton {
 
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vzeroall_s(triton::arch::Instruction& inst) {
+        /* ZMM0-15 in 64-bit mode, YMM0-7 otherwise */
+        auto is64bits = this->architecture->getArchitecture() == triton::arch::architecture_e::ARCH_X86_64;
+        auto first    = is64bits ? ID_REG_X86_ZMM0 : ID_REG_X86_YMM0;
+        auto count    = is64bits ? 16u : 8u;
+
+        for (triton::uint32 i = 0; i < count; i++) {
+          auto dst  = triton::arch::OperandWrapper(this->architecture->getRegister(static_cast<triton::arch::register_e>(first + i)));
+          auto node = this->astCtxt->bv(0, dst.getBitSize());
+          this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VZEROALL operation");
+          this->taintEngine->setTaint(dst, false);
+        }
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vzeroupper_s(triton::arch::Instruction& inst) {
+        /* ZMM0-15 in 64-bit mode, YMM0-7 otherwise */
+        auto is64bits = this->architecture->getArchitecture() == triton::arch::architecture_e::ARCH_X86_64;
+        auto first    = is64bits ? ID_REG_X86_ZMM0 : ID_REG_X86_YMM0;
+        auto count    = is64bits ? 16u : 8u;
+
+        for (triton::uint32 i = 0; i < count; i++) {
+          auto dst  = triton::arch::OperandWrapper(this->architecture->getRegister(static_cast<triton::arch::register_e>(first + i)));
+          auto op   = this->symbolicEngine->getOperandAst(inst, dst);
+          auto node = this->astCtxt->zx(dst.getBitSize() - 128, this->astCtxt->extract(127, 0, op));
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VZEROUPPER operation");
+          expr->isTainted = this->taintEngine->isTainted(dst);
+        }
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
