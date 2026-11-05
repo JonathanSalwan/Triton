@@ -86,6 +86,44 @@ class TestCallback(unittest.TestCase):
         cb_new_refcnt = tuple(sys.getrefcount(x) for x in (cb, cb.__self__, cb.__func__))
         self.assertTrue(cb_initial_refcnt == cb_new_refcnt)
 
+    def test_callback_released_with_context(self):
+        import gc, weakref
+        def make_callback():
+            payload = set()
+            def cb(api, mem):
+                payload.add(mem)
+            return cb, weakref.ref(cb)
+
+        cb, ref = make_callback()
+        ctx = TritonContext(ARCH.X86_64)
+        ctx.addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, cb)
+        del cb, ctx
+        gc.collect()
+        self.assertIsNone(ref())
+
+        cb, ref = make_callback()
+        ctx = TritonContext(ARCH.X86_64)
+        ctx.addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, cb)
+        ctx.clearCallbacks()
+        del cb
+        gc.collect()
+        self.assertIsNone(ref())
+
+    def test_callback_return_value_released(self):
+        import sys
+        ctx = TritonContext(ARCH.X86_64)
+        ast = ctx.getAstContext()
+        node = ast.bv(1, 8)
+        ret = object()
+
+        ctx.addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, lambda api, mem: ret)
+        ctx.addCallback(CALLBACK.SYMBOLIC_SIMPLIFICATION, lambda api, n: node)
+        refcnt = (sys.getrefcount(ret), sys.getrefcount(node))
+        for _ in range(10):
+            ctx.getConcreteMemoryValue(MemoryAccess(0x1000, 4))
+            ctx.simplify(ast.bv(2, 8))
+        self.assertEqual(refcnt, (sys.getrefcount(ret), sys.getrefcount(node)))
+
     def test_call_rsp_issue(self):
         def test_call(add_callback):
             def get_concrete_memory_value_hook(ctx, mem):
