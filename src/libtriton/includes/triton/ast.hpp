@@ -70,6 +70,9 @@ namespace triton {
         //! Hashes the tree.
         virtual void initHash(void) = 0;
 
+        //! Hashes this node and the nodes below it that are not hashed yet, without recursion.
+        void computeHash(void) const;
+
       protected:
         //! Deep level for computing hash
         triton::uint32 level;
@@ -90,8 +93,11 @@ namespace triton {
         //! The value of the tree from this root node.
         triton::uint512 eval;
 
-        //! The hash of the tree
-        triton::uint512 hash;
+        //! The hash of the tree, computed on the first getHash()
+        mutable triton::uint512 hash;
+
+        //! False until the hash is computed, and again when the node changes.
+        mutable bool hashed;
 
         //! True if the tree contains a symbolic variable.
         bool symbolized;
