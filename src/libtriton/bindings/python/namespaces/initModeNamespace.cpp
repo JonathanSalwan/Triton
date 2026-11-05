@@ -43,6 +43,12 @@ Concretizes every register tagged as undefined (see #750).
 - **MODE.CONSTANT_FOLDING**<br>
 Performs a constant folding optimization of sub ASTs which do not contain symbolic variables.
 
+- **MODE.INTEL_UNDEFINED_FLAGS**<br>
+Sets the x86 flags the manual leaves undefined to the values Intel processors write, where known: AF after logic, shift,
+multiply and bit scan instructions, OF after `sar`, AF/PF/SF after `mul` and `imul`, CF/OF/SF after `bsf` and `bsr`,
+OF/SF/PF after `lzcnt` and `tzcnt`, and AF/PF (and SF for `bextr`) after the BMI instructions. Flags whose value
+differs between Intel cores stay undefined.
+
 - **MODE.MEMORY_ARRAY**<br>
 Enables symbolic pointers reasoning (QF_ABV logic). When this mode is not enabled, which is the case by default, the QF_BV memory model is applied.
 
@@ -80,6 +86,7 @@ namespace triton {
         xPyDict_SetItemString(modeDict, "AST_OPTIMIZATIONS",              PyLong_FromUint32(triton::modes::AST_OPTIMIZATIONS));
         xPyDict_SetItemString(modeDict, "CONCRETIZE_UNDEFINED_REGISTERS", PyLong_FromUint32(triton::modes::CONCRETIZE_UNDEFINED_REGISTERS));
         xPyDict_SetItemString(modeDict, "CONSTANT_FOLDING",               PyLong_FromUint32(triton::modes::CONSTANT_FOLDING));
+        xPyDict_SetItemString(modeDict, "INTEL_UNDEFINED_FLAGS",          PyLong_FromUint32(triton::modes::INTEL_UNDEFINED_FLAGS));
         xPyDict_SetItemString(modeDict, "MEMORY_ARRAY",                   PyLong_FromUint32(triton::modes::MEMORY_ARRAY));
         xPyDict_SetItemString(modeDict, "ONLY_ON_SYMBOLIZED",             PyLong_FromUint32(triton::modes::ONLY_ON_SYMBOLIZED));
         xPyDict_SetItemString(modeDict, "ONLY_ON_TAINTED",                PyLong_FromUint32(triton::modes::ONLY_ON_TAINTED));
