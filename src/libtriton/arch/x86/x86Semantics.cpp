@@ -135,6 +135,8 @@ LODSD                        |            | Load doubleword at address
 LODSQ                        |            | Load quadword at address
 LODSW                        |            | Load word at address
 LOOP                         |            | Loop According to ECX Counter
+LOOPE                        |            | Loop According to ECX Counter while ZF is set
+LOOPNE                       |            | Loop According to ECX Counter while ZF is clear
 LZCNT                        |            | Count the Number of Leading Zero Bits
 FXRSTOR                      | sse1       | Restore the x87 FPU, MMX, XMM, and MXCSR register state from m512byte
 FXRSTOR64                    | sse1       | Restore the x87 FPU, MMX, XMM, and MXCSR register state from m512byte (REX.W = 1)
@@ -560,6 +562,8 @@ namespace triton {
           case ID_INS_LODSQ:          this->lodsq_s(inst);        break;
           case ID_INS_LODSW:          this->lodsw_s(inst);        break;
           case ID_INS_LOOP:           this->loop_s(inst);         break;
+          case ID_INS_LOOPE:          this->loope_s(inst);        break;
+          case ID_INS_LOOPNE:         this->loopne_s(inst);       break;
           case ID_INS_LZCNT:          this->lzcnt_s(inst);        break;
           case ID_INS_INT3:           this->int3_s(inst);         break;
           case ID_INS_MFENCE:         this->mfence_s(inst);       break;
@@ -8507,6 +8511,92 @@ namespace triton {
         else {
           expr2->isTainted = this->taintEngine->taintAssignment(pc, src);
         }
+
+        /* Create the path constraint */
+        this->symbolicEngine->pushPathConstraint(inst, expr2);
+      }
+
+
+      void x86Semantics::loope_s(triton::arch::Instruction& inst) {
+        auto  count = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_CX));
+        auto  zf    = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ZF));
+        auto  pc    = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
+        auto& src   = inst.operands[0];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, count);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, zf);
+
+        /* Create the semantics */
+        auto node1 = this->astCtxt->bvsub(op2, this->astCtxt->bv(1, op2->getBitvectorSize()));
+
+        /* Create symbolic expression */
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, count, "LOOPE counter operation");
+
+        /* Create the semantics */
+        auto node2 = this->astCtxt->ite(
+                       this->astCtxt->land(
+                         this->astCtxt->lnot(this->astCtxt->equal(node1, this->astCtxt->bv(0, node1->getBitvectorSize()))),
+                         this->astCtxt->equal(op3, this->astCtxt->bvtrue())
+                       ),
+                       op1,
+                       this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize())
+                     );
+
+        /* Create symbolic expression */
+        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, pc, "Program Counter");
+
+        /* Set condition flag */
+        if (!node1->evaluate().is_zero() && !op3->evaluate().is_zero())
+          inst.setConditionTaken(true);
+
+        /* Spread taint */
+        expr2->isTainted = this->taintEngine->taintAssignment(pc, count);
+        expr2->isTainted = this->taintEngine->taintUnion(pc, zf);
+
+        /* Create the path constraint */
+        this->symbolicEngine->pushPathConstraint(inst, expr2);
+      }
+
+
+      void x86Semantics::loopne_s(triton::arch::Instruction& inst) {
+        auto  count = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_CX));
+        auto  zf    = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ZF));
+        auto  pc    = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
+        auto& src   = inst.operands[0];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, count);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, zf);
+
+        /* Create the semantics */
+        auto node1 = this->astCtxt->bvsub(op2, this->astCtxt->bv(1, op2->getBitvectorSize()));
+
+        /* Create symbolic expression */
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, count, "LOOPNE counter operation");
+
+        /* Create the semantics */
+        auto node2 = this->astCtxt->ite(
+                       this->astCtxt->land(
+                         this->astCtxt->lnot(this->astCtxt->equal(node1, this->astCtxt->bv(0, node1->getBitvectorSize()))),
+                         this->astCtxt->equal(op3, this->astCtxt->bvfalse())
+                       ),
+                       op1,
+                       this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize())
+                     );
+
+        /* Create symbolic expression */
+        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, pc, "Program Counter");
+
+        /* Set condition flag */
+        if (!node1->evaluate().is_zero() && op3->evaluate().is_zero())
+          inst.setConditionTaken(true);
+
+        /* Spread taint */
+        expr2->isTainted = this->taintEngine->taintAssignment(pc, count);
+        expr2->isTainted = this->taintEngine->taintUnion(pc, zf);
 
         /* Create the path constraint */
         this->symbolicEngine->pushPathConstraint(inst, expr2);
