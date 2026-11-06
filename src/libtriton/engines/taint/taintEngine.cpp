@@ -543,7 +543,7 @@ namespace triton {
 
       /* mem U imm */
       bool TaintEngine::unionMemoryImmediate(const triton::arch::MemoryAccess& memDst) {
-        if (this->isMemoryTainted(memDst), false) {
+        if (this->isMemoryTainted(memDst, false)) {
           return TAINTED;
         }
         return !TAINTED;
@@ -557,7 +557,7 @@ namespace triton {
           return TAINTED;
         }
 
-        if (this->isMemoryTainted(memDst), false) {
+        if (this->isMemoryTainted(memDst, false)) {
           return TAINTED;
         }
 
