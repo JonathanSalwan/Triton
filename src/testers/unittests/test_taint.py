@@ -250,11 +250,12 @@ class TestTaint(unittest.TestCase):
         Triton.taintMemory(MemoryAccess(0x2000, 4))
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
 
-        Triton.taintUnion(MemoryAccess(0x2000, 4), Immediate(1, 4))
+        self.assertTrue(Triton.taintUnion(MemoryAccess(0x2000, 4), Immediate(1, 4)))
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
 
         Triton.untaintMemory(MemoryAccess(0x2000, 4))
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
+        self.assertFalse(Triton.taintUnion(MemoryAccess(0x2000, 4), Immediate(1, 4)))
 
     def test_taint_union_memory_memory(self):
         """Check tainting union memory U memory."""
@@ -288,7 +289,7 @@ class TestTaint(unittest.TestCase):
         Triton.taintMemory(MemoryAccess(0x2000, 4))
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
 
-        Triton.taintUnion(MemoryAccess(0x2000, 4), Triton.registers.rax)
+        self.assertTrue(Triton.taintUnion(MemoryAccess(0x2000, 4), Triton.registers.rax))
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
         self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
 
@@ -296,14 +297,42 @@ class TestTaint(unittest.TestCase):
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
         self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
 
-        Triton.taintUnion(MemoryAccess(0x2000, 4), Triton.registers.rax)
+        self.assertFalse(Triton.taintUnion(MemoryAccess(0x2000, 4), Triton.registers.rax))
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
         self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
 
         Triton.taintRegister(Triton.registers.rax)
-        Triton.taintUnion(MemoryAccess(0x2000, 4), Triton.registers.rax)
+        self.assertTrue(Triton.taintUnion(MemoryAccess(0x2000, 4), Triton.registers.rax))
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
         self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
+
+    def test_taint_memory_xor_instruction(self):
+        """Memory destination taint must be reflected in the XOR instruction."""
+        opcodes = (
+            b"\x48\x31\x03",      # xor qword ptr [rbx], rax
+            b"\x48\x83\x33\x01",  # xor qword ptr [rbx], 1
+        )
+        for opcode in opcodes:
+            for through_pointers in (False, True):
+                for only_tainted in (False, True):
+                    for memory_tainted in (False, True):
+                        with self.subTest(opcode=opcode.hex(), pointers=through_pointers,
+                                          only_tainted=only_tainted, memory_tainted=memory_tainted):
+                            ctx = TritonContext(ARCH.X86_64)
+                            ctx.setMode(MODE.TAINT_THROUGH_POINTERS, through_pointers)
+                            ctx.setMode(MODE.ONLY_ON_TAINTED, only_tainted)
+                            ctx.setConcreteRegisterValue(ctx.registers.rbx, 0x2000)
+                            ctx.setConcreteRegisterValue(ctx.registers.rax, 1)
+                            mem = MemoryAccess(0x2000, 8)
+                            ctx.setConcreteMemoryValue(mem, 0x41)
+                            ctx.setTaintMemory(mem, memory_tainted)
+                            inst = Instruction(opcode)
+                            inst.setAddress(0x1000)
+
+                            self.assertEqual(ctx.processing(inst), EXCEPTION.NO_FAULT)
+                            self.assertEqual(inst.isTainted(), memory_tainted)
+                            self.assertEqual(ctx.isMemoryTainted(mem), memory_tainted)
+                            self.assertEqual(ctx.getConcreteMemoryValue(mem), 0x40)
 
     def test_taint_union_register_immediate(self):
         """Check tainting union register U immediate."""
