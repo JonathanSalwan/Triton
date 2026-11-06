@@ -637,6 +637,8 @@ class TestAstSimplification4(unittest.TestCase):
         for n in (self.ast.bvsub(add, a), self.ast.bvxor(xor, a), self.ast.bvxor(a, xor)):
             self.assertTrue(n.equalTo(b))
         self.assertTrue(self.ast.bvsub(add, b).equalTo(a))
+        self.assertTrue(self.ast.bvneg(neg).equalTo(a))
+        self.assertTrue(self.ast.bvnot(inv).equalTo(a))
 
     def test_inverse_instructions(self):
         for code in (

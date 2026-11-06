@@ -315,6 +315,13 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvneg(const SharedAbstractNode& expr) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: -(-A) = A */
+        SharedAbstractNode n = triton::ast::dereference(expr);
+        if (n->getType() == BVNEG_NODE)
+          return n->getChildren()[0];
+      }
+
       SharedAbstractNode node = std::make_shared<BvnegNode>(expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvneg(): Not enough memory.");
@@ -347,6 +354,13 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvnot(const SharedAbstractNode& expr) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: ~~A = A */
+        SharedAbstractNode n = triton::ast::dereference(expr);
+        if (n->getType() == BVNOT_NODE)
+          return n->getChildren()[0];
+      }
+
       SharedAbstractNode node = std::make_shared<BvnotNode>(expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvnot(): Not enough memory.");
