@@ -593,6 +593,35 @@ class TestAstSimplification4(unittest.TestCase):
         n = self.ast.extract(7, 0, r2)
         self.assertEqual(str(n), "SymVar_0")
 
+    def test_same_symbolic_operands(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        x = self.ast.bvadd(a, self.ast.bv(1, 32))
+        y = self.ast.bvadd(a, self.ast.bv(1, 32))
+        r = self.ast.reference(self.ctx.newSymbolicExpression(x))
+        for other in (x, y, r):
+            self.assertEqual(str(self.ast.bvsub(x, other)), "(_ bv0 32)")
+            self.assertEqual(str(self.ast.bvxor(x, other)), "(_ bv0 32)")
+            self.assertTrue(self.ast.bvand(x, other).equalTo(x))
+            self.assertTrue(self.ast.bvor(x, other).equalTo(x))
+
+    def test_same_register_operands(self):
+        self.ctx.symbolizeRegister(self.ctx.registers.eax, "eax")
+        for opcode in (b"\x29\xc0", b"\x31\xc0"):  # sub eax, eax; xor eax, eax
+            self.ctx.processing(Instruction(opcode))
+            self.assertFalse(self.ctx.getRegisterAst(self.ctx.registers.eax).isSymbolized())
+
+    def test_different_operands_with_same_hash(self):
+        # The hash squares the child hashes of ordered nodes, so integers hashing to h and -h collide
+        h = (AST_NODE.INTEGER ^ 2) % (1 << 512)
+        v = ((1 << 512) - h) ^ AST_NODE.INTEGER
+        a = self.ast.variable(self.ctx.newSymbolicVariable(512))
+        x = self.ast.bvmul(a, self.ast.bv(2, 512))
+        y = self.ast.bvmul(a, self.ast.bv(v, 512))
+        self.assertEqual(x.getHash(), y.getHash())
+        self.assertFalse(x.equalTo(y))
+        self.assertTrue(self.ast.bvxor(x, y).isSymbolized())
+        self.assertTrue(self.ast.bvsub(x, y).isSymbolized())
+
 
 class TestAstSimplification5(unittest.TestCase):
 
