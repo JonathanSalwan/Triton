@@ -233,6 +233,29 @@ class TestProcessing(unittest.TestCase):
         # movlps xmm1, QWORD PTR [rax]
         self.ctx.processing(Instruction(b"\x0F\x12\x08"))
 
+    def test_prefixed_relative_branch(self):
+        """Check that a REX.W prefix does not truncate the target of a relative branch."""
+        self.ctx = TritonContext(ARCH.X86_64)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsp, 0x10000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rcx, 5)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.zf, 1)
+        address = 0x7ff612340000
+        for opcode, target, taken in (
+            (b"\x48\xeb\x77", 0x7a, True),                  # jmp
+            (b"\x49\xeb\x77", 0x7a, True),                  # jmp
+            (b"\x48\x74\x77", 0x7a, True),                  # je
+            (b"\x66\x48\x74\x77", 0x7b, True),              # je, REX.W overrides 66
+            (b"\x48\x0f\x84\x77\x00\x00\x00", 0x7e, True),  # je rel32
+            (b"\x48\x74\xf0", -0xd, True),                  # je backward
+            (b"\x48\xe8\x77\x00\x00\x00", 0x7d, True),      # call
+            (b"\x48\xe2\x77", 0x7a, True),                  # loop
+            (b"\x48\xe3\x77", 0x7a, False),                 # jrcxz
+        ):
+            inst = Instruction(address, opcode)
+            self.ctx.processing(inst)
+            self.assertEqual(inst.getOperands()[0].getValue(), address + target)
+            self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.rip), address + target if taken else inst.getNextAddress())
+
     def test_mix_high_low_register(self):
         """Check operation on lower and higher register."""
         self.ctx = TritonContext()
