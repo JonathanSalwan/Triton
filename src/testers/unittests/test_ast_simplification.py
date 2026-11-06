@@ -622,6 +622,34 @@ class TestAstSimplification4(unittest.TestCase):
         self.assertTrue(self.ast.bvxor(x, y).isSymbolized())
         self.assertTrue(self.ast.bvsub(x, y).isSymbolized())
 
+    def test_inverse_operands(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        # Operands reached through references, as instruction semantics build them
+        neg = self.ast.reference(self.ctx.newSymbolicExpression(self.ast.bvneg(a)))
+        inv = self.ast.reference(self.ctx.newSymbolicExpression(self.ast.bvnot(a)))
+        add = self.ast.reference(self.ctx.newSymbolicExpression(self.ast.bvadd(b, a)))
+        xor = self.ast.reference(self.ctx.newSymbolicExpression(self.ast.bvxor(b, a)))
+        for n in (self.ast.bvadd(a, neg), self.ast.bvadd(neg, a), self.ast.bvand(a, inv), self.ast.bvand(inv, a)):
+            self.assertEqual(str(n), "(_ bv0 32)")
+        for n in (self.ast.bvor(a, inv), self.ast.bvor(inv, a)):
+            self.assertEqual(str(n), "(_ bv4294967295 32)")
+        for n in (self.ast.bvsub(add, a), self.ast.bvxor(xor, a), self.ast.bvxor(a, xor)):
+            self.assertTrue(n.equalTo(b))
+        self.assertTrue(self.ast.bvsub(add, b).equalTo(a))
+
+    def test_inverse_instructions(self):
+        for code in (
+            [b"\x89\xc1", b"\xf7\xd9", b"\x01\xc1"],  # mov ecx, eax; neg ecx; add ecx, eax
+            [b"\x89\xc1", b"\xf7\xd1", b"\x21\xc1"],  # mov ecx, eax; not ecx; and ecx, eax
+        ):
+            ctx = TritonContext(ARCH.X86)
+            ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
+            ctx.symbolizeRegister(ctx.registers.eax, "eax")
+            for opcode in code:
+                ctx.processing(Instruction(opcode))
+            self.assertFalse(ctx.getRegisterAst(ctx.registers.ecx).isSymbolized())
+
 
 class TestAstSimplification5(unittest.TestCase):
 
