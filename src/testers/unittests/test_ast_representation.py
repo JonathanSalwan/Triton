@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import TritonContext, ARCH, AST_REPRESENTATION, VERSION
+from triton import TritonContext, ARCH, AST_REPRESENTATION, MODE, VERSION
 
 
 smtlifting = """(define-fun bswap8 ((value (_ BitVec 8))) (_ BitVec 8)
@@ -280,3 +280,29 @@ class TestAstRepresentation(unittest.TestCase):
                 self.assertNotEqual(len(self.ctx.liftToLLVM(n, fname="test", optimize=True)), 0)
             # Dot
             self.assertNotEqual(len(self.ctx.liftToDot(n)), 0)
+
+    def test_lifting_order(self):
+        """Referenced expressions are defined first, even with a greater id."""
+        ctx = TritonContext(ARCH.X86_64)
+        ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
+        ast = ctx.getAstContext()
+        x = ast.variable(ctx.newSymbolicVariable(32))
+        node = ast.zx(32, ast.bvadd(x, ast.bv(1, 32)))
+        b = ctx.newSymbolicExpression(ast.bvadd(node, ast.bv(2, 64)))
+        # The shared zx node now references a new expression (ref!1)
+        ctx.newSymbolicExpression(node)
+        self.assertEqual(str(b.getAst()), "(bvadd ((_ zero_extend 32) ref!1) (_ bv2 64))")
+
+        q = ctx.newSymbolicExpression(ast.equal(ast.reference(b), ast.bv(9, 64)))
+        smt = ctx.liftToSMT(q)
+        self.assertLess(smt.index("(define-fun ref!1 "), smt.index("(define-fun ref!0 "))
+        self.assertLess(smt.index("(define-fun ref!0 "), smt.index("(define-fun ref!3 "))
+        py = ctx.liftToPython(q)
+        self.assertLess(py.index("ref_1 = "), py.index("ref_0 = "))
+        self.assertLess(py.index("ref_0 = "), py.index("ref_3 = "))
+
+        # With assert_, the root is not defined but asserted
+        smt = ctx.liftToSMT(q, True)
+        self.assertLess(smt.index("(define-fun ref!1 "), smt.index("(define-fun ref!0 "))
+        self.assertNotIn("(define-fun ref!3 ", smt)
+        self.assertIn("(assert (= ref!0 (_ bv9 64)))", smt)

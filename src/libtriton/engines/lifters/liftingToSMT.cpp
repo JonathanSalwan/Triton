@@ -5,8 +5,8 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#include <algorithm>
 #include <map>
+#include <unordered_set>
 #include <vector>
 
 #include <triton/astEnums.hpp>
@@ -119,11 +119,16 @@ namespace triton {
         triton::ast::representations::mode_e mode = this->astCtxt->getRepresentationMode();
         this->astCtxt->setRepresentationMode(triton::ast::representations::SMT_REPRESENTATION);
 
-        /* Collect SSA form */
-        auto ssa = this->symbolic->sliceExpressions(expr);
-        std::vector<triton::usize> symExprs;
-        for (const auto& se : ssa) {
-          symExprs.push_back(se.first);
+        /* Collect SSA form in topological order (referenced expressions first) */
+        std::vector<triton::engines::symbolic::SharedSymbolicExpression> symExprs;
+        std::unordered_set<triton::usize> printed;
+        for (const auto& n : triton::ast::childrenExtraction(expr->getAst(), true /* unroll */, true /* revert */)) {
+          if (n->getType() == triton::ast::REFERENCE_NODE) {
+            const auto& se = reinterpret_cast<triton::ast::ReferenceNode*>(n.get())->getSymbolicExpression();
+            if (printed.insert(se->getId()).second) {
+              symExprs.push_back(se);
+            }
+          }
         }
 
         /* Collect used symbolic variables */
@@ -142,16 +147,13 @@ namespace triton {
           stream << n << std::endl;
         }
 
-        /* Sort SSA */
-        std::sort(symExprs.begin(), symExprs.end());
-        if (assert_) {
-          /* The last node will be handled later to separate conjuncts */
-          symExprs.pop_back();
+        /* The root expression comes last, unless assert_ handles it later to separate conjuncts */
+        if (!assert_) {
+          symExprs.push_back(expr);
         }
 
         /* Print symbolic expressions */
-        for (const auto& id : symExprs) {
-          auto& e = ssa[id];
+        for (const auto& e : symExprs) {
           stream << e->getFormattedExpression();
           if (icomment && !e->getDisassembly().empty()) {
             if (e->getComment().empty()) {
