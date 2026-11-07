@@ -271,12 +271,18 @@ namespace triton {
 
 
       void SymbolicExpression::writeBackDisassembly(const std::string& disassembly) {
+        this->disassembly = std::make_shared<const std::string>(disassembly);
+      }
+
+
+      void SymbolicExpression::writeBackDisassembly(const std::shared_ptr<const std::string>& disassembly) {
         this->disassembly = disassembly;
       }
 
 
       const std::string& SymbolicExpression::getDisassembly(void) {
-        return this->disassembly;
+        static const std::string empty;
+        return this->disassembly ? *this->disassembly : empty;
       }
 
 

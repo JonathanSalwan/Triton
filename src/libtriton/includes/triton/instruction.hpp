@@ -10,6 +10,7 @@
 
 #include <list>
 #include <map>
+#include <memory>
 #include <ostream>
 #include <set>
 #include <sstream>
@@ -58,6 +59,9 @@ namespace triton {
 
         //! The disassembly of the instruction. This field is set at the disassembly level.
         std::stringstream disassembly;
+
+        //! "<address>: <disassembly>", made once for all the symbolic expressions of the instruction.
+        std::shared_ptr<const std::string> expressionDisassembly;
 
         //! The opcode of the instruction.
         triton::uint8 opcode[16];
