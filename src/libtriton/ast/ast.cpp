@@ -49,8 +49,37 @@ namespace triton {
           child->parents.erase(this);
         }
       }
-      /* See #828: Release ownership before calling container destructor */
-      this->children.clear();
+
+      /*
+       * Releasing the last reference to a child destroys it from here, and a deep AST
+       * overflowed the stack (see #753). The children owned only by this node are detached
+       * and released in a loop instead, together with the AST of a reference whose
+       * expression dies with the reference.
+       */
+      std::vector<SharedAbstractNode> worklist;
+      worklist.swap(this->children);
+      while (!worklist.empty()) {
+        SharedAbstractNode node = std::move(worklist.back());
+        worklist.pop_back();
+
+        if (node == nullptr || node.use_count() != 1)
+          continue;
+
+        for (auto& child : node->children) {
+          if (child) {
+            child->parents.erase(node.get());
+            worklist.push_back(std::move(child));
+          }
+        }
+        node->children.clear();
+
+        if (node->type == REFERENCE_NODE) {
+          const auto& expr = reinterpret_cast<ReferenceNode*>(node.get())->getSymbolicExpression();
+          if (expr.use_count() == 1 && expr->getAst()) {
+            worklist.push_back(expr->getAst());
+          }
+        }
+      }
     }
 
 

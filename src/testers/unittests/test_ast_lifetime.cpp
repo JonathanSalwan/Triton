@@ -187,6 +187,39 @@ namespace {
     require(unrolled->evaluate() == 14, "expression replacement modified the unrolled AST");
   }
 
+  /* Built without AstContext, so no node is kept every 10000 levels to bound the release (see #753) */
+  const unsigned DEEP = 200000;
+
+  void testDeepChainRelease() {
+    triton::Context ctx(triton::arch::ARCH_X86_64);
+    auto ast = ctx.getAstContext();
+    auto one = ast->bv(1, 64);
+    triton::ast::SharedAbstractNode node = ast->variable(ctx.newSymbolicVariable(64));
+    for (unsigned i = 0; i < DEEP; i++) {
+      auto parent = std::make_shared<triton::ast::BvaddNode>(node, one);
+      parent->init();
+      node = parent;
+    }
+    require(node->getLevel() > DEEP, "the chain is not as deep as built");
+    node.reset();
+  }
+
+  void testDeepReferenceChainRelease() {
+    triton::Context ctx(triton::arch::ARCH_X86_64);
+    auto ast = ctx.getAstContext();
+    auto one = ast->bv(1, 64);
+    triton::ast::SharedAbstractNode node = ast->variable(ctx.newSymbolicVariable(64));
+    for (unsigned i = 0; i < DEEP; i++) {
+      auto expr = std::make_shared<triton::engines::symbolic::SymbolicExpression>(node, i, triton::engines::symbolic::VOLATILE_EXPRESSION);
+      auto reference = std::make_shared<triton::ast::ReferenceNode>(expr);
+      reference->init();
+      auto parent = std::make_shared<triton::ast::BvaddNode>(reference, one);
+      parent->init();
+      node = parent;
+    }
+    node.reset();
+  }
+
 } // namespace
 
 int main() {
@@ -200,6 +233,8 @@ int main() {
     {"shared intermediate child", testSharedIntermediateChild},
     {"null child during destruction", testInvalidChildDuringDestruction},
     {"copies and references", testCopiesAndReferences},
+    {"deep chain release", testDeepChainRelease},
+    {"deep reference chain release", testDeepReferenceChainRelease},
   };
   unsigned failed = 0;
   for (const auto& test : tests) {
