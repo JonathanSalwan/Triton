@@ -33,6 +33,7 @@ namespace triton {
       this->ctxt        = ctxt;
       this->eval        = 0;
       this->hash        = 0;
+      this->hashed      = false;
       this->logical     = false;
       this->level       = 1;
       this->size        = 0;
@@ -169,7 +170,47 @@ namespace triton {
 
 
     triton::uint512 AbstractNode::getHash(void) const {
+      if (!this->hashed) {
+        this->computeHash();
+      }
       return this->hash;
+    }
+
+
+    void AbstractNode::computeHash(void) const {
+      /* A node hashes its children's hashes (a reference, its expression's tree): hash them first */
+      std::vector<AbstractNode*> worklist = {const_cast<AbstractNode*>(this)};
+
+      while (!worklist.empty()) {
+        AbstractNode* node = worklist.back();
+        bool ready = true;
+
+        if (node->hashed) {
+          worklist.pop_back();
+          continue;
+        }
+
+        for (const auto& child : node->children) {
+          if (child && !child->hashed) {
+            worklist.push_back(child.get());
+            ready = false;
+          }
+        }
+
+        if (node->type == REFERENCE_NODE) {
+          AbstractNode* tree = reinterpret_cast<ReferenceNode*>(node)->getSymbolicExpression()->getAst().get();
+          if (!tree->hashed) {
+            worklist.push_back(tree);
+            ready = false;
+          }
+        }
+
+        if (ready) {
+          node->initHash();
+          node->hashed = true;
+          worklist.pop_back();
+        }
+      }
     }
 
 
@@ -319,7 +360,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -402,7 +443,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -461,7 +502,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -515,7 +556,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -569,7 +610,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -655,7 +696,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -709,7 +750,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -763,7 +804,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -817,7 +858,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -867,7 +908,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -921,7 +962,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -971,7 +1012,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1025,7 +1066,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1087,7 +1128,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1149,7 +1190,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1216,7 +1257,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1277,7 +1318,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1338,7 +1379,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1392,7 +1433,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1453,7 +1494,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1514,7 +1555,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1579,7 +1620,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1644,7 +1685,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1698,7 +1739,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1756,7 +1797,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1810,7 +1851,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1864,7 +1905,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1918,7 +1959,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -1972,7 +2013,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2030,7 +2071,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2084,7 +2125,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2138,7 +2179,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2199,7 +2240,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2241,7 +2282,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2301,7 +2342,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2351,7 +2392,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2405,7 +2446,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2459,7 +2500,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2523,7 +2564,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2574,7 +2615,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2631,7 +2672,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2668,7 +2709,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2738,7 +2779,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2790,7 +2831,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2842,7 +2883,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2892,7 +2933,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2944,7 +2985,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -2996,7 +3037,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -3038,7 +3079,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -3105,7 +3146,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -3188,7 +3229,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -3253,7 +3294,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -3316,7 +3357,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -3353,7 +3394,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
@@ -3416,7 +3457,7 @@ namespace triton {
         this->initParents();
       }
 
-      this->initHash();
+      this->hashed = false;
     }
 
 
