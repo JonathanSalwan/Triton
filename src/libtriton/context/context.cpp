@@ -572,6 +572,9 @@ namespace triton {
       delete this->symbolic;
       delete this->taint;
 
+      /* The engines released their expressions, now release what the AST context kept */
+      this->astCtxt->releaseCollected();
+
       this->astCtxt   = nullptr;
       this->irBuilder = nullptr;
       this->lifting   = nullptr;

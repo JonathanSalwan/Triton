@@ -71,6 +71,17 @@ namespace triton {
     }
 
 
+    void AstContext::releaseCollected(void) {
+      /*
+       * Newest first: a node is collected after the deeper collected nodes of its
+       * AST, so each release stops at the next one, as in collect() (#753).
+       */
+      while (!this->nodes.empty()) {
+        this->nodes.pop_front();
+      }
+    }
+
+
     SharedAbstractNode AstContext::array(triton::uint32 indexSize) {
       SharedAbstractNode node = std::make_shared<ArrayNode>(indexSize, this->shared_from_this());
       if (node == nullptr)

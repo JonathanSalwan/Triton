@@ -86,6 +86,9 @@ namespace triton {
         //! Garbage unused nodes.
         TRITON_EXPORT void garbage(void);
 
+        //! Releases all the collected nodes. They hold this context, so they would keep it alive.
+        TRITON_EXPORT void releaseCollected(void);
+
         //! AST C++ API - array node builder
         TRITON_EXPORT SharedAbstractNode array(triton::uint32 addrSize);
 
