@@ -21,7 +21,7 @@ namespace triton {
   namespace ast {
 
     AstContext::AstContext(const triton::modes::SharedModes& modes)
-      : modes(modes) {
+      : modes(modes), evalGeneration(0) {
     }
 
 
@@ -38,6 +38,7 @@ namespace triton {
       this->modes             = other.modes;
       this->nodes             = other.nodes;
       this->valueMapping      = other.valueMapping;
+      this->evalGeneration    = other.evalGeneration;
 
       return *this;
     }
@@ -1076,8 +1077,9 @@ namespace triton {
       auto it = this->valueMapping.find(name);
       if (it != this->valueMapping.end()) {
         if (auto node = it->second.first.lock()) {
+          /* Nodes depending on the variable are re-evaluated when they are read (see AbstractNode::evaluate) */
           it->second.second = value;
-          node->initParents();
+          this->evalGeneration++;
         }
         else {
           throw triton::exceptions::Ast("AstContext::updateVariable(): This symbolic variable is dead.");
@@ -1112,6 +1114,11 @@ namespace triton {
       }
 
       throw triton::exceptions::Ast("AstContext::updateVariable(): Variable does not exist.");
+    }
+
+
+    triton::usize AstContext::getEvalGeneration(void) const {
+      return this->evalGeneration;
     }
 
 
