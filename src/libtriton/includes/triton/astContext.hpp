@@ -64,6 +64,9 @@ namespace triton {
         //! The list of nodes
         std::deque<SharedAbstractNode> nodes;
 
+        //! Incremented when a variable value changes. Symbolized nodes evaluated before are stale.
+        triton::usize evalGeneration;
+
         //! Returns simplified concatenation.
         SharedAbstractNode simplify_concat(std::vector<SharedAbstractNode> exprs);
 
@@ -352,6 +355,9 @@ namespace triton {
 
         //! Gets a variable value from its name.
         TRITON_EXPORT const triton::uint512& getVariableValue(const std::string& name) const;
+
+        //! Returns the evaluation generation, incremented by each variable update.
+        TRITON_EXPORT triton::usize getEvalGeneration(void) const;
 
         //! Sets the representation mode for this astContext
         TRITON_EXPORT void setRepresentationMode(triton::ast::representations::mode_e mode);
