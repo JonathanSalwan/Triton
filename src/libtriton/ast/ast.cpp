@@ -9,6 +9,7 @@
 #include <cmath>
 #include <list>
 #include <new>
+#include <set>
 #include <stack>
 #include <unordered_map>
 #include <unordered_set>
@@ -156,10 +157,56 @@ namespace triton {
 
 
     bool AbstractNode::equalTo(const SharedAbstractNode& other) const {
-      return (this->evaluate() == other->evaluate()) &&
-             (this->getBitvectorSize() == other->getBitvectorSize()) &&
-             (this->getHash() == other->getHash()) &&
-             (this->getLevel() == other->getLevel());
+      /* A reference stands for the AST of its expression, which also gives its hash */
+      auto unref = [](AbstractNode* node) {
+        while (node->getType() == REFERENCE_NODE)
+          node = reinterpret_cast<ReferenceNode*>(node)->getSymbolicExpression()->getAst().get();
+        return node;
+      };
+
+      /* Different trees may share a hash, so trees that match on it are compared node by node */
+      std::vector<std::pair<AbstractNode*, AbstractNode*>> worklist = {{const_cast<AbstractNode*>(this), other.get()}};
+      std::set<std::pair<AbstractNode*, AbstractNode*>> compared;
+
+      while (!worklist.empty()) {
+        AbstractNode* node1 = unref(worklist.back().first);
+        AbstractNode* node2 = unref(worklist.back().second);
+        worklist.pop_back();
+
+        if (node1 == node2 || !compared.insert({node1, node2}).second)
+          continue;
+
+        if (node1->type != node2->type ||
+            node1->getBitvectorSize() != node2->getBitvectorSize() ||
+            node1->getHash() != node2->getHash() ||
+            node1->getLevel() != node2->getLevel() ||
+            node1->children.size() != node2->children.size())
+          return false;
+
+        switch (node1->type) {
+          case ARRAY_NODE:
+            return false;
+          case INTEGER_NODE:
+            if (reinterpret_cast<IntegerNode*>(node1)->getInteger() != reinterpret_cast<IntegerNode*>(node2)->getInteger())
+              return false;
+            break;
+          case STRING_NODE:
+            if (reinterpret_cast<StringNode*>(node1)->getString() != reinterpret_cast<StringNode*>(node2)->getString())
+              return false;
+            break;
+          case VARIABLE_NODE:
+            if (reinterpret_cast<VariableNode*>(node1)->getSymbolicVariable() != reinterpret_cast<VariableNode*>(node2)->getSymbolicVariable())
+              return false;
+            break;
+          default:
+            break;
+        }
+
+        for (triton::usize index = 0; index < node1->children.size(); index++)
+          worklist.push_back({node1->children[index].get(), node2->children[index].get()});
+      }
+
+      return true;
     }
 
 
