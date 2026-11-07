@@ -770,6 +770,12 @@ namespace triton {
           //! The LOOP semantics.
           void loop_s(triton::arch::Instruction& inst);
 
+          //! The LOOPE semantics.
+          void loope_s(triton::arch::Instruction& inst);
+
+          //! The LOOPNE semantics.
+          void loopne_s(triton::arch::Instruction& inst);
+
           //! The LZCNT semantics.
           void lzcnt_s(triton::arch::Instruction& inst);
 
