@@ -2536,9 +2536,10 @@ namespace triton {
          * pf is set to one if there is an even number of bit set to 1 in the least
          * significant byte of the result.
          */
+        auto ref  = this->astCtxt->reference(parent);
         auto node = this->astCtxt->bv(1, 1);
         for (triton::uint32 counter = low; counter <= high; counter++) {
-          node = this->astCtxt->bvxor(node, this->astCtxt->extract(counter, counter, this->astCtxt->reference(parent)));
+          node = this->astCtxt->bvxor(node, this->astCtxt->extract(counter, counter, ref));
         }
 
         /* Create the symbolic expression */
@@ -2564,9 +2565,10 @@ namespace triton {
          * Create the semantics.
          * pf if op2 != 0
          */
+        auto ref   = this->astCtxt->reference(parent);
         auto node1 = this->astCtxt->bv(1, 1);
         for (triton::uint32 counter = low; counter <= high; counter++) {
-          node1 = this->astCtxt->bvxor(node1, this->astCtxt->extract(counter, counter, this->astCtxt->reference(parent)));
+          node1 = this->astCtxt->bvxor(node1, this->astCtxt->extract(counter, counter, ref));
         }
 
         auto node2 = this->astCtxt->ite(
