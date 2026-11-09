@@ -486,6 +486,13 @@ namespace triton {
       }
 
 
+      /* Returns a strong reference that is released when its last copy is destroyed */
+      static std::shared_ptr<PyObject> PyObjectRef(PyObject* obj) {
+        Py_XINCREF(obj);
+        return std::shared_ptr<PyObject>(obj, [](PyObject* o) { Py_XDECREF(o); });
+      }
+
+
       static PyObject* TritonContext_addCallback(PyObject* self, PyObject* args) {
         PyObject* function = nullptr;
         PyObject* mode     = nullptr;
@@ -506,20 +513,24 @@ namespace triton {
         if (PyMethod_Check(function)) {
           cb_self = PyMethod_GET_SELF(function);
           cb = PyMethod_GET_FUNCTION(function);
-          Py_INCREF(cb_self);
         }
         else {
           cb = function;
         }
-        Py_INCREF(cb);
+
+        /* The registered callback owns these references until it is removed, cleared or destroyed */
+        auto cbRef   = PyObjectRef(cb);
+        auto selfRef = PyObjectRef(cb_self);
 
         try {
           switch (static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode))) {
 
             case callbacks::GET_CONCRETE_MEMORY_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::GET_CONCRETE_MEMORY_VALUE, callbacks::getConcreteMemoryValueCallback([cb_self, cb](triton::Context& ctx, const triton::arch::MemoryAccess& mem) {
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::GET_CONCRETE_MEMORY_VALUE, callbacks::getConcreteMemoryValueCallback([cbRef, selfRef](triton::Context& ctx, const triton::arch::MemoryAccess& mem) {
                 /********* Lambda *********/
-                PyObject* args = nullptr;
+                PyObject* cb      = cbRef.get();
+                PyObject* cb_self = selfRef.get();
+                PyObject* args    = nullptr;
 
                 /* Create function args */
                 if (cb_self) {
@@ -545,14 +556,17 @@ namespace triton {
                 if (ret == nullptr) {
                   throw triton::exceptions::PyCallbacks();
                 }
+                Py_DECREF(ret);
                 /********* End of lambda *********/
               }, cb));
               break;
 
             case callbacks::GET_CONCRETE_REGISTER_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::GET_CONCRETE_REGISTER_VALUE, callbacks::getConcreteRegisterValueCallback([cb_self, cb](triton::Context& ctx, const triton::arch::Register& reg){
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::GET_CONCRETE_REGISTER_VALUE, callbacks::getConcreteRegisterValueCallback([cbRef, selfRef](triton::Context& ctx, const triton::arch::Register& reg){
                 /********* Lambda *********/
-                PyObject* args = nullptr;
+                PyObject* cb      = cbRef.get();
+                PyObject* cb_self = selfRef.get();
+                PyObject* args    = nullptr;
 
                 /* Create function args */
                 if (cb_self) {
@@ -578,14 +592,17 @@ namespace triton {
                 if (ret == nullptr) {
                   throw triton::exceptions::PyCallbacks();
                 }
+                Py_DECREF(ret);
                 /********* End of lambda *********/
               }, cb));
               break;
 
             case callbacks::SET_CONCRETE_MEMORY_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::SET_CONCRETE_MEMORY_VALUE, callbacks::setConcreteMemoryValueCallback([cb_self, cb](triton::Context& ctx, const triton::arch::MemoryAccess& mem, const triton::uint512& value) {
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::SET_CONCRETE_MEMORY_VALUE, callbacks::setConcreteMemoryValueCallback([cbRef, selfRef](triton::Context& ctx, const triton::arch::MemoryAccess& mem, const triton::uint512& value) {
                 /********* Lambda *********/
-                PyObject* args = nullptr;
+                PyObject* cb      = cbRef.get();
+                PyObject* cb_self = selfRef.get();
+                PyObject* args    = nullptr;
 
                 /* Create function args */
                 if (cb_self) {
@@ -613,14 +630,17 @@ namespace triton {
                 if (ret == nullptr) {
                   throw triton::exceptions::PyCallbacks();
                 }
+                Py_DECREF(ret);
                 /********* End of lambda *********/
               }, cb));
               break;
 
             case callbacks::SET_CONCRETE_REGISTER_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::SET_CONCRETE_REGISTER_VALUE, callbacks::setConcreteRegisterValueCallback([cb_self, cb](triton::Context& ctx, const triton::arch::Register& reg, const triton::uint512& value){
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::SET_CONCRETE_REGISTER_VALUE, callbacks::setConcreteRegisterValueCallback([cbRef, selfRef](triton::Context& ctx, const triton::arch::Register& reg, const triton::uint512& value){
                 /********* Lambda *********/
-                PyObject* args = nullptr;
+                PyObject* cb      = cbRef.get();
+                PyObject* cb_self = selfRef.get();
+                PyObject* args    = nullptr;
 
                 /* Create function args */
                 if (cb_self) {
@@ -648,14 +668,17 @@ namespace triton {
                 if (ret == nullptr) {
                   throw triton::exceptions::PyCallbacks();
                 }
+                Py_DECREF(ret);
                 /********* End of lambda *********/
               }, cb));
               break;
 
             case callbacks::SYMBOLIC_SIMPLIFICATION:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::SYMBOLIC_SIMPLIFICATION, callbacks::symbolicSimplificationCallback([cb_self, cb](triton::Context& ctx, triton::ast::SharedAbstractNode node) {
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::SYMBOLIC_SIMPLIFICATION, callbacks::symbolicSimplificationCallback([cbRef, selfRef](triton::Context& ctx, triton::ast::SharedAbstractNode node) {
                 /********* Lambda *********/
-                PyObject* args = nullptr;
+                PyObject* cb      = cbRef.get();
+                PyObject* cb_self = selfRef.get();
+                PyObject* args    = nullptr;
 
                 /* Create function args */
                 if (cb_self) {
@@ -683,11 +706,14 @@ namespace triton {
                 }
 
                 /* Check if the callback has returned a AbstractNode */
-                if (!PyAstNode_Check(ret))
+                if (!PyAstNode_Check(ret)) {
+                  Py_DECREF(ret);
                   throw triton::exceptions::Callbacks("Callbacks::processCallbacks(SYMBOLIC_SIMPLIFICATION): You must return a AstNode object.");
+                }
 
                 /* Update node */
                 node = PyAstNode_AsAstNode(ret);
+                Py_DECREF(ret);
                 return node;
                 /********* End of lambda *********/
               }, cb));
@@ -2663,11 +2689,6 @@ namespace triton {
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        Py_DECREF(cb);
-        if (cb_self != nullptr) {
-          Py_DECREF(cb_self);
         }
 
         Py_INCREF(Py_None);
