@@ -60,7 +60,7 @@ namespace triton {
           triton::uint64 address;
 
           //! The instruction disassembly where the symbolic expression comes from.
-          std::string disassembly;
+          std::shared_ptr<const std::string> disassembly;
 
           //! The symbolic expression id. This id is unique.
           triton::usize id;
@@ -156,6 +156,9 @@ namespace triton {
 
           //! Writes back the instruction disassembly where the symbolic expression comes from.
           TRITON_EXPORT void writeBackDisassembly(const std::string& disassembly);
+
+          //! Writes back the instruction disassembly, shared with the other expressions of the instruction.
+          TRITON_EXPORT void writeBackDisassembly(const std::shared_ptr<const std::string>& disassembly);
 
           //! Gets the instruction disassembly where the symbolic expression comes from.
           TRITON_EXPORT const std::string& getDisassembly(void);

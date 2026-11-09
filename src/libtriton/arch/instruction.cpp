@@ -98,6 +98,7 @@ namespace triton {
 
       this->disassembly.clear();
       this->disassembly.str(other.disassembly.str());
+      this->expressionDisassembly = other.expressionDisassembly;
     }
 
 
@@ -123,6 +124,7 @@ namespace triton {
 
     void Instruction::setAddress(triton::uint64 addr) {
       this->address = addr;
+      this->expressionDisassembly.reset();
     }
 
 
@@ -337,6 +339,7 @@ namespace triton {
     void Instruction::setDisassembly(const std::string& str) {
       this->disassembly.clear();
       this->disassembly.str(str);
+      this->expressionDisassembly.reset();
     }
 
 
@@ -358,7 +361,10 @@ namespace triton {
     void Instruction::addSymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr) {
       if (expr == nullptr)
         throw triton::exceptions::Instruction("Instruction::addSymbolicExpression(): Cannot add a null expression.");
-      expr->writeBackDisassembly(triton::utils::toString(*this));
+      if (this->expressionDisassembly == nullptr) {
+        this->expressionDisassembly = std::make_shared<const std::string>(triton::utils::toString(*this));
+      }
+      expr->writeBackDisassembly(this->expressionDisassembly);
       expr->setAddress(this->getAddress());
       this->symbolicExpressions.push_back(expr);
     }
@@ -532,6 +538,7 @@ namespace triton {
 
       /* Clear the stringstream (See #975) */
       std::stringstream().swap(this->disassembly);
+      this->expressionDisassembly.reset();
 
       this->loadAccess.clear();
       this->operands.clear();
