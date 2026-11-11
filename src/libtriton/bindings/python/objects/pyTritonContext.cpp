@@ -2453,7 +2453,7 @@ namespace triton {
         };
 
         /* Extract keywords */
-        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OO", keywords, &expr, &assert, &icomment) == false) {
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OOO", keywords, &expr, &assert, &icomment) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::liftToSMT(): Invalid number of arguments");
         }
 

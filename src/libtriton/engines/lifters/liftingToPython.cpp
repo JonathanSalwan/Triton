@@ -5,8 +5,8 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#include <algorithm>
 #include <map>
+#include <unordered_set>
 #include <vector>
 
 #include <triton/astEnums.hpp>
@@ -67,12 +67,18 @@ namespace triton {
         triton::ast::representations::mode_e mode = this->astCtxt->getRepresentationMode();
         this->astCtxt->setRepresentationMode(triton::ast::representations::PYTHON_REPRESENTATION);
 
-        /* Collect SSA form */
-        auto ssa = this->symbolic->sliceExpressions(expr);
-        std::vector<triton::usize> symExprs;
-        for (const auto& se : ssa) {
-          symExprs.push_back(se.first);
+        /* Collect SSA form in topological order (referenced expressions first) */
+        std::vector<triton::engines::symbolic::SharedSymbolicExpression> symExprs;
+        std::unordered_set<triton::usize> printed;
+        for (const auto& n : triton::ast::childrenExtraction(expr->getAst(), true /* unroll */, true /* revert */)) {
+          if (n->getType() == triton::ast::REFERENCE_NODE) {
+            const auto& se = reinterpret_cast<triton::ast::ReferenceNode*>(n.get())->getSymbolicExpression();
+            if (printed.insert(se->getId()).second) {
+              symExprs.push_back(se);
+            }
+          }
         }
+        symExprs.push_back(expr);
 
         /* Collect used symbolic variables */
         std::map<triton::usize, triton::engines::symbolic::SharedSymbolicVariable> symVars;
@@ -96,12 +102,8 @@ namespace triton {
           stream << n << std::endl;
         }
 
-        /* Sort SSA */
-        std::sort(symExprs.begin(), symExprs.end());
-
         /* Print symbolic expressions */
-        for (const auto& id : symExprs) {
-          auto& e = ssa[id];
+        for (const auto& e : symExprs) {
           stream << e->getFormattedExpression();
           if (icomment && !e->getDisassembly().empty()) {
             if (e->getComment().empty()) {
