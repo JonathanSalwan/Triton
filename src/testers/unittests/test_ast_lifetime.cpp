@@ -5,8 +5,11 @@
 
 #include <cstdio>
 #include <memory>
+#include <sstream>
 #include <stdexcept>
+#include <string>
 #include <utility>
+#include <vector>
 
 #include <triton/ast.hpp>
 #include <triton/astContext.hpp>
@@ -220,6 +223,117 @@ namespace {
     node.reset();
   }
 
+  void testContextReleasedWithDeepAst() {
+    std::weak_ptr<triton::ast::AstContext> weak;
+    {
+      triton::Context ctx(triton::arch::ARCH_X86_64);
+      auto ast = ctx.getAstContext();
+      weak = ast;
+      auto node = ast->variable(ctx.newSymbolicVariable(64));
+      for (unsigned i = 0; i < 10000; ++i) {
+        node = ast->bvadd(node, ast->bv(1, 64));
+      }
+    }
+    require(weak.expired(), "AstContext outlives its Context once an AST is 10000 levels deep");
+  }
+
+  /* A few instructions on symbolic registers; returns one line per symbolic expression (id, text, hash, value) */
+  std::vector<std::string> runProgram(triton::Context& ctx) {
+    const char* program[] = {
+      "\x48\x01\xd8",          /* add rax, rbx */
+      "\x48\x0f\xaf\xc1",      /* imul rax, rcx */
+      "\x48\x31\xc3",          /* xor rbx, rax */
+      "\x48\xc1\xe0\x03",      /* shl rax, 3 */
+      "\x48\x89\x04\x24",      /* mov [rsp], rax */
+      "\x48\x8b\x14\x24",      /* mov rdx, [rsp] */
+      "\x48\x29\xda",          /* sub rdx, rbx */
+    };
+    const unsigned sizes[] = {3, 4, 3, 4, 4, 4, 3};
+
+    ctx.setConcreteRegisterValue(ctx.registers.x86_rsp, 0x7000);
+    ctx.symbolizeRegister(ctx.registers.x86_rax);
+    ctx.symbolizeRegister(ctx.registers.x86_rbx);
+    ctx.setConcreteRegisterValue(ctx.registers.x86_rcx, 0x1234);
+
+    std::vector<std::string> lines;
+    triton::uint64 pc = 0x1000;
+    for (unsigned i = 0; i < sizeof(sizes) / sizeof(sizes[0]); i++) {
+      triton::arch::Instruction inst(pc, reinterpret_cast<const triton::uint8*>(program[i]), sizes[i]);
+      ctx.processing(inst);
+      pc += sizes[i];
+      for (const auto& expr : inst.symbolicExpressions) {
+        std::ostringstream line;
+        line << expr->getId() << " " << expr->getAst().get() << " " << expr->getAst()->getHash() << " " << expr->getAst()->evaluate();
+        lines.push_back(line.str());
+      }
+    }
+    return lines;
+  }
+
+  std::string describe(const triton::ast::SharedAbstractNode& node) {
+    std::ostringstream text;
+    text << node.get() << " " << node->getHash() << " " << node->evaluate();
+    return text.str();
+  }
+
+  void testNodesOutliveContext() {
+    triton::ast::SharedAbstractNode node;
+    std::string before;
+    {
+      triton::Context ctx(triton::arch::ARCH_X86_64);
+      runProgram(ctx);
+      node = ctx.getSymbolicRegister(ctx.registers.x86_rdx)->getAst();
+      before = describe(node);
+    }
+    require(describe(node) == before, "AST changed after its context was destroyed");
+    require(node->getChildren().size() == 2, "AST lost its children after its context was destroyed");
+    /* The last reference to the AST context goes away with this node */
+    node.reset();
+  }
+
+  void testNodesSurviveReset() {
+    triton::Context ctx(triton::arch::ARCH_X86_64);
+    runProgram(ctx);
+    auto node = ctx.getSymbolicRegister(ctx.registers.x86_rdx)->getAst();
+    auto before = describe(node);
+    ctx.reset();
+    require(describe(node) == before, "AST changed after its context was reset");
+    runProgram(ctx);
+    require(describe(node) == before, "AST changed after its context was reused");
+  }
+
+  void testInterleavedContexts() {
+    std::vector<triton::ast::SharedAbstractNode> nodes;
+    std::vector<std::string> before;
+    for (unsigned i = 0; i < 50; i++) {
+      triton::Context ctx(triton::arch::ARCH_X86_64);
+      runProgram(ctx);
+      nodes.push_back(ctx.getSymbolicRegister(ctx.registers.x86_rdx)->getAst());
+      before.push_back(describe(nodes.back()));
+      if (i % 3 == 0 && nodes.size() > 1) {
+        nodes.erase(nodes.begin());
+        before.erase(before.begin());
+      }
+    }
+    for (unsigned i = 0; i < nodes.size(); i++) {
+      require(describe(nodes[i]) == before[i], "AST of a destroyed context changed while other contexts were used");
+    }
+    while (!nodes.empty()) {
+      nodes.pop_back();
+    }
+  }
+
+  void testSameTreesAfterChurn() {
+    triton::Context first(triton::arch::ARCH_X86_64);
+    auto expected = runProgram(first);
+    for (unsigned i = 0; i < 20; i++) {
+      triton::Context other(triton::arch::ARCH_X86_64);
+      runProgram(other);
+    }
+    triton::Context second(triton::arch::ARCH_X86_64);
+    require(runProgram(second) == expected, "the same program built different expressions");
+  }
+
 } // namespace
 
 int main() {
@@ -235,6 +349,11 @@ int main() {
     {"copies and references", testCopiesAndReferences},
     {"deep chain release", testDeepChainRelease},
     {"deep reference chain release", testDeepReferenceChainRelease},
+    {"context released with a deep AST", testContextReleasedWithDeepAst},
+    {"nodes outlive their context", testNodesOutliveContext},
+    {"nodes survive a context reset", testNodesSurviveReset},
+    {"interleaved contexts", testInterleavedContexts},
+    {"same trees after allocation churn", testSameTreesAfterChurn},
   };
   unsigned failed = 0;
   for (const auto& test : tests) {
