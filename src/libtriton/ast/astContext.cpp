@@ -20,6 +20,26 @@
 namespace triton {
   namespace ast {
 
+    /* Returns true if node, through references, is the unary operation type applied to expr */
+    static bool isUnaryOf(const SharedAbstractNode& node, ast_e type, const SharedAbstractNode& expr) {
+      SharedAbstractNode n = triton::ast::dereference(node);
+      return n->getType() == type && n->getChildren()[0]->equalTo(expr);
+    }
+
+
+    /* If node, through references, is the binary operation type with expr as one operand, returns the other one */
+    static SharedAbstractNode otherOperand(const SharedAbstractNode& node, ast_e type, const SharedAbstractNode& expr) {
+      SharedAbstractNode n = triton::ast::dereference(node);
+      if (n->getType() != type)
+        return nullptr;
+      if (n->getChildren()[0]->equalTo(expr))
+        return n->getChildren()[1];
+      if (n->getChildren()[1]->equalTo(expr))
+        return n->getChildren()[0];
+      return nullptr;
+    }
+
+
     AstContext::AstContext(const triton::modes::SharedModes& modes)
       : modes(modes) {
     }
@@ -127,6 +147,10 @@ namespace triton {
         /* Optimization: A + 0 = A */
         if (!expr2->isSymbolized() && expr2->evaluate() == 0)
           return expr1;
+
+        /* Optimization: A + -A = 0 */
+        if (isUnaryOf(expr2, BVNEG_NODE, expr1) || isUnaryOf(expr1, BVNEG_NODE, expr2))
+          return this->bv(0, expr1->getBitvectorSize());
       }
 
       SharedAbstractNode node = std::make_shared<BvaddNode>(expr1, expr2);
@@ -163,8 +187,12 @@ namespace triton {
           return expr2;
 
         /* Optimization: A & A = A */
-        if (!expr1->isSymbolized() && !expr2->isSymbolized() && expr1->equalTo(expr2))
+        if (expr1->equalTo(expr2))
           return expr1;
+
+        /* Optimization: A & ~A = 0 */
+        if (isUnaryOf(expr2, BVNOT_NODE, expr1) || isUnaryOf(expr1, BVNOT_NODE, expr2))
+          return this->bv(0, expr1->getBitvectorSize());
       }
 
       SharedAbstractNode node = std::make_shared<BvandNode>(expr1, expr2);
@@ -298,6 +326,13 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvneg(const SharedAbstractNode& expr) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: -(-A) = A */
+        SharedAbstractNode n = triton::ast::dereference(expr);
+        if (n->getType() == BVNEG_NODE)
+          return n->getChildren()[0];
+      }
+
       SharedAbstractNode node = std::make_shared<BvnegNode>(expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvneg(): Not enough memory.");
@@ -330,6 +365,13 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvnot(const SharedAbstractNode& expr) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: ~~A = A */
+        SharedAbstractNode n = triton::ast::dereference(expr);
+        if (n->getType() == BVNOT_NODE)
+          return n->getChildren()[0];
+      }
+
       SharedAbstractNode node = std::make_shared<BvnotNode>(expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvnot(): Not enough memory.");
@@ -364,10 +406,12 @@ namespace triton {
           return this->bv(expr2->getBitvectorMask(), expr2->getBitvectorSize());
 
         /* Optimization: A | A = A */
-        /* Only apply when both operands are concrete. Two different symbolic expressions
-         * may evaluate to the same value but represent distinct computations. */
-        if (!expr1->isSymbolized() && !expr2->isSymbolized() && expr1->equalTo(expr2))
+        if (expr1->equalTo(expr2))
           return expr1;
+
+        /* Optimization: A | ~A = -1 */
+        if (isUnaryOf(expr2, BVNOT_NODE, expr1) || isUnaryOf(expr1, BVNOT_NODE, expr2))
+          return this->bv(expr1->getBitvectorMask(), expr1->getBitvectorSize());
       }
 
       SharedAbstractNode node = std::make_shared<BvorNode>(expr1, expr2);
@@ -616,10 +660,12 @@ namespace triton {
           return this->bvneg(expr2);
 
         /* Optimization: A - A = 0 */
-        /* Only apply when both operands are concrete to preserve symbolic information.
-         * Different symbolic expressions may evaluate equal but must remain distinct. */
-        if (!expr1->isSymbolized() && !expr2->isSymbolized() && expr1->equalTo(expr2))
+        if (expr1->equalTo(expr2))
           return this->bv(0, expr1->getBitvectorSize());
+
+        /* Optimization: (A + B) - A = B */
+        if (SharedAbstractNode n = otherOperand(expr1, BVADD_NODE, expr2))
+          return n;
       }
 
       SharedAbstractNode node = std::make_shared<BvsubNode>(expr1, expr2);
@@ -747,11 +793,14 @@ namespace triton {
           return expr2;
 
         /* Optimization: A ^ A = 0 */
-        /* Only apply when both operands are concrete to avoid losing symbolic information.
-         * Two different symbolic expressions may have the same concrete value temporarily,
-         * but they represent different symbolic computations that must be preserved. */
-        if (!expr1->isSymbolized() && !expr2->isSymbolized() && expr1->equalTo(expr2))
+        if (expr1->equalTo(expr2))
           return this->bv(0, expr1->getBitvectorSize());
+
+        /* Optimization: (A ^ B) ^ A = B */
+        if (SharedAbstractNode n = otherOperand(expr1, BVXOR_NODE, expr2))
+          return n;
+        if (SharedAbstractNode n = otherOperand(expr2, BVXOR_NODE, expr1))
+          return n;
       }
 
       SharedAbstractNode node = std::make_shared<BvxorNode>(expr1, expr2);

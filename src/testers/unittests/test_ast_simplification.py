@@ -593,6 +593,65 @@ class TestAstSimplification4(unittest.TestCase):
         n = self.ast.extract(7, 0, r2)
         self.assertEqual(str(n), "SymVar_0")
 
+    def test_same_symbolic_operands(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        x = self.ast.bvadd(a, self.ast.bv(1, 32))
+        y = self.ast.bvadd(a, self.ast.bv(1, 32))
+        r = self.ast.reference(self.ctx.newSymbolicExpression(x))
+        for other in (x, y, r):
+            self.assertEqual(str(self.ast.bvsub(x, other)), "(_ bv0 32)")
+            self.assertEqual(str(self.ast.bvxor(x, other)), "(_ bv0 32)")
+            self.assertTrue(self.ast.bvand(x, other).equalTo(x))
+            self.assertTrue(self.ast.bvor(x, other).equalTo(x))
+
+    def test_same_register_operands(self):
+        self.ctx.symbolizeRegister(self.ctx.registers.eax, "eax")
+        for opcode in (b"\x29\xc0", b"\x31\xc0"):  # sub eax, eax; xor eax, eax
+            self.ctx.processing(Instruction(opcode))
+            self.assertFalse(self.ctx.getRegisterAst(self.ctx.registers.eax).isSymbolized())
+
+    def test_different_operands_with_same_hash(self):
+        # The hash squares the child hashes of ordered nodes, so integers hashing to h and -h collide
+        h = (AST_NODE.INTEGER ^ 2) % (1 << 512)
+        v = ((1 << 512) - h) ^ AST_NODE.INTEGER
+        a = self.ast.variable(self.ctx.newSymbolicVariable(512))
+        x = self.ast.bvmul(a, self.ast.bv(2, 512))
+        y = self.ast.bvmul(a, self.ast.bv(v, 512))
+        self.assertEqual(x.getHash(), y.getHash())
+        self.assertFalse(x.equalTo(y))
+        self.assertTrue(self.ast.bvxor(x, y).isSymbolized())
+        self.assertTrue(self.ast.bvsub(x, y).isSymbolized())
+
+    def test_inverse_operands(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        # Operands reached through references, as instruction semantics build them
+        neg = self.ast.reference(self.ctx.newSymbolicExpression(self.ast.bvneg(a)))
+        inv = self.ast.reference(self.ctx.newSymbolicExpression(self.ast.bvnot(a)))
+        add = self.ast.reference(self.ctx.newSymbolicExpression(self.ast.bvadd(b, a)))
+        xor = self.ast.reference(self.ctx.newSymbolicExpression(self.ast.bvxor(b, a)))
+        for n in (self.ast.bvadd(a, neg), self.ast.bvadd(neg, a), self.ast.bvand(a, inv), self.ast.bvand(inv, a)):
+            self.assertEqual(str(n), "(_ bv0 32)")
+        for n in (self.ast.bvor(a, inv), self.ast.bvor(inv, a)):
+            self.assertEqual(str(n), "(_ bv4294967295 32)")
+        for n in (self.ast.bvsub(add, a), self.ast.bvxor(xor, a), self.ast.bvxor(a, xor)):
+            self.assertTrue(n.equalTo(b))
+        self.assertTrue(self.ast.bvsub(add, b).equalTo(a))
+        self.assertTrue(self.ast.bvneg(neg).equalTo(a))
+        self.assertTrue(self.ast.bvnot(inv).equalTo(a))
+
+    def test_inverse_instructions(self):
+        for code in (
+            [b"\x89\xc1", b"\xf7\xd9", b"\x01\xc1"],  # mov ecx, eax; neg ecx; add ecx, eax
+            [b"\x89\xc1", b"\xf7\xd1", b"\x21\xc1"],  # mov ecx, eax; not ecx; and ecx, eax
+        ):
+            ctx = TritonContext(ARCH.X86)
+            ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
+            ctx.symbolizeRegister(ctx.registers.eax, "eax")
+            for opcode in code:
+                ctx.processing(Instruction(opcode))
+            self.assertFalse(ctx.getRegisterAst(ctx.registers.ecx).isSymbolized())
+
 
 class TestAstSimplification5(unittest.TestCase):
 
