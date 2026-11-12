@@ -5,6 +5,7 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
+#include <algorithm>
 #include <cstring>
 #include <new>
 #include <set>
@@ -15,6 +16,9 @@
 #include <triton/astContext.hpp>
 
 
+
+/* Smallest map size at which dead symbolic expressions are swept. */
+static const triton::usize SWEEP_MIN_SIZE = 1 << 16;
 
 namespace triton {
   namespace engines {
@@ -38,6 +42,7 @@ namespace triton {
         this->numberOfRegisters = this->architecture->numberOfRegisters();
         this->uniqueSymExprId   = 0;
         this->uniqueSymVarId    = 0;
+        this->symbolicExpressionsSweepSize = SWEEP_MIN_SIZE;
         this->memoryArray       = nullptr;
 
         this->symbolicReg.resize(this->numberOfRegisters);
@@ -57,6 +62,7 @@ namespace triton {
         this->memoryBitvector        = other.memoryBitvector;
         this->numberOfRegisters      = other.numberOfRegisters;
         this->symbolicExpressions    = other.symbolicExpressions;
+        this->symbolicExpressionsSweepSize = other.symbolicExpressionsSweepSize;
         this->symbolicReg            = other.symbolicReg;
         this->symbolicVariables      = other.symbolicVariables;
         this->uniqueSymExprId        = other.uniqueSymExprId;
@@ -84,6 +90,7 @@ namespace triton {
         this->modes                  = other.modes;
         this->numberOfRegisters      = other.numberOfRegisters;
         this->symbolicExpressions    = other.symbolicExpressions;
+        this->symbolicExpressionsSweepSize = other.symbolicExpressionsSweepSize;
         this->symbolicReg            = other.symbolicReg;
         this->symbolicVariables      = other.symbolicVariables;
         this->uniqueSymExprId        = other.uniqueSymExprId;
@@ -421,6 +428,23 @@ namespace triton {
 
         /* Save and returns the new shared symbolic expression */
         this->symbolicExpressions[id] = expr;
+
+        /*
+         * A dead expression keeps its whole make_shared allocation while its weak entry
+         * stays in the map, and entries were only erased when the map was listed: an
+         * emulation kept every expression it ever built (several KB per instruction).
+         * Sweeping once the map has doubled since the last sweep keeps it amortized O(1).
+         */
+        if (this->symbolicExpressions.size() >= this->symbolicExpressionsSweepSize) {
+          for (auto it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end();) {
+            if (it->second.expired())
+              it = this->symbolicExpressions.erase(it);
+            else
+              ++it;
+          }
+          this->symbolicExpressionsSweepSize = std::max<triton::usize>(2 * this->symbolicExpressions.size(), SWEEP_MIN_SIZE);
+        }
+
         return expr;
       }
 
