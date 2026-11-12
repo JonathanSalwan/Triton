@@ -91,6 +91,14 @@ namespace triton {
           //! Sets a register as undefined.
           void undefined_s(triton::arch::Instruction& inst, const triton::arch::Register& reg);
 
+          //! Clears a flag left undefined by the manual if INTEL_UNDEFINED_FLAGS is enabled, else sets it as undefined.
+          void clearUndefinedFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment="");
+
+          //! Defines AF, PF and SF after MUL and IMUL if INTEL_UNDEFINED_FLAGS is enabled, else sets them as undefined.
+          void mulUndefinedFlags_s(triton::arch::Instruction& inst,
+                                   const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                   triton::arch::OperandWrapper& dst);
+
           //! Control flow semantics. Used to represent IP.
           void controlFlow_s(triton::arch::Instruction& inst);
 

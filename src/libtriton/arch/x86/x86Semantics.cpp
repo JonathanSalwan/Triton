@@ -934,6 +934,32 @@ namespace triton {
       }
 
 
+      void x86Semantics::clearUndefinedFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment) {
+        if (this->modes->isModeEnabled(triton::modes::INTEL_UNDEFINED_FLAGS)) {
+          this->clearFlag_s(inst, flag, comment);
+        }
+        else {
+          this->undefined_s(inst, flag);
+        }
+      }
+
+
+      void x86Semantics::mulUndefinedFlags_s(triton::arch::Instruction& inst,
+                                             const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                             triton::arch::OperandWrapper& dst) {
+        if (this->modes->isModeEnabled(triton::modes::INTEL_UNDEFINED_FLAGS)) {
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
+          this->pf_s(inst, parent, dst, true);
+          this->sf_s(inst, parent, dst, true);
+        }
+        else {
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
+        }
+      }
+
+
       void x86Semantics::controlFlow_s(triton::arch::Instruction& inst) {
         auto pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto counter = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_CX));
@@ -3190,7 +3216,7 @@ namespace triton {
         this->zf_s(inst, expr, dst);
 
         /* Tag undefined flags */
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3220,6 +3246,12 @@ namespace triton {
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->sf_s(inst, expr, dst);
         this->zf_s(inst, expr, dst);
+
+        /* The manual leaves AF and PF undefined */
+        if (this->modes->isModeEnabled(triton::modes::INTEL_UNDEFINED_FLAGS)) {
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "Clears parity flag");
+        }
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3350,6 +3382,13 @@ namespace triton {
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->zf_s(inst, expr, dst);
 
+        /* The manual leaves AF, PF and SF undefined */
+        if (this->modes->isModeEnabled(triton::modes::INTEL_UNDEFINED_FLAGS)) {
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "Clears parity flag");
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "Clears sign flag");
+        }
+
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -3376,6 +3415,12 @@ namespace triton {
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->sf_s(inst, expr, dst);
         this->zf_s(inst, expr, dst);
+
+        /* The manual leaves AF and PF undefined */
+        if (this->modes->isModeEnabled(triton::modes::INTEL_UNDEFINED_FLAGS)) {
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "Clears parity flag");
+        }
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3407,6 +3452,12 @@ namespace triton {
         this->sf_s(inst, expr, dst);
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_ZF), "Clears zero flag");
 
+        /* The manual leaves AF and PF undefined */
+        if (this->modes->isModeEnabled(triton::modes::INTEL_UNDEFINED_FLAGS)) {
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "Clears parity flag");
+        }
+
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -3436,6 +3487,12 @@ namespace triton {
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->sf_s(inst, expr, dst);
         this->zf_s(inst, expr, dst);
+
+        /* The manual leaves AF and PF undefined */
+        if (this->modes->isModeEnabled(triton::modes::INTEL_UNDEFINED_FLAGS)) {
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "Clears parity flag");
+        }
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3621,11 +3678,11 @@ namespace triton {
         this->zfBsf_s(inst, expr, src, op2);
 
         /* Tag undefined flags */
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "Clears carry flag");
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "Clears sign flag");
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3811,11 +3868,11 @@ namespace triton {
         this->zfBsf_s(inst, expr, src, op2); /* same as bsf */
 
         /* Tag undefined flags */
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "Clears carry flag");
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "Clears sign flag");
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4126,6 +4183,12 @@ namespace triton {
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->sf_s(inst, expr, dst);
         this->zf_s(inst, expr, dst);
+
+        /* The manual leaves AF and PF undefined */
+        if (this->modes->isModeEnabled(triton::modes::INTEL_UNDEFINED_FLAGS)) {
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "Clears parity flag");
+        }
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -7395,6 +7458,7 @@ namespace triton {
                 expr->isTainted = this->taintEngine->taintUnion(ax, src);
                 this->cfImul_s(inst, expr, al, this->astCtxt->bvmul(op1, op2), node);
                 this->ofImul_s(inst, expr, al, this->astCtxt->bvmul(op1, op2), node);
+                this->mulUndefinedFlags_s(inst, expr, al);
                 break;
               }
 
@@ -7412,6 +7476,7 @@ namespace triton {
                 expr2->isTainted = this->taintEngine->taintUnion(dx, ax);
                 this->cfImul_s(inst, expr1, ax, node1, node2);
                 this->ofImul_s(inst, expr1, ax, node1, node2);
+                this->mulUndefinedFlags_s(inst, expr1, ax);
                 break;
               }
 
@@ -7429,6 +7494,7 @@ namespace triton {
                 expr2->isTainted = this->taintEngine->taintUnion(edx, eax);
                 this->cfImul_s(inst, expr1, eax, node1, node2);
                 this->ofImul_s(inst, expr1, eax, node1, node2);
+                this->mulUndefinedFlags_s(inst, expr1, eax);
                 break;
               }
 
@@ -7446,6 +7512,7 @@ namespace triton {
                 expr2->isTainted = this->taintEngine->taintUnion(rdx, rax);
                 this->cfImul_s(inst, expr1, rax, node1, node2);
                 this->ofImul_s(inst, expr1, rax, node1, node2);
+                this->mulUndefinedFlags_s(inst, expr1, rax);
                 break;
               }
 
@@ -7465,6 +7532,7 @@ namespace triton {
             expr->isTainted = this->taintEngine->taintUnion(dst, src);
             this->cfImul_s(inst, expr, dst, node1, node2);
             this->ofImul_s(inst, expr, dst, node1, node2);
+            this->mulUndefinedFlags_s(inst, expr, dst);
             break;
           }
 
@@ -7481,15 +7549,13 @@ namespace triton {
             expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
             this->cfImul_s(inst, expr, dst, node1, node2);
             this->ofImul_s(inst, expr, dst, node1, node2);
+            this->mulUndefinedFlags_s(inst, expr, dst);
             break;
           }
 
         }
 
         /* Tag undefined flags */
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
 
         /* Update the symbolic control flow */
@@ -8787,10 +8853,10 @@ namespace triton {
         this->zf_s(inst, expr, src);
 
         /* Tag undefined flags */
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "Clears sign flag");
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "Clears parity flag");
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -9913,6 +9979,7 @@ namespace triton {
             auto ah = this->astCtxt->extract((triton::bitsize::word - 1), triton::bitsize::byte, node);
             this->cfMul_s(inst, expr, src2, ah);
             this->ofMul_s(inst, expr, src2, ah);
+            this->mulUndefinedFlags_s(inst, expr, src1);
             break;
           }
 
@@ -9939,6 +10006,7 @@ namespace triton {
             /* Update symbolic flags */
             this->cfMul_s(inst, expr2, src2, dx);
             this->ofMul_s(inst, expr2, src2, dx);
+            this->mulUndefinedFlags_s(inst, expr1, dst1);
             break;
           }
 
@@ -9965,6 +10033,7 @@ namespace triton {
             /* Update symbolic flags */
             this->cfMul_s(inst, expr2, src2, edx);
             this->ofMul_s(inst, expr2, src2, edx);
+            this->mulUndefinedFlags_s(inst, expr1, dst1);
             break;
           }
 
@@ -9992,15 +10061,13 @@ namespace triton {
             /* Update symbolic flags */
             this->cfMul_s(inst, expr2, src2, rdx);
             this->ofMul_s(inst, expr2, src2, rdx);
+            this->mulUndefinedFlags_s(inst, expr1, dst1);
             break;
           }
 
         }
 
         /* Tag undefined flags */
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
 
         /* Update the symbolic control flow */
@@ -10155,7 +10222,7 @@ namespace triton {
         this->zf_s(inst, expr, dst);
 
         /* Tag undefined flags */
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -14999,11 +15066,11 @@ namespace triton {
 
         /* Tag undefined flags */
         if (op2->evaluate() != 0) {
-          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+          this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
         }
 
         if (op2->evaluate() > 1) {
-          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+          this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         }
 
         /* Update the symbolic control flow */
@@ -15839,7 +15906,7 @@ namespace triton {
 
         /* Tag undefined flags */
         if (op2->evaluate() != 0) {
-          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+          this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
         }
 
         if (op2bis->evaluate() > dst.getBitSize()) {
@@ -15917,7 +15984,7 @@ namespace triton {
 
         /* Tag undefined flags */
         if (op3->evaluate() != 0) {
-          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+          this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
         }
 
         if (op3->evaluate() > 1) {
@@ -16011,7 +16078,7 @@ namespace triton {
 
         /* Tag undefined flags */
         if (op2->evaluate() != 0) {
-          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+          this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
         }
 
         if (op2bis->evaluate() > dst.getBitSize()) {
@@ -16089,7 +16156,7 @@ namespace triton {
 
         /* Tag undefined flags */
         if (op3->evaluate() != 0) {
-          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+          this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
         }
 
         if (op3->evaluate() > 1) {
@@ -16436,7 +16503,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
 
         /* Update symbolic flags */
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "Clears carry flag");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->pf_s(inst, expr, src1, true);
@@ -16627,10 +16694,10 @@ namespace triton {
         this->zf_s(inst, expr, src);
 
         /* Tag undefined flags */
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "Clears sign flag");
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "Clears parity flag");
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -19193,7 +19260,7 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Update symbolic flags */
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->clearUndefinedFlag_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "Clears adjust flag");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "Clears carry flag");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->pf_s(inst, expr, dst);
