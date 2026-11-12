@@ -70,6 +70,9 @@ namespace triton {
         //! Hashes the tree.
         virtual void initHash(void) = 0;
 
+        //! Re-inits the stale symbolized nodes of the tree, children first.
+        void refreshEval(void);
+
       protected:
         //! Deep level for computing hash
         triton::uint32 level;
@@ -89,6 +92,9 @@ namespace triton {
 
         //! The value of the tree from this root node.
         triton::uint512 eval;
+
+        //! The evaluation generation of the context when `eval` was computed.
+        triton::usize evalGeneration;
 
         //! The hash of the tree
         triton::uint512 hash;
