@@ -53,3 +53,26 @@ class TestDeep(unittest.TestCase):
     def test_symbolic_variable_update(self):
         self.triton.setConcreteVariableValue(self.sym_var.getSymbolicVariable(), 0xdeadbeaf)
         self.assertEqual(self.complex_ast_tree.evaluate(), 0xdeadbeaf)
+
+    def chain(self, depth):
+        ctx = TritonContext(ARCH.X86_64)
+        ast = ctx.getAstContext()
+        var = ast.variable(ctx.newSymbolicVariable(64))
+        nodes = [ast.bv(1, 64)]
+        for _ in range(depth):
+            nodes.append(ast.bvadd(nodes[-1], var))
+        return ctx, nodes
+
+    def test_deep_hash(self):
+        _, nodes = self.chain(50000)
+        self.assertNotEqual(nodes[-1].getHash(), 0)
+
+    def test_hash_order(self):
+        # The same tree hashes the same whichever node is asked first
+        _, a = self.chain(DEPTH)
+        _, b = self.chain(DEPTH)
+        root = a[-1].getHash()
+        middle = b[DEPTH // 2].getHash()
+        self.assertEqual(b[-1].getHash(), root)
+        self.assertEqual(a[DEPTH // 2].getHash(), middle)
+        self.assertEqual(self.complex_ast_tree.getHash(), self.complex_ast_tree.getHash())
