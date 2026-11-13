@@ -2849,12 +2849,12 @@ namespace triton {
                         this->astCtxt->equal(op3, this->astCtxt->bvtrue())
                       ),
                       // then
-                      this->astCtxt->concat(
-                        this->astCtxt->bvadd(op2, this->astCtxt->bv(1, src2.getBitSize())),
-                        this->astCtxt->bvand(
-                          this->astCtxt->bvadd(op1, this->astCtxt->bv(6, src1.getBitSize())),
-                          this->astCtxt->bv(0xf, src1.getBitSize())
-                        )
+                      this->astCtxt->bvand(
+                        this->astCtxt->bvadd(
+                          this->astCtxt->concat(op2, op1),
+                          this->astCtxt->bv(0x106, dst.getBitSize())
+                        ),
+                        this->astCtxt->bv(0xff0f, dst.getBitSize())
                       ),
                       // else
                       this->astCtxt->concat(
@@ -2867,7 +2867,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "AAA operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src3);
 
         /* Update symbolic flags */
         this->afAaa_s(inst, expr, dsttmp, op1, op3);
