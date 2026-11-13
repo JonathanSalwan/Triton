@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # coding: utf-8
-"""验证 AAA 的整 AX 进位、符号关系和 AF 污点。"""
+"""Verify AAA carry, symbolic expression, and AF taint semantics."""
 
 import unittest
 
