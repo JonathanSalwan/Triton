@@ -23,6 +23,9 @@
 
 
 
+/* True while AbstractNode::refreshEval() re-inits stale nodes, whose hashes and parents do not change */
+static thread_local bool refreshingValues = false;
+
 namespace triton {
   namespace ast {
 
@@ -32,6 +35,7 @@ namespace triton {
       this->array       = false;
       this->ctxt        = ctxt;
       this->eval        = 0;
+      this->evalGeneration = ctxt->getEvalGeneration();
       this->hash        = 0;
       this->hashed      = false;
       this->logical     = false;
@@ -78,7 +82,7 @@ namespace triton {
 
 
     bool AbstractNode::isSigned(void) const {
-      if ((this->eval >> (this->size-1)) & 1)
+      if ((this->evaluate() >> (this->size-1)) & 1)
         return true;
       return false;
     }
@@ -165,7 +169,55 @@ namespace triton {
 
 
     triton::uint512 AbstractNode::evaluate(void) const {
+      if (this->symbolized && this->evalGeneration != this->ctxt->getEvalGeneration()) {
+        const_cast<AbstractNode*>(this)->refreshEval();
+      }
       return this->eval;
+    }
+
+
+    void AbstractNode::refreshEval(void) {
+      triton::usize generation = this->ctxt->getEvalGeneration();
+      std::vector<std::pair<AbstractNode*, bool>> worklist;
+
+      /* Restores the flag on exit, also when an init() throws or an evaluate() inside it refreshes again */
+      struct Refreshing {
+        bool saved;
+        Refreshing() : saved(refreshingValues) { refreshingValues = true; }
+        ~Refreshing() { refreshingValues = saved; }
+      } refreshing;
+
+      /* Iterative to avoid stack overflows on deep ASTs. Unsymbolized nodes never change. */
+      worklist.push_back({this, false});
+      while (!worklist.empty()) {
+        AbstractNode* node = worklist.back().first;
+        bool postOrder = worklist.back().second;
+        worklist.pop_back();
+
+        if (node->evalGeneration == generation) {
+          continue;
+        }
+
+        if (postOrder) {
+          node->init();
+          node->evalGeneration = generation;
+          continue;
+        }
+
+        worklist.push_back({node, true});
+        for (const auto& child : node->children) {
+          if (child->symbolized && child->evalGeneration != generation) {
+            worklist.push_back({child.get(), false});
+          }
+        }
+
+        if (node->type == REFERENCE_NODE) {
+          AbstractNode* ast = reinterpret_cast<ReferenceNode*>(node)->getSymbolicExpression()->getAst().get();
+          if (ast->symbolized && ast->evalGeneration != generation) {
+            worklist.push_back({ast, false});
+          }
+        }
+      }
     }
 
 
@@ -251,6 +303,10 @@ namespace triton {
 
 
     void AbstractNode::setParent(AbstractNode* p) {
+      /* The re-init of a stale node finds its parents already linked */
+      if (refreshingValues)
+        return;
+
       auto it = parents.find(p);
 
       if (it == parents.end()) {
@@ -360,7 +416,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -443,7 +500,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -502,7 +560,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -556,7 +615,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -610,7 +670,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -696,7 +757,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -750,7 +812,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -804,7 +867,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -858,7 +922,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -908,7 +973,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -962,7 +1028,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1012,7 +1079,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1066,7 +1134,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1128,7 +1197,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1190,7 +1260,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1257,7 +1328,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1318,7 +1390,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1379,7 +1452,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1433,7 +1507,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1494,7 +1569,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1555,7 +1631,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1620,7 +1697,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1685,7 +1763,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1739,7 +1818,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1797,7 +1877,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1851,7 +1932,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1905,7 +1987,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -1959,7 +2042,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2013,7 +2097,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2071,7 +2156,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2125,7 +2211,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2179,7 +2266,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2240,7 +2328,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2282,7 +2371,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2342,7 +2432,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2392,7 +2483,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2446,7 +2538,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2500,7 +2593,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2564,7 +2658,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2615,7 +2710,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2672,7 +2768,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2709,7 +2806,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2779,7 +2877,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2831,7 +2930,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2883,7 +2983,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2933,7 +3034,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -2985,7 +3087,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -3037,7 +3140,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -3079,7 +3183,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -3146,7 +3251,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -3229,7 +3335,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -3247,6 +3354,7 @@ namespace triton {
 
 
     triton::uint8 StoreNode::select(triton::uint64 addr) const {
+      this->evaluate();
       if (this->memory.find(addr) != this->memory.end()) {
         return this->memory.at(addr);
       }
@@ -3265,6 +3373,7 @@ namespace triton {
 
 
     std::unordered_map<triton::uint64, triton::uint8>& StoreNode::getMemory(void) {
+      this->evaluate();
       return this->memory;
     }
 
@@ -3294,7 +3403,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -3357,7 +3467,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -3394,7 +3505,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
@@ -3457,7 +3569,8 @@ namespace triton {
         this->initParents();
       }
 
-      this->hashed = false;
+      if (!refreshingValues)
+        this->hashed = false;
     }
 
 
