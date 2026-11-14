@@ -44,6 +44,8 @@ jobs:
 
       - name: Get CMake
         uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "~4.4.0"
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
