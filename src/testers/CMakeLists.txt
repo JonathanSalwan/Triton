@@ -19,6 +19,7 @@ if((${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin
 
     add_test(NAME UnicornAArch64Semantics  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/aarch64/unicorn_test_aarch64.py)
     add_test(NAME UnicornX86Semantics      COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/x86/unicorn_test_x86.py)
+    add_test(NAME UnicornX8632Semantics    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/x86/unicorn_test_x86_32.py)
     add_test(NAME UnicornRiscv64Semantics  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/riscv/unicorn_test_riscv64.py)
     add_test(NAME UnicornRiscv32Semantics  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/riscv/unicorn_test_riscv32.py)
     add_test(NAME UnicornARM32Semantics1   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/arm32/unicorn_test_arm32_branch_arm_1.py)
@@ -60,6 +61,7 @@ if((${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin
     set_property(TEST
         UnicornAArch64Semantics
         UnicornX86Semantics
+        UnicornX8632Semantics
         UnicornARM32Semantics1
         UnicornARM32Semantics2
         UnicornARM32Semantics3
