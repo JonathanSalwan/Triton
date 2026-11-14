@@ -1,6 +1,6 @@
 #pragma warning(disable:4067)
 
-#if not (defined REG_SPEC || defined REG_SPEC_NO_CAPSTONE)
+#if !(defined REG_SPEC || defined REG_SPEC_NO_CAPSTONE)
 #error REG_SPEC have to be specified before including specs
 #endif
 
