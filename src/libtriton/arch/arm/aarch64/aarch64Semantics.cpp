@@ -4591,9 +4591,28 @@ namespace triton {
         void AArch64Semantics::mov_s(triton::arch::Instruction& inst) {
           auto& dst = inst.operands[0];
           auto& src = inst.operands[1];
+          const auto& dstReg = dst.getConstRegister();
+          bool insert = dstReg.getVectorIndex() != -1 && dstReg.getVASSize() != 0;
 
           /* Create the semantics */
           auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* A lane write depends on the old vector for every untouched element. */
+          if (insert) {
+            const auto& parent = this->architecture->getParentRegister(dstReg);
+            auto previous = this->symbolicEngine->getRegisterAst(inst, parent);
+            auto size = dstReg.getVASSize() * triton::bitsize::byte;
+            auto low = dstReg.getVectorIndex() * size;
+            auto high = low + size - 1;
+
+            node = this->astCtxt->extract(size - 1, 0, node);
+            if (low != 0) {
+              node = this->astCtxt->concat(node, this->astCtxt->extract(low - 1, 0, previous));
+            }
+            if (high + 1 < parent.getBitSize()) {
+              node = this->astCtxt->concat(this->astCtxt->extract(parent.getBitSize() - 1, high + 1, previous), node);
+            }
+          }
 
           /*
            * The source can be wider than the destination: Capstone's MOV aliases of
@@ -4609,7 +4628,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOV operation");
 
           /* Spread taint */
-          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+          expr->isTainted = insert ? this->taintEngine->taintUnion(dst, src) : this->taintEngine->taintAssignment(dst, src);
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
